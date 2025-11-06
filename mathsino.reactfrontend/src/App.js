@@ -1,17 +1,15 @@
-// src/App.js (PEŁNA, POPRAWNA WERSJA)
 
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-// Importujemy nasz główny szablon
+
 import Layout from './Layout'; 
 
-// Importujemy nasze "podstrony"
+
 import Play from './components/Play/Play';
 import Learn from './components/Learn/Learn';
 
-// Możemy dodać proste komponenty-zaślepki tutaj,
-// albo stworzyć dla nich pliki w /components/
+
 const Statistics = () => <h2>Statystyki (w budowie)</h2>;
 const Friends = () => <h2>Znajomi (w budowie)</h2>;
 const Resources = () => <h2>Zasoby (w budowie)</h2>;

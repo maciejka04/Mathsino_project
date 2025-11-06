@@ -15,10 +15,10 @@
 
 body {
     font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: linear-gradient(135deg, #2a2a72 0%, #009ffd 74%);
+    background: linear-gradient(135deg, #101011 0%, #6d0e26 74%);
     min-height: 100vh;
     display: flex;
-    align-items: center;
+    align-items: left;
     justify-content: center;
     color: #fff;
     overflow: hidden;
@@ -75,14 +75,12 @@ body {
 
 
 .menu a.active-link {
-  /* Przenosimy tło z li do a */
+  
   background: rgba(255, 255, 255, 0.25);
-  border-radius: 12px; /* Zaokrąglamy sam link */
+  border-radius: 12px; 
 }
 
-/* Musimy też ostylować 'li', w którym jest aktywny link,
-  aby pokazać boczny pasek, bo 'a' jest wewnątrz 'li'
-*/
+
 .menu li:has(a.active-link)::before {
   content: '';
   position: absolute;
@@ -95,16 +93,15 @@ body {
   border-radius: 0 4px 4px 0;
 }
 
-/* Poprawka dla hover, aby nie psuł aktywnego linku */
+
 .menu li:has(a.active-link):hover {
-  background: none; /* Usuwamy tło z 'li' przy hover */
+  background: none; 
 }
 
 .menu a.active-link:hover {
-  background: rgba(255, 255, 255, 0.25); /* Podtrzymujemy tło na linku */
+  background: rgba(255, 255, 255, 0.25); 
 }
 
-/* Musimy też nadać linkom odpowiednią formę, bo wyjęliśmy je z 'li' */
 .menu li a {
   display: flex;
   align-items: center;
@@ -117,17 +114,17 @@ body {
   border-radius: 12px;
   transition: background 0.2s ease;
 
-  /* === DODAJ TE DWIE LINIE === */
-  position: relative; /* Niezbędne dla animacji 'highlight' */
-  overflow: hidden;   /* Aby animacja nie wyszła poza link */
+
+  position: relative;
+  overflow: hidden;  
 }
 
-/* Uproszczony hover - teraz na samym linku */
+
 .menu li a:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* Usuwamy styl z 'li' - teraz jest na 'a' */
+
 .menu li:hover {
   background: none;
 }
