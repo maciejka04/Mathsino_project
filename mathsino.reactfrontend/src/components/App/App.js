@@ -2,6 +2,9 @@ import './App.css';
 
 import React, { useState, useEffect, useRef } from 'react';
 import awatar from '../../assets/profilowe_smok.png';
+import logo from '../../assets/logo.png';
+import offline from '../../assets/offline.jpg';
+import online from '../../assets/online.jpg';
 function GlassmorphismLayout() {
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -98,7 +101,7 @@ function GlassmorphismLayout() {
         {}
         <aside className="sidebar">
           <div className="logo">
-            <i className="fab fa-apple" />
+            <img src={logo}/>
           </div>
           
           {}
@@ -162,47 +165,34 @@ function GlassmorphismLayout() {
               />
             </div>
             <div className="user-info">
-              <h3>Alex Morgan</h3>
-              <p>Designer</p>
+              <h3>User</h3>
+              
             </div>
           </div>
         </aside>
         
         <main className="content">
           <header>
-            <h1>Welcome Back, Alex</h1>
-            <p>Check out your project statistics for today</p>
+            <h1>Welcome Back, User</h1>
+            <p>log in to save your progress</p>
           </header>
           
           {}
           <div className="card-container" ref={cardContainerRef}>
             <div className="card">
-              <div className="card-icon">
-                <i className="fas fa-check-circle" />
-              </div>
+              
               <div className="card-info">
-                <h3>12</h3>
-                <p>Completed Tasks</p>
+                <img src = {offline}/>
               </div>
             </div>
+            
             <div className="card">
-              <div className="card-icon">
-                <i className="fas fa-clock" />
-              </div>
               <div className="card-info">
-                <h3>5</h3>
-                <p>Pending Tasks</p>
+                <img src = {online}/>
               </div>
+              
             </div>
-            <div className="card">
-              <div className="card-icon">
-                <i className="fas fa-users" />
-              </div>
-              <div className="card-info">
-                <h3>7</h3>
-                <p>Active Projects</p>
-              </div>
-            </div>
+            
           </div>
         </main>
       </div>
