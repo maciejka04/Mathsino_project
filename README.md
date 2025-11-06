@@ -28,6 +28,9 @@ Docker jest **wymagany** do uruchomienia .NET Aspire.
 3. Uruchom Docker Desktop
 4. Poczekaj aż Docker całkowicie wystartuje (ikona w menu bar powinna być zielona)
 
+#### 2.5. Nodejs
+1. Pobierz [https://nodejs.org/en/download]
+
 **Alternatywa (macOS)**: Możesz użyć Podman Desktop zamiast Docker Desktop
 
 ### 3. IDE/Edytor (opcjonalnie, ale zalecane)
@@ -84,6 +87,15 @@ Jeśli Docker nie jest uruchomiony, uruchom aplikację Docker Desktop i poczekaj
 ### Krok 6: Uruchom projekt
 
 Przejdź do folderu głównego projektu (Mathsino) i wykonaj:
+
+```bash
+cd Mathsino.reactfrontend
+npm install
+```
+
+```bash
+cd ..
+```
 
 ```bash
 cd Mathsino.host
