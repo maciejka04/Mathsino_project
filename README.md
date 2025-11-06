@@ -91,6 +91,7 @@ Przejdź do folderu głównego projektu (Mathsino) i wykonaj:
 ```bash
 cd Mathsino.reactfrontend
 npm install
+npm install react-router-dom
 ```
 
 ```bash
