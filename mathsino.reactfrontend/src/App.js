@@ -4,8 +4,8 @@ import { Routes, Route } from 'react-router-dom';
 
 
 import Layout from './Layout'; 
-
-
+import Profile from './components/Profile/Profile';
+import Home from './components/Home/Home';
 import Play from './components/Play/Play';
 import Learn from './components/Learn/Learn';
 
@@ -20,9 +20,11 @@ function App() {
       <Route path="/" element={<Layout />}>
         
         {/* Strona główna */}
-        <Route index element={<Play />} />
+        <Route index element={<Home />} />
         
         {/* Pozostałe podstrony */}
+        <Route path="play" element={<Play />} />
+        <Route path="profile" element={<Profile />} />
         <Route path="learn" element={<Learn />} />
         <Route path="statistics" element={<Statistics />} />
         <Route path="friends" element={<Friends />} />

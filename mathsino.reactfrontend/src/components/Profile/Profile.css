@@ -1,0 +1,139 @@
+/* src/components/Profile/Profile.css */
+
+/* Układ siatki dla strony profilu */
+.profile-grid {
+  display: grid;
+  /* Dwie kolumny: jedna węższa na info, druga szersza na opcje */
+  grid-template-columns: 1fr 2fr;
+  gap: 24px;
+  align-items: flex-start; /* Karty nie muszą mieć tej samej wysokości */
+}
+
+/* Karta z informacjami o użytkowniku */
+.profile-info-card {
+  /* Układ pionowy, wyśrodkowany */
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Duży awatar na stronie profilu */
+.profile-page-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.5);
+  margin-bottom: 16px;
+  object-fit: cover;
+}
+
+.profile-info-card h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+.profile-info-card p {
+  opacity: 0.7;
+  font-size: 14px;
+}
+
+/* Karta z wyborem awatarów */
+.profile-avatar-card {
+  flex-direction: column;
+  align-items: flex-start;
+}
+.profile-avatar-card p {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-top: -4px;
+  margin-bottom: 16px;
+}
+
+/* Siatka dla małych awatarów */
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.avatar-option {
+  width: 100%;
+  aspect-ratio: 1 / 1; /* Zachowaj kwadratowy kształt */
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+}
+
+.avatar-option:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.avatar-option.active {
+  opacity: 1;
+  /* Użyjemy zmiennej CSS z :root, jeśli jest dostępna */
+  border-color: var(--primary-color, #0066ff);
+  box-shadow: 0 0 15px rgba(0, 102, 255, 0.5);
+}
+
+/* Karta z przyciskami */
+.profile-actions-card {
+  flex-direction: column;
+  align-items: stretch; /* Przyciski rozciągnięte na 100% */
+}
+
+/* Ogólny styl dla przycisków */
+.logout-button,
+.danger-button {
+  padding: 12px 16px;
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  /* Użyjemy głównej czcionki, jeśli jest dostępna */
+  font-family: 'SF Pro Display', sans-serif;
+}
+
+.logout-button {
+  background-color: var(--primary-color, #0066ff);
+  color: white;
+}
+.logout-button:hover {
+  background-color: #0056d6;
+}
+
+.danger-zone {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+.danger-zone h4 {
+  margin-bottom: 12px;
+  color: #ff4d4d;
+}
+
+.danger-button {
+  background-color: transparent;
+  color: #ff4d4d;
+  border: 1px solid #ff4d4d;
+}
+.danger-button:hover {
+  background-color: rgba(255, 77, 77, 0.1);
+}
+
+/* Poprawki dla mniejszych ekranów */
+@media (max-width: 1024px) {
+  .profile-grid {
+    grid-template-columns: 1fr; /* 1 kolumna na tabletach/mobilnych */
+  }
+}

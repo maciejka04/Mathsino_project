@@ -1,6 +1,7 @@
 // src/components/Play/Play.js (PEŁNY, POPRAWNY KOD)
 
 import React, { useEffect, useRef } from 'react';
+import './Play.css';
 import offline from '../../assets/offline.jpg';
 import online from '../../assets/online.jpg';
 
