@@ -36,7 +36,14 @@ function Friends() {
       );
     }
   };
-
+const check_profile = (id) => {
+    const friendToRemove = friends.find(friend => friend.id === id);
+    if (!friendToRemove) return;
+    const isConfirmed = window.confirm(
+      `TRZEBA DODAĆ ABY SPRAWDZAŁO PROFIL UZYTKOWNIKA ${friendToRemove.name} `
+    );
+    
+  };
   const handleAcceptRequest = (id) => {
     const requestToAccept = requests.find(req => req.id === id);
     if (!requestToAccept) return;
@@ -80,7 +87,7 @@ function Friends() {
         </form>
       </div>
 
-      {/* --- Nowa sekcja --- */}
+      {}
       <div className="friend-requests-section card-style">
         <h2>Friend Requests ({requests.length})</h2>
         <div className="friends-list">
@@ -131,7 +138,7 @@ function Friends() {
                   </span>
                 </div>
                 <button
-                  onClick={() => handleRemoveFriend(friend.id)}
+                  onClick={() => check_profile(friend.id)}
                   className="check-btn"
                 >
                   Check Profile

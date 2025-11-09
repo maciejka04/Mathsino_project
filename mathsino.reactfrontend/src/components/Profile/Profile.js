@@ -3,30 +3,16 @@
 import React, { useState } from 'react';
 import './Profile.css';
 // Zaimportuj swój domyślny awatar
-import currentAvatar from '../../assets/profilowe_smok.png'; 
+import smok from '../../assets/profilowe_smok.png'; 
+import panda from '../../assets/profilowe_panda.png'; 
 
-// === WAŻNE ===
-// Musisz dodać 7 plików awatarów do folderu 'src/assets/avatars/'
-// i odkomentować/dostosować te importy:
-
-// import avatar1 from '../../assets/avatars/avatar1.png';
-// import avatar2 from '../../assets/avatars/avatar2.png';
-// import avatar3 from '../../assets/avatars/avatar3.png';
-// import avatar4 from '../../assets/avatars/avatar4.png';
-// import avatar5 from '../../assets/avatars/avatar5.png';
-// import avatar6 from '../../assets/avatars/avatar6.png';
-// import avatar7 from '../../assets/avatars/avatar7.png';
-
-// Na razie, aby kod działał, użyjemy tablicy z domyślnym awatarem
-// Zastąp ją, gdy dodasz prawdziwe awatary:
-// const avatars = [currentAvatar, avatar1, avatar2, avatar3, avatar4, avatar5, avatar6, avatar7];
-const avatars = [currentAvatar, currentAvatar, currentAvatar, currentAvatar, currentAvatar, currentAvatar, currentAvatar];
+const avatars = [smok, panda, panda, panda, panda, panda, panda];
 
 
 function Profile() {
   // Później ten stan będzie zapisywany na serwerze,
   // ale na razie zarządzamy nim lokalnie.
-  const [selectedAvatar, setSelectedAvatar] = useState(currentAvatar);
+  const [selectedAvatar, setSelectedAvatar] = useState(panda);
 
   return (
     <div className="profile-page-container">
