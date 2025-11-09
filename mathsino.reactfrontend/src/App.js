@@ -28,7 +28,6 @@ function App() {
         <Route path="statistics" element={<Statistics />} />
         <Route path="friends" element={<Friends />} />
         <Route path="resources" element={<Resources />} />
-
       </Route>
     </Routes>
   );

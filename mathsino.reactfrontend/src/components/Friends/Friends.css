@@ -1,0 +1,149 @@
+/* src/components/Friends/Friends.css */
+
+/* Główny kontener strony */
+.friends-page-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+  
+}
+
+.friends-page-container h1 {
+  text-align: center;
+  color: #ffffff;
+  margin-bottom: 30px;
+}
+
+.friends-page-container h2 {
+  border-bottom: 2px solid #868b8c;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  color: #34495e;
+}
+
+/* Wspólny styl dla "kart" */
+.card-style {
+  background-color: #b8b8b8;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 25px;
+  margin-bottom: 30px;
+}
+
+/* --- Sekcja Dodawania Znajomych --- */
+.add-friend-form {
+  display: flex;
+  gap: 10px; /* Odstęp między polem a przyciskiem */
+}
+
+.add-friend-input {
+  flex: 1; /* Input zajmuje całe dostępne miejsce */
+  padding: 12px 15px;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.add-friend-input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 5px rgba(52,152,219,0.5);
+}
+
+.add-friend-button {
+  padding: 12px 20px;
+  background-color: #3498db; /* Niebieski */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.add-friend-button:hover {
+  background-color: #2980b9;
+}
+
+/* --- Sekcja Listy Znajomych --- */
+.friends-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Odstęp między znajomymi */
+}
+
+.friend-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  background-color: white;
+  border: 1px solid #8e999c;
+  border-radius: 5px;
+  transition: box-shadow 0.2s ease;
+}
+
+.friend-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%; /* Okrągły awatar */
+  margin-right: 15px;
+  object-fit: cover;
+}
+
+.friend-details {
+  flex: 1; /* Zajmuje resztę miejsca */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.friend-name {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #2c3e50;
+}
+
+.status {
+  font-size: 0.9rem;
+}
+
+.status.online {
+  color: #27ae60; /* Zielony */
+}
+
+.status.offline {
+  color: #95a5a6; 
+}
+
+.remove-btn {
+  padding: 8px 12px;
+  background-color: #e74c3c; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+.check-btn {
+  padding: 8px 12px;
+  background-color: #3498db; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+  margin-right: 7px;
+  
+}
+
+.remove-btn:hover {
+  background-color: #c0392b;
+}
