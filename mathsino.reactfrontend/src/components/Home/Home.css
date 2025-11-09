@@ -1,0 +1,131 @@
+
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.dashboard-card {
+  align-items: center; 
+}
+
+.dashboard-card i {
+  font-size: 28px;
+  margin-right: 20px;
+  min-width: 30px; 
+  text-align: center;
+  opacity: 0.9;
+}
+
+.dashboard-card-text h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+.dashboard-card-text h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+.dashboard-card-text p {
+  font-size: 14px;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.primary-card,
+.secondary-card {
+  grid-column: span 1;
+  padding: 24px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.primary-card i,
+.secondary-card i {
+  font-size: 32px;
+  margin-right: 0;
+  margin-bottom: 12px;
+}
+
+.primary-card i {
+  color: var(--primary-color); 
+}
+.secondary-card i {
+  color: #28a745;
+}
+
+
+.welcome-stats-card,
+.focus-card {
+  grid-column: span 2;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.stats-grid {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-basis: 33%;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.stat-label {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.focus-card {
+  flex-direction: row;
+  align-items: center;
+  background: rgba(40, 167, 69, 0.15);
+  border-color: rgba(40, 167, 69, 0.3);
+}
+
+.focus-card i {
+  font-size: 28px;
+  color: #28a745;
+}
+
+
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .primary-card,
+  .secondary-card,
+  .welcome-stats-card,
+  .focus-card {
+    grid-column: span 1;
+  }
+
+  .stats-grid {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .stat-item {
+    align-items: flex-start;
+  }
+}

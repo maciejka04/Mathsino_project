@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600&display=swap');
 
 :root {
@@ -206,70 +207,31 @@ header p {
     opacity: 0.8;
 }
 
-.card-container {
- display: grid;
-
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 24px;
-    margin-top: 20px;
-    flex: 1;
-    align-items: stretch;
-    
-    
-}
-
+/* Style globalne dla kart (używane przez Home, Play, Profile) */
+/* Możemy je tu zostawić, aby uniknąć powtórzeń */
+.dashboard-card,
 .card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 24px;
-    display: flex;
-    align-items: center;
-    border: 1px solid rgba(251, 251, 251, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  color: #fff;
+  text-decoration: none;
 }
 
+.dashboard-card:hover,
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-.card-icon {
-    width: 50px;
-    height: 50px;
-    background: var(--primary-color);
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 16px;
-}
-
-.card-icon i {
-    font-size: 22px;
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 
-.card-info {
- 
- display: flex;
- align-items: center;
- justify-content: center;
-
-width: 100%;
-height: 100%;
-}
-.card-info img{
-    width: 76%;
-    height: 76%;
-    object-fit: contain;
-}
-
-
+/* Media queries dla globalnego layoutu */
 @media (max-width: 1024px) {
     .sidebar {
         width: var(--sidebar-collapsed-width);
@@ -291,10 +253,6 @@ height: 100%;
     .content {
         padding: 30px;
     }
-    
-    .card-container {
-        grid-template-columns: repeat(2, 1fr);
-    }
 }
 
 @media (max-width: 768px) {
@@ -302,177 +260,4 @@ height: 100%;
         width: 95%;
         height: 90vh;
     }
-    
-    .card-container {
-        grid-template-columns: 1fr;
-    }
-} 
-
-/* ============================================== */
-/* === SEKCJA PULPITU (HOME.JS) - ZMIENIONA === */
-/* ============================================== */
-
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-  width: 100%;
-  margin-top: 20px;
-}
-
-.dashboard-card {
-  /* Style Glassmorphism */
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 24px;
-  display: flex;
-  align-items: center; 
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-  text-decoration: none;
-  color: #fff;
-}
-
-.dashboard-card:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  background: rgba(255, 255, 255, 0.15);
-}
-
-/* Ikony w kartach pulpitu */
-.dashboard-card i {
-  font-size: 28px;
-  margin-right: 20px;
-  min-width: 30px; 
-  text-align: center;
-  opacity: 0.9;
-}
-
-.dashboard-card-text h3 {
-  font-size: 20px;
-  font-weight: 600;
-  margin: 0 0 4px 0;
-}
-.dashboard-card-text h4 {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 0 0 4px 0;
-}
-.dashboard-card-text p {
-  font-size: 14px;
-  opacity: 0.8;
-  margin: 0;
-}
-
-/* --- Układ Siatki (Grid Layout) --- */
-
-/* === ZMIENIONE === */
-/* Karty zajmujące 1 kolumnę (dla "Graj" i "Ucz się") */
-.primary-card,
-.secondary-card {
-  grid-column: span 1; /* Było: span 2 */
-  padding: 24px;
-  /* Dodane dla lepszego wyglądu mniejszych kart */
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.primary-card i,
-.secondary-card i {
-  font-size: 32px;
-  margin-right: 0; /* Dodane */
-  margin-bottom: 12px; /* Dodane */
-}
-
-.primary-card i {
-  color: var(--primary-color); 
-}
-.secondary-card i {
-  color: #28a745; /* Zielony dla nauki */
-}
-
-/* === DODANE === */
-/* Nowe karty szerokie na 2 kolumny */
-.welcome-stats-card,
-.focus-card {
-  grid-column: span 2;
-  flex-direction: column; /* Układ pionowy */
-  align-items: flex-start; /* Wyrównaj do lewej */
-}
-
-/* Wewnętrzna siatka dla statystyk */
-.stats-grid {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex-basis: 33%; /* Podziel na 3 równe kolumny */
-}
-
-.stat-value {
-  font-size: 24px;
-  font-weight: 600;
-  color: #fff;
-}
-
-.stat-label {
-  font-size: 14px;
-  opacity: 0.8;
-}
-
-/* Karta "Fokus" */
-.focus-card {
-  flex-direction: row; /* Układ poziomy */
-  align-items: center; /* Wyśrodkuj ikonę i tekst */
-  background: rgba(40, 167, 69, 0.15); /* Inny kolor tła, np. zielony */
-  border-color: rgba(40, 167, 69, 0.3);
-}
-
-.focus-card i {
-  font-size: 28px;
-  color: #28a745; /* Zielony */
-}
-
-/* === USUNIĘTE (Już niepotrzebne) === */
-/*
-.tip-card { ... }
-.tip-card i { ... }
-*/
-
-
-/* === ZAKTUALIZOWANE @media === */
-@media (max-width: 1024px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  /* Wszystkie karty zajmują teraz 1 kolumnę */
-  .primary-card,
-  .secondary-card,
-  .welcome-stats-card, /* Dodane */
-  .focus-card {         /* Dodane */
-    grid-column: span 1;
-  }
-
-  /* Dodane dla mobilnej siatki statystyk */
-  .stats-grid {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
-  .stat-item {
-    align-items: flex-start;
-  }
 }
