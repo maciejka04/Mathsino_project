@@ -9,9 +9,11 @@ import Home from './components/Home/Home';
 import Play from './components/Play/Play';
 import Learn from './components/Learn/Learn';
 import Friends from './components/Friends/Friends';
+import Statistics from './components/Statistics/Statistics';
+import Resources from './components/Resources/Resources';
 
-const Statistics = () => <h2>Statystyki (w budowie)</h2>;
-const Resources = () => <h2>Zasoby (w budowie)</h2>;
+
+
 
 function App() {
   return (

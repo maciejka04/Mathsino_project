@@ -1,0 +1,61 @@
+/* src/components/Statistics/Statistics.css */
+
+.stats-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Three columns */
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+/* Style for the individual stat cards */
+.stat-card {
+  /* We re-use the global .dashboard-card style! */
+  /* But we change the layout inside */
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px 24px;
+}
+
+.stat-card-label {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-card-value {
+  font-size: 28px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Specific colors for rank/lessons */
+.stat-card-value.rank-gold {
+  color: #ffc107;
+}
+.stat-card-value.lessons-green {
+  color: #28a745;
+}
+
+/* Container for the line chart */
+.chart-container {
+  /* We use .dashboard-card for the glass effect */
+  padding: 24px;
+  height: 400px; /* Give the chart a specific height */
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-container h3 {
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 1024px) {
+  .stats-overview-grid {
+    grid-template-columns: 1fr; /* Stack on top */
+  }
+}

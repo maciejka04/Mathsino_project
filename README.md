@@ -91,7 +91,9 @@ Przejdź do folderu głównego projektu (Mathsino) i wykonaj:
 ```bash
 cd Mathsino.reactfrontend
 npm install
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 npm install react-router-dom
+npm install chart.js react-chartjs-2
 ```
 
 ```bash
