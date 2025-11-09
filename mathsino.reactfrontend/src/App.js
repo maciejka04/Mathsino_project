@@ -8,10 +8,9 @@ import Profile from './components/Profile/Profile';
 import Home from './components/Home/Home';
 import Play from './components/Play/Play';
 import Learn from './components/Learn/Learn';
-
+import Friends from './components/Friends/Friends';
 
 const Statistics = () => <h2>Statystyki (w budowie)</h2>;
-const Friends = () => <h2>Znajomi (w budowie)</h2>;
 const Resources = () => <h2>Zasoby (w budowie)</h2>;
 
 function App() {
