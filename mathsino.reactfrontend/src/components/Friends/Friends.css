@@ -1,12 +1,21 @@
 /* src/components/Friends/Friends.css */
 
+/* Kolor akcentu (z wykresu) */
+:root {
+  --accent-pink: #D83A7A;
+  --accent-pink-hover: #b02e62;
+  --accent-green: #28a745;
+  --accent-red: #e74c3c;
+  --accent-red-hover: #c0392b;
+}
+
 /* Główny kontener strony */
 .friends-page-container {
   padding: 20px;
   max-width: 900px;
   margin: 20px auto;
-  font-family: Arial, sans-serif;
-  
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: #e0e0e0; /* Domyślny jasny kolor tekstu */
 }
 
 .friends-page-container h1 {
@@ -16,17 +25,23 @@
 }
 
 .friends-page-container h2 {
-  border-bottom: 2px solid #868b8c;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Subtelna linia */
   padding-bottom: 10px;
   margin-bottom: 20px;
-  color: #34495e;
+  color: #ffffff; /* Biały nagłówek */
 }
 
-/* Wspólny styl dla "kart" */
+/* Wspólny styl dla "kart" - EFEKT SZKŁA */
 .card-style {
-  background-color: #b8b8b8;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  /* Zmieniamy tło na JASNE, półprzezroczyste */
+  background: rgba(255, 255, 255, 0.1); /* JASNE, półprzezroczyste tło */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  
   padding: 25px;
   margin-bottom: 30px;
 }
@@ -34,29 +49,37 @@
 /* --- Sekcja Dodawania Znajomych --- */
 .add-friend-form {
   display: flex;
-  gap: 10px; /* Odstęp między polem a przyciskiem */
+  gap: 10px;
 }
 
 .add-friend-input {
-  flex: 1; /* Input zajmuje całe dostępne miejsce */
+  flex: 1;
   padding: 12px 15px;
-  border: 1px solid #bdc3c7;
-  border-radius: 5px;
   font-size: 1rem;
+  
+  /* Styl dla ciemnego tła */
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  border-radius: 8px;
+}
+
+.add-friend-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .add-friend-input:focus {
   outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 5px rgba(52,152,219,0.5);
+  border-color: var(--accent-pink);
+  box-shadow: 0 0 5px rgba(216, 58, 122, 0.5);
 }
 
 .add-friend-button {
   padding: 12px 20px;
-  background-color: #3498db; /* Niebieski */
+  background-color: var(--accent-pink); /* Różowy akcent */
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
   font-weight: bold;
@@ -64,40 +87,43 @@
 }
 
 .add-friend-button:hover {
-  background-color: #2980b9;
+  background-color: var(--accent-pink-hover); /* Ciemniejszy różowy */
 }
 
 /* --- Sekcja Listy Znajomych --- */
 .friends-list {
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Odstęp między znajomymi */
+  gap: 15px;
 }
 
 .friend-item {
   display: flex;
   align-items: center;
   padding: 15px;
-  background-color: white;
-  border: 1px solid #8e999c;
-  border-radius: 5px;
+  
+  /* Lżejsze tło dla elementu listy */
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
   transition: box-shadow 0.2s ease;
 }
 
 .friend-item:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background-color: rgba(255, 255, 255, 0.12);
 }
 
 .avatar {
   width: 50px;
   height: 50px;
-  border-radius: 50%; /* Okrągły awatar */
+  border-radius: 50%;
   margin-right: 15px;
   object-fit: cover;
 }
 
 .friend-details {
-  flex: 1; /* Zajmuje resztę miejsca */
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -106,7 +132,7 @@
 .friend-name {
   font-weight: bold;
   font-size: 1.1rem;
-  color: #2c3e50;
+  color: #ffffff; /* Biały tekst */
 }
 
 .status {
@@ -114,36 +140,76 @@
 }
 
 .status.online {
-  color: #27ae60; /* Zielony */
+  color: var(--accent-green); /* Zielony (jak w Statistics) */
 }
 
 .status.offline {
-  color: #95a5a6; 
+  color: #95a5a6; /* Szary (bez zmian) */
 }
 
-.remove-btn {
-  padding: 8px 12px;
-  background-color: #e74c3c; 
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: background-color 0.2s ease;
-}
+/* Przyciski w liście */
 .check-btn {
   padding: 8px 12px;
-  background-color: #3498db; 
+  background-color: var(--accent-pink); /* Różowy akcent */
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 0.9rem;
   transition: background-color 0.2s ease;
   margin-right: 7px;
-  
+  margin-left: 7px;
+  font-weight: 600;
+}
+
+.check-btn:hover {
+  background-color: var(--accent-pink-hover);
+}
+
+.remove-btn {
+  padding: 8px 12px;
+  background-color: var(--accent-red); /* Czerwony (bez zmian) */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+  font-weight: 600;
 }
 
 .remove-btn:hover {
-  background-color: #c0392b;
+  background-color: var(--accent-red-hover);
+}
+
+/* Style dla przycisków Accept/Decline */
+.request-actions {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.btn-accept, .btn-decline {
+  padding: 8px 12px;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.btn-accept {
+  background-color: var(--accent-green);
+}
+.btn-accept:hover {
+  background-color: #218838;
+}
+
+.btn-decline {
+  background-color: var(--accent-red);
+}
+.btn-decline:hover {
+  background-color: var(--accent-red-hover);
 }
