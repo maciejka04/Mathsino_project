@@ -42,7 +42,11 @@
     height: 76%;
     object-fit: contain;
 }
-
+.card-link {
+    text-decoration: none; /* Usuń podkreślenie */
+    color: inherit; /* Zachowaj kolor tekstu */
+    display: block; /* Upewnij się, że zajmuje całą dostępną przestrzeń siatki */
+}
 /* Media queries dla Play.js */
 @media (max-width: 1024px) {
     .card-container {

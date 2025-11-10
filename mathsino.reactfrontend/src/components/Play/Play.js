@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import './Play.css';
 import offline from '../../assets/offline.jpg';
 import online from '../../assets/online.jpg';
+import { Link } from 'react-router-dom';
 
 function Play() {
   // 1. Hook useRef jest potrzebny
@@ -49,19 +50,28 @@ function Play() {
     };
   }, []); // Pusta tablica = uruchom tylko raz
 
-  return (
+return (
     // 3. 'ref' musi być podpięty do kontenera
     <div className="card-container" ref={cardContainerRef}>
-      <div className="card">
-        <div className="card-info">
-          <img src={offline} alt="Play Offline" />
+      
+      {/* === 1. Karta Offline (Używamy <Link> zamiast <div> i onClick) === */}
+      <Link to="/offline" className="card-link">
+        <div className="card">
+          <div className="card-info">
+            <img src={offline} alt="Play Offline" />
+          </div>
         </div>
-      </div>
-      <div className="card">
-        <div className="card-info">
-          <img src={online} alt="Play Online" />
+      </Link>
+      
+      {/* === 2. Karta Online (Używamy <Link> zamiast <div> i onClick) === */}
+      <Link to="/online" className="card-link">
+        <div className="card">
+          <div className="card-info">
+            <img src={online} alt="Play Online" />
+          </div>
         </div>
-      </div>
+      </Link>
+      
     </div>
   );
 }

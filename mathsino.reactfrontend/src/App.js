@@ -11,6 +11,8 @@ import Learn from './components/Learn/Learn';
 import Friends from './components/Friends/Friends';
 import Statistics from './components/Statistics/Statistics';
 import Resources from './components/Resources/Resources';
+import Offline from './components/Offline/Offline';
+import Online from './components/Online/Online';
 
 
 
@@ -30,6 +32,8 @@ function App() {
         <Route path="statistics" element={<Statistics />} />
         <Route path="friends" element={<Friends />} />
         <Route path="resources" element={<Resources />} />
+        <Route path="online" element={<Online />} />
+        <Route path="offline" element={<Offline />} />
       </Route>
     </Routes>
   );

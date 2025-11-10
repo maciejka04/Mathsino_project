@@ -5,7 +5,7 @@ import React, { useEffect, useRef } from 'react';
 
 // === ZMIANA 1: Dodajemy 'Link' do importów ===
 // Będziemy go używać do podlinkowania logo
-import { Outlet, NavLink, Link } from 'react-router-dom';
+import { Outlet, NavLink, Link, useLocation } from 'react-router-dom';
 
 // Importy zasobów
 import awatar from './assets/profilowe_smok.png';
@@ -13,6 +13,7 @@ import logo from './assets/logo.png';
 
 function Layout() {
   
+  const location = useLocation();
   const menuRef = useRef(null);
 
   // 2. Poprawiony useEffect dla animacji menu (bez zmian)
@@ -55,62 +56,63 @@ function Layout() {
     };
   }, []); // Pusta tablica = uruchom tylko raz
 
-
-  return (
-    <> 
-      <div className="container">
+  const hideMenu = location.pathname === '/online' || location.pathname === '/offline';
+return (
+  <>
+    <div className="container">
+      {/* Sidebar (menu) pojawia się tylko wtedy, gdy NIE jesteś w /online ani /offline */}
+      {!hideMenu && (
         <aside className="sidebar">
-          
-          {/* === ZMIANA 2: Obejmujemy logo linkiem === */}
+          {/* Logo z linkiem do strony głównej */}
           <div className="logo">
             <Link to="/">
               <img src={logo} alt="Logo" />
             </Link>
           </div>
-          
+
+          {/* Nawigacja */}
           <nav className="menu" ref={menuRef}>
             <ul>
               <li>
-              {/* === ZMIANA 3: Zmieniamy link 'Play' === */}
-                <NavLink 
-                  to="/play"  // <-- Zmienione z "/" na "/play"
-                  className={({ isActive }) => isActive ? 'active-link' : ''}
+                <NavLink
+                  to="/play"
+                  className={({ isActive }) => (isActive ? 'active-link' : '')}
                 >
                   <i className="fa-solid fa-play" />
                   <span>Play</span>
                 </NavLink>
               </li>
               <li>
-                <NavLink 
+                <NavLink
                   to="/learn"
-                  className={({ isActive }) => isActive ? 'active-link' : ''}
+                  className={({ isActive }) => (isActive ? 'active-link' : '')}
                 >
                   <i className="fa-solid fa-graduation-cap" />
                   <span>Learn</span>
                 </NavLink>
               </li>
               <li>
-                <NavLink 
+                <NavLink
                   to="/statistics"
-                  className={({ isActive }) => isActive ? 'active-link' : ''}
+                  className={({ isActive }) => (isActive ? 'active-link' : '')}
                 >
                   <i className="fas fa-chart-simple" />
                   <span>Statistics</span>
                 </NavLink>
               </li>
               <li>
-                <NavLink 
+                <NavLink
                   to="/friends"
-                  className={({ isActive }) => isActive ? 'active-link' : ''}
+                  className={({ isActive }) => (isActive ? 'active-link' : '')}
                 >
                   <i className="fa-solid fa-user-group" />
                   <span>Friends</span>
                 </NavLink>
               </li>
               <li>
-                <NavLink 
+                <NavLink
                   to="/resources"
-                  className={({ isActive }) => isActive ? 'active-link' : ''}
+                  className={({ isActive }) => (isActive ? 'active-link' : '')}
                 >
                   <i className="fa-solid fa-gear" />
                   <span>Resources</span>
@@ -119,26 +121,25 @@ function Layout() {
             </ul>
           </nav>
 
-          {/* Profil zostaje bez zmian */}
+          {/* Profil użytkownika */}
           <Link to="/profile" className="profile">
             <div className="avatar">
-                <img src={awatar} alt="Profile" />
+              <img src={awatar} alt="Profile" />
             </div>
             <div className="user-info">
-                <h3>User</h3>
+              <h3>User</h3>
             </div>
           </Link>
         </aside>
-        
-        <main className="content">
-          
-          {/* 4. Miejsce na podstrony (Play, Learn, itd.) */}
-          <Outlet />
+      )}
 
-        </main>
-      </div>
-    </>
-  );
+      {/* Główna zawartość (podstrony) */}
+      <main className="content">
+        <Outlet />
+      </main>
+    </div>
+  </>
+);
 }
 
 export default Layout;
