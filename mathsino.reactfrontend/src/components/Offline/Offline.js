@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import './Offline.css';
-import tableImage from '../../assets/table.png'; 
+import tableImage from '../../assets/table2.png'; 
 import dziesiecImage from '../../assets/zetony/dziesiec.png'; 
 import piecdziesiatImage from '../../assets/zetony/piecdziesiat.png'; 
 import stoImage from '../../assets/zetony/sto.png'; 

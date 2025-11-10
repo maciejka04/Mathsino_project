@@ -37,6 +37,11 @@ body {
     height: 96%;
     object-fit: cover;
     display: block;
+    user-select: none;
+    -webkit-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none;
+    pointer-events: none;
 }
 
 .back-button {
@@ -93,6 +98,10 @@ body {
     cursor: pointer;
     border-radius: 50%;
     transition: transform 0.2s, box-shadow 0.2s;
+    -webkit-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none;
+    pointer-events: none;
 }
 
 .chip-image:hover {
