@@ -20,6 +20,8 @@ import Online from './components/Online/Online';
 function App() {
   return (
     <Routes>
+      <Route path="online" element={<Online />} />
+      <Route path="offline" element={<Offline />} />
       <Route path="/" element={<Layout />}>
         
         {/* Strona główna */}
@@ -32,8 +34,7 @@ function App() {
         <Route path="statistics" element={<Statistics />} />
         <Route path="friends" element={<Friends />} />
         <Route path="resources" element={<Resources />} />
-        <Route path="online" element={<Online />} />
-        <Route path="offline" element={<Offline />} />
+        
       </Route>
     </Routes>
   );

@@ -1,11 +1,12 @@
 html,
 body {
     margin: 0;
-    padding: 0;
+    padding: 0px;
     width: 100%;
     height: 100%;
     overflow: hidden;
 }
+
 
 .online-container {
     display: flex;
@@ -26,16 +27,14 @@ body {
     aspect-ratio: 16 / 9;
     position: relative;
     overflow: hidden;
-    border-radius: 12px;
-
     margin: 0;
     padding: 0;
 }
 
 .game-table-image {
     width: 100%;
-    height: 96%;
-    object-fit: cover;
+    height: 85%;
+    object-fit: contain;
     display: block;
     user-select: none;
     -webkit-user-select: none; 
@@ -72,49 +71,69 @@ body {
 
 .betting-ui {
     position: absolute;
-    top: 600px;
-    left: 300px;
+    top: 440px;
+    left: 255px;
     z-index: 10;
-
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
-
     padding: 15px;
-    background-color: rgba(0, 0, 0, 0.6);
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    background-color: transparent; 
+    box-shadow: none;
 }
 
 .chip-selection {
     display: flex;
     gap: 10px;
+
+}
+
+.chip-selection .chip-image:nth-child(2) {
+    margin-top: 17px; 
+}
+
+.chip-selection .chip-image:nth-child(3) {
+    margin-top: 34px; 
+}
+
+.chip-selection .chip-image:nth-child(4) {
+    margin-top: 51px; 
 }
 
 .chip-image {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     cursor: pointer;
     border-radius: 50%;
     transition: transform 0.2s, box-shadow 0.2s;
-    -webkit-user-select: none; 
-    -moz-user-select: none; 
-    -ms-user-select: none;
-    pointer-events: none;
+    position: relative; 
+    z-index: 1;
 }
 
 .chip-image:hover {
     transform: scale(1.1);
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }
-
+.card-image {
+    position: absolute; 
+    width: 5%; 
+    height: auto;
+    border-radius: 4px;
+    z-index: 50; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
 .current-balance {
-    color: white;
+    position: absolute;
+    top: 600px;
+    left: 50px;
+    z-index: 10;
+    display: flex;
     font-size: 1.1em;
     padding-top: 5px;
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
     width: 100%;
+    border-top: none; 
+    border-top: 0;
 }
 
 .balance-label {
@@ -139,11 +158,12 @@ body {
     display: flex;
     justify-content: center;
     gap: 20px;
-    padding: 20px;
+    padding: 0px;
     width: auto;
     max-width: 600px;
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 15px;
+    background-color: transparent; 
+    box-shadow: none;
+   
 }
 
 .action-button {
@@ -154,11 +174,18 @@ body {
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
     text-transform: uppercase;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     min-width: 100px;
 }
+.action-button.disabled-action {
+    background-color: transparent !important; 
+    color: #ffffff !important;
+    border: 2px solid white; 
+    opacity: 0.8; 
+    cursor: default; 
+    pointer-events: none;
+}
+
 
 
 .action-button.hit {
@@ -167,6 +194,18 @@ body {
 
 .action-button.hit:hover {
     background-color: #218838;
+}
+
+.action-button.hit:hover {
+    background-color: #218838;
+}
+
+.action-button.double {
+    background-color: #7016cb;
+}
+
+.action-button.double:hover {
+    background-color: #6914b4;
 }
 
 .action-button.stand {
