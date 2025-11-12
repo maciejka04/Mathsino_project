@@ -28,3 +28,13 @@ public class UserFriend
     public int FriendId { get; set; }
     public User Friend { get; set; } = null!;
 }
+
+public record FriendDto(int Id, string FirstName, string LastName, string Email);
+
+public record UserDto(
+    int Id,
+    string FirstName,
+    string LastName,
+    string Email,
+    List<FriendDto> Friends
+);
