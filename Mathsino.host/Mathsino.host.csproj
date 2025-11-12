@@ -13,6 +13,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mathsino.Backend\Mathsino.Backend.csproj" />
-    <ProjectReference Include="..\Mathsino.Frontend\Mathsino.Frontend.csproj" />
   </ItemGroup>
 </Project>
