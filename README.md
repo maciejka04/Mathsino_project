@@ -1,4 +1,4 @@
-# READ.md wygenerowane przy pomocy Claude, na remote labs wmi nie trzeba nic robić wystarczy odpalić projekt
+# README.md wygenerowane przy pomocy Claude, na remote labs wmi nie trzeba nic robić wystarczy odpalić projekt
 
 # Mathsino
 
