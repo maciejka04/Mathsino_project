@@ -1,3 +1,6 @@
+using System.Text.Json.Serialization;
+using Mathsino.Backend.Models;
+
 namespace Mathsino.Backend.Game;
 
 public class Game
@@ -9,9 +12,14 @@ public class Game
 
     public List<Player> Players { get; set; } = [];
 
+    [JsonIgnore]
     public Deck Deck { get; set; } = new Deck();
 
-    public Player Dealer { get; set; } = new Player();
+    public Player Dealer { get; set; } =
+        new Player
+        {
+            User = new User { Id = 0, FirstName = "Dealer" },
+        };
 
     public void AddPlayer(Player player)
     {
@@ -61,17 +69,59 @@ public class Game
         }
         Dealer.Hand.Add(Deck.DrawCard());
     }
-}
 
-public enum GameType
-{
-    SinglePlayer,
-    MultiPlayer,
-}
+    public void DealerDrawCard()
+    {
+        while (Dealer.HandValue() < 17)
+        {
+            Dealer.Hand.Add(Deck.DrawCard());
+        }
+    }
 
-public enum GameStatus
-{
-    WaitingForPlayers,
-    InProgress,
-    Completed,
+    public void PlayerHit(Guid playerId)
+    {
+        var player = Players.FirstOrDefault(p => p.PlayerId == playerId);
+        if (player == null)
+        {
+            throw new InvalidOperationException("Player not found in the game.");
+        }
+        if (Status != GameStatus.InProgress)
+        {
+            throw new InvalidOperationException("Cannot hit when the game is not in progress.");
+        }
+        player.Hand.Add(Deck.DrawCard());
+    }
+
+    public void PlayerPass(Guid playerId)
+    {
+        if (Status != GameStatus.InProgress)
+        {
+            throw new InvalidOperationException("Cannot pass when the game is not in progress.");
+        }
+
+        var player = Players.FirstOrDefault(p => p.PlayerId == playerId);
+
+        if (player == null)
+        {
+            throw new InvalidOperationException("Player not found in the game.");
+        }
+        if (player.Status != PlayerStatus.Active)
+        {
+            throw new InvalidOperationException("Player has already passed.");
+        }
+
+        player.Status = PlayerStatus.Passed;
+
+        if (Type == GameType.SinglePlayer)
+        {
+            EndGame();
+            return;
+        }
+    }
+
+    public void EndGame()
+    {
+        DealerDrawCard();
+        Status = GameStatus.Completed;
+    }
 }
