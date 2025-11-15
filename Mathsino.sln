@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mathsino.host", "Mathsino.h
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mathsino.ServisDefaults", "Mathsino.ServisDefaults\Mathsino.ServisDefaults.csproj", "{F672440F-D4C4-4C09-BA5E-75893A6E105A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mathsino.Backend.Test", "Mathsino.Backend.Test\Mathsino.Backend.Test.csproj", "{B6BC2BFC-057F-4A03-938D-9BAB0690A0B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{F672440F-D4C4-4C09-BA5E-75893A6E105A}.Release|x64.Build.0 = Release|Any CPU
 		{F672440F-D4C4-4C09-BA5E-75893A6E105A}.Release|x86.ActiveCfg = Release|Any CPU
 		{F672440F-D4C4-4C09-BA5E-75893A6E105A}.Release|x86.Build.0 = Release|Any CPU
+		{B6BC2BFC-057F-4A03-938D-9BAB0690A0B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6BC2BFC-057F-4A03-938D-9BAB0690A0B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6BC2BFC-057F-4A03-938D-9BAB0690A0B5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B6BC2BFC-057F-4A03-938D-9BAB0690A0B5}.Debug|x64.Build.0 = Debug|Any CPU
+		{B6BC2BFC-057F-4A03-938D-9BAB0690A0B5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B6BC2BFC-057F-4A03-938D-9BAB0690A0B5}.Debug|x86.Build.0 = Debug|Any CPU
+		{B6BC2BFC-057F-4A03-938D-9BAB0690A0B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6BC2BFC-057F-4A03-938D-9BAB0690A0B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6BC2BFC-057F-4A03-938D-9BAB0690A0B5}.Release|x64.ActiveCfg = Release|Any CPU
+		{B6BC2BFC-057F-4A03-938D-9BAB0690A0B5}.Release|x64.Build.0 = Release|Any CPU
+		{B6BC2BFC-057F-4A03-938D-9BAB0690A0B5}.Release|x86.ActiveCfg = Release|Any CPU
+		{B6BC2BFC-057F-4A03-938D-9BAB0690A0B5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
