@@ -25,5 +25,10 @@ public static class GameEndPoints
             (GameService gameService, Guid gameId, Guid playerId) =>
                 gameService.PlayerPass(gameId, playerId)
         );
+        app.MapGet(
+            "games/{gameId}/check-results/{playerId}",
+            (GameService gameService, Guid gameId, Guid playerId) =>
+                gameService.CheckResults(gameId, playerId)
+        );
     }
 }

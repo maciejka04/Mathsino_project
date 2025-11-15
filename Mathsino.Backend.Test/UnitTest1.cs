@@ -70,7 +70,7 @@ public class PlayerTests
         var player = new Mathsino.Backend.Game.Player();
         player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "10", Suit = "Hearts" });
         player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "7", Suit = "Clubs" });
-        player.HandValue().ShouldBe(17);
+        player.HandValue.ShouldBe(17);
     }
 
     [Test]
@@ -79,7 +79,7 @@ public class PlayerTests
         var player = new Mathsino.Backend.Game.Player();
         player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "A", Suit = "Spades" });
         player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "7", Suit = "Diamonds" });
-        player.HandValue().ShouldBe(18);
+        player.HandValue.ShouldBe(18);
     }
 
     [Test]
@@ -89,20 +89,20 @@ public class PlayerTests
         player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "A", Suit = "Spades" });
         player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "9", Suit = "Diamonds" });
         player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "5", Suit = "Hearts" });
-        player.HandValue().ShouldBe(15);
+        player.HandValue.ShouldBe(15);
     }
 
     [Test]
     public void HandValue_Test()
     {
         var player = new Mathsino.Backend.Game.Player();
-        player.HandValue().ShouldBe(0);
+        player.HandValue.ShouldBe(0);
 
         player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "A", Suit = "Spades" });
         player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "10", Suit = "Diamonds" });
-        player.HandValue().ShouldBe(21);
+        player.HandValue.ShouldBe(21);
         player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "7", Suit = "Hearts" });
-        player.HandValue().ShouldBe(18);
+        player.HandValue.ShouldBe(18);
     }
 }
 
@@ -173,5 +173,135 @@ public class GameTests
         game.Status.ShouldBe(Mathsino.Backend.Game.GameStatus.InProgress);
         player.Hand.Count.ShouldBe(2);
         game.Dealer.Hand.Count.ShouldBe(2);
+    }
+}
+
+public class DealerTests
+{
+    [Test]
+    public void Dealer_Should_Hit_Until_17_Or_Higher()
+    {
+        var game = new Mathsino.Backend.Game.Game();
+        var dealer = game.Dealer;
+
+        dealer.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "5", Suit = "Hearts" });
+        dealer.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "6", Suit = "Clubs" });
+
+        game.DealerDrawCard();
+
+        dealer.HandValue.ShouldBeGreaterThanOrEqualTo(17);
+    }
+}
+
+public class CheckResultsTests
+{
+    [Test]
+    public void CheckResults_Should_Set_Player_Result_Correctly_To_Lose_Higher_Than_21()
+    {
+        var game = new Mathsino.Backend.Game.Game();
+        var player = new Mathsino.Backend.Game.Player();
+        game.Players.Add(player);
+
+        player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "10", Suit = "Hearts" });
+        player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "9", Suit = "Clubs" });
+        player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "5", Suit = "Diamonds" });
+        game.Dealer.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "10", Suit = "Spades" });
+        game.Dealer.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "7", Suit = "Diamonds" });
+
+        game.Status = Mathsino.Backend.Game.GameStatus.Completed;
+        game.CheckResults(player.PlayerId);
+
+        player.Result.ShouldBe(Mathsino.Backend.Game.GameResult.Lose);
+    }
+
+    [Test]
+    public void CheckResults_Should_Set_Player_Result_Correctly_To_Lose_Lower_Than_Dealer()
+    {
+        var game = new Mathsino.Backend.Game.Game();
+        var player = new Mathsino.Backend.Game.Player();
+        game.Players.Add(player);
+
+        player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "10", Suit = "Hearts" });
+        player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "9", Suit = "Clubs" });
+        game.Dealer.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "10", Suit = "Spades" });
+        game.Dealer.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "10", Suit = "Diamonds" });
+
+        game.Status = Mathsino.Backend.Game.GameStatus.Completed;
+        game.CheckResults(player.PlayerId);
+
+        player.Result.ShouldBe(Mathsino.Backend.Game.GameResult.Lose);
+    }
+
+    [Test]
+    public void CheckResults_Should_Set_Player_Result_Correctly_To_Win_Higher_Than_Dealer()
+    {
+        var game = new Mathsino.Backend.Game.Game();
+        var player = new Mathsino.Backend.Game.Player();
+        game.Players.Add(player);
+
+        player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "10", Suit = "Hearts" });
+        player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "9", Suit = "Clubs" });
+        game.Dealer.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "10", Suit = "Spades" });
+        game.Dealer.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "7", Suit = "Diamonds" });
+
+        game.Status = Mathsino.Backend.Game.GameStatus.Completed;
+        game.CheckResults(player.PlayerId);
+
+        player.Result.ShouldBe(Mathsino.Backend.Game.GameResult.Win);
+    }
+
+    [Test]
+    public void CheckResults_Should_Set_Player_Result_Correctly_To_Win_Dealer_Higher_Than_21()
+    {
+        var game = new Mathsino.Backend.Game.Game();
+        var player = new Mathsino.Backend.Game.Player();
+        game.Players.Add(player);
+
+        player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "10", Suit = "Hearts" });
+        player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "9", Suit = "Clubs" });
+        game.Dealer.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "10", Suit = "Spades" });
+        game.Dealer.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "6", Suit = "Diamonds" });
+        game.Dealer.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "7", Suit = "Diamonds" });
+
+        game.Status = Mathsino.Backend.Game.GameStatus.Completed;
+        game.CheckResults(player.PlayerId);
+
+        player.Result.ShouldBe(Mathsino.Backend.Game.GameResult.Win);
+    }
+
+    [Test]
+    public void CheckResults_Should_Set_Player_Result_Correctly_To_Blackjack()
+    {
+        var game = new Mathsino.Backend.Game.Game();
+        var player = new Mathsino.Backend.Game.Player();
+        game.Players.Add(player);
+
+        player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "10", Suit = "Hearts" });
+        player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "A", Suit = "Clubs" });
+        game.Dealer.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "10", Suit = "Spades" });
+        game.Dealer.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "7", Suit = "Diamonds" });
+
+        game.Status = Mathsino.Backend.Game.GameStatus.Completed;
+        game.CheckResults(player.PlayerId);
+
+        player.Result.ShouldBe(Mathsino.Backend.Game.GameResult.Blackjack);
+    }
+
+    [Test]
+    public void CheckResults_Should_Set_Player_Result_Correctly_To_Push()
+    {
+        var game = new Mathsino.Backend.Game.Game();
+        var player = new Mathsino.Backend.Game.Player();
+        game.Players.Add(player);
+
+        player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "10", Suit = "Hearts" });
+        player.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "7", Suit = "Clubs" });
+        game.Dealer.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "10", Suit = "Spades" });
+        game.Dealer.Hand.Add(new Mathsino.Backend.Game.Card { Rank = "7", Suit = "Diamonds" });
+
+        game.Status = Mathsino.Backend.Game.GameStatus.Completed;
+        game.CheckResults(player.PlayerId);
+
+        player.Result.ShouldBe(Mathsino.Backend.Game.GameResult.Push);
     }
 }

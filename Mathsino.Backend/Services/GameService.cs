@@ -62,4 +62,17 @@ public class GameService(ILogger<GameService>? logger, IServiceScopeFactory scop
         game.PlayerPass(playerId);
         return game;
     }
+
+    public Game.Game CheckResults(Guid gameId, Guid playerId)
+    {
+        logger?.LogInformation(
+            "Checking results for player {PlayerId} in game {GameId}",
+            playerId,
+            gameId
+        );
+        var game = GetGameById(gameId);
+        game.CheckResults(playerId);
+        return game;
+    }
+
 }

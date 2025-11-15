@@ -72,7 +72,7 @@ public class Game
 
     public void DealerDrawCard()
     {
-        while (Dealer.HandValue() < 17)
+        while (Dealer.HandValue < 17)
         {
             Dealer.Hand.Add(Deck.DrawCard());
         }
@@ -116,6 +116,43 @@ public class Game
         {
             EndGame();
             return;
+        }
+    }
+
+    public void CheckResults(Guid playerId)
+    {
+        if (Status != GameStatus.Completed)
+        {
+            throw new InvalidOperationException("Game is not yet completed.");
+        }
+
+        var player = Players.FirstOrDefault(p => p.PlayerId == playerId);
+        if (player == null)
+        {
+            throw new InvalidOperationException("Player not found in the game.");
+        }
+
+        if (player.HandValue > 21)
+        {
+            player.Result = GameResult.Lose;
+            return;
+        }
+        if (player.HandValue == 21 && player.Hand.Count == 2)
+        {
+            player.Result = GameResult.Blackjack;
+            return;
+        }
+        if (Dealer.HandValue > 21 || player.HandValue > Dealer.HandValue)
+        {
+            player.Result = GameResult.Win;
+        }
+        else if (player.HandValue < Dealer.HandValue)
+        {
+            player.Result = GameResult.Lose;
+        }
+        else
+        {
+            player.Result = GameResult.Push;
         }
     }
 

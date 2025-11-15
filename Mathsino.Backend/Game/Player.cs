@@ -10,17 +10,22 @@ public class Player
 
     public PlayerStatus Status { get; set; } = PlayerStatus.Active;
 
-    public int HandValue()
+    public int HandValue
     {
-        int value = Hand.Sum(card => card.Value);
-        int aceCount = Hand.Count(card => card.Rank == "A");
-
-        while (value > 21 && aceCount > 0)
+        get
         {
-            value -= 10;
-            aceCount--;
-        }
+            int value = Hand.Sum(card => card.Value);
+            int aceCount = Hand.Count(card => card.Rank == "A");
 
-        return value;
+            while (value > 21 && aceCount > 0)
+            {
+                value -= 10;
+                aceCount--;
+            }
+
+            return value;
+        }
     }
+
+    public GameResult? Result { get; set; } = null;
 }
