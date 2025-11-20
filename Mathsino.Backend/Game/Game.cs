@@ -78,19 +78,33 @@ public class Game
         }
     }
 
-    public void PlayerHit(Guid playerId)
+public void PlayerHit(Guid playerId)
+{
+    var player = Players.FirstOrDefault(p => p.PlayerId == playerId);
+    if (player == null)
     {
-        var player = Players.FirstOrDefault(p => p.PlayerId == playerId);
-        if (player == null)
-        {
-            throw new InvalidOperationException("Player not found in the game.");
-        }
-        if (Status != GameStatus.InProgress)
-        {
-            throw new InvalidOperationException("Cannot hit when the game is not in progress.");
-        }
-        player.Hand.Add(Deck.DrawCard());
+        throw new InvalidOperationException("Player not found in the game.");
     }
+    if (Status != GameStatus.InProgress)
+    {
+        throw new InvalidOperationException("Cannot hit when the game is not in progress.");
+    }
+
+    player.Hand.Add(Deck.DrawCard());
+
+
+    if (player.HandValue > 21)
+    {
+        player.Result = GameResult.Lose;
+        
+        player.Status = PlayerStatus.Passed;
+
+        if (Type == GameType.SinglePlayer)
+        {
+            Status = GameStatus.Completed;
+        }
+    }
+}
 
     public void PlayerPass(Guid playerId)
     {

@@ -9,6 +9,20 @@ builder.AddServiceDefaults();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        policy =>
+        {
+
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
+
 builder.Services.AddDbContextPool<MathsinoContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("mathsino-db"))
 );
@@ -17,6 +31,9 @@ builder.Services.AddScoped<UsersService>();
 builder.Services.AddSingleton<GameService>();
 
 var app = builder.Build();
+
+app.UseCors("AllowReactApp");
+
 
 app.UseSwagger();
 app.UseSwaggerUI();
