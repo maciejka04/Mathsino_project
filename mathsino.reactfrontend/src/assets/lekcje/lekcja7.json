@@ -1,0 +1,149 @@
+{
+  "lesson_id": 7,
+  "lesson_title": "Soft Hands: Attacking with Double Down",
+  "introduction": {
+    "avatar_pose": "A",
+    "text": "Welcome to the 'Pro Level'. You know how to Hit Soft Hands. Now, let's learn how to make money with them. When you have a low Soft Hand (A,2 to A,7) and the Dealer is weak (3-6), we don't just Hit. We DOUBLE. Why? Because we can't bust, and the dealer is likely to bust."
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "title": "The Aggressive Soft 18 (A,7 vs 3)",
+      "goal": "Teach Doubling on Soft 18 against weak cards.",
+      "setup": {
+        "player_hand": ["A", "7"],
+        "dealer_up_card": "3",
+        "dealer_hidden_card": "9"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "B",
+          "text": "You have Soft 18. Most players just Stand here. But look at my 3. It's weak. Your table says: DOUBLE! You have a great chance to catch a 10, J, Q, K or a small card to improve.",
+          "required_action": "DOUBLE",
+          "cards_added": ["10"],
+          "player_score_after": 18
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["K"],
+        "dealer_final_score": 22,
+        "avatar_pose": "B",
+        "text": "You drew a 10. Your total stayed 18 (A+7+10 = 18). But since I had a weak 3, I busted. You won double!",
+        "result_status": "WIN_DOUBLE"
+      }
+    },
+    {
+      "id": 2,
+      "title": "The Hidden Gem (A,5 vs 6)",
+      "goal": "Teach Doubling on Soft 16 (A,5).",
+      "setup": {
+        "player_hand": ["A", "5"],
+        "dealer_up_card": "6",
+        "dealer_hidden_card": "8"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "You have Soft 16 (Ace+5). It feels like a nothing hand. But I have a 6 – the worst card for me. Attack my weakness! Double Down.",
+          "required_action": "DOUBLE",
+          "cards_added": ["5"],
+          "player_score_after": 21
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["10"],
+        "dealer_final_score": 24,
+        "avatar_pose": "B",
+        "text": "Boom! You caught a 5 for a perfect 21. I busted. That's how you play smart.",
+        "result_status": "WIN_DOUBLE"
+      }
+    },
+    {
+      "id": 3,
+      "title": "The Deep Dive (A,2 vs 5)",
+      "goal": "Teach Doubling on the lowest Soft Hand (A,2).",
+      "setup": {
+        "player_hand": ["A", "2"],
+        "dealer_up_card": "5",
+        "dealer_hidden_card": "7"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Soft 13 (Ace+2). Against my 5, this is a Double. Even if you get a bad card, I will probably bust anyway.",
+          "required_action": "DOUBLE",
+          "cards_added": ["K"],
+          "player_score_after": 13
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["10"],
+        "dealer_final_score": 22,
+        "avatar_pose": "B",
+        "text": "You got a King. You are stuck with 13. But guess what? I drew a 10 and busted. The math worked!",
+        "result_status": "WIN_DOUBLE"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Know the Limit (A,6 vs 2)",
+      "goal": "Teach the boundary: A,6 vs 2 is HIT, not Double.",
+      "setup": {
+        "player_hand": ["A", "6"],
+        "dealer_up_card": "2",
+        "dealer_hidden_card": "9"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Soft 17 (A,6). I have a 2. A 2 is weak, but NOT weak enough to Double with Soft 17. Check the table. It says HIT.",
+          "required_action": "HIT",
+          "cards_added": ["4"],
+          "player_score_after": 21
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["8"],
+        "dealer_final_score": 19,
+        "avatar_pose": "B",
+        "text": "Good discipline. You hit and got 21. If you had doubled, you would have 21 too, but it was riskier.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Soft 18 Defense (A,7 vs 9)",
+      "goal": "Review: Soft 18 vs Strong card is a HIT.",
+      "setup": {
+        "player_hand": ["A", "7"],
+        "dealer_up_card": "9",
+        "dealer_hidden_card": "10"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Soft 18 again. But now I have a 9. The offense is over. Now we must defend. Do not Stand (9 beats 18 too often). Do not Double. Hit!",
+          "required_action": "HIT",
+          "cards_added": ["3"],
+          "player_score_after": 21
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 19,
+        "avatar_pose": "B",
+        "text": "You saved it! 21 beats 19. Standing on Soft 18 against a 9 is a common mistake.",
+        "result_status": "WIN"
+      }
+    }
+  ],
+  "conclusion": {
+    "avatar_pose": "A",
+    "text": "You are playing aggressively now! Hitting, Standing, Doubling... only one mechanic left: SPLIT. In the next lesson, we will learn the Golden Rules of splitting pairs."
+  }
+}

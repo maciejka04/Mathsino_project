@@ -1,0 +1,165 @@
+{
+  "lesson_id": 1,
+  "lesson_title": "Basic Rules & Mechanics",
+  "introduction": {
+    "avatar_pose": "A",
+    "text": "Welcome to the table! In Blackjack, you play against me. The goal is simple: get more points than me without going over 21. Face cards are 10, Ace is 1 or 11. Important rule: I play like a robot – I must hit on 16 or less. I always stand on 17 or more. Let's start!"
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "title": "HIT & BUST Mechanics",
+      "goal": "Demonstrate losing by exceeding 21 (Bust).",
+      "setup": {
+        "player_hand": ["7", "5"],
+        "dealer_up_card": "6",
+        "dealer_hidden_card": "10"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "You have 12 points. That's too low to be safe. You need to take a card. Click HIT.",
+          "required_action": "HIT",
+          "cards_added": ["J"],
+          "player_score_after": 22
+        }
+      ],
+      "finish": {
+        "avatar_pose": "C",
+        "text": "Ouch! 22 is a 'Bust'. You went over 21 and lose automatically, no matter what I have. Remember: greed kills!",
+        "result_status": "LOSE"
+      }
+    },
+    {
+      "id": 2,
+      "title": "STAND Mechanics",
+      "goal": "Demonstrate winning by standing (Dealer Bust).",
+      "setup": {
+        "player_hand": ["K", "9"],
+        "dealer_up_card": "8",
+        "dealer_hidden_card": "5"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "You have 19 points. That's a strong hand. I must hit up to 16, so I might bust. Don't risk it. Click STAND.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 19
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["Q"],
+        "dealer_final_score": 23,
+        "avatar_pose": "B",
+        "text": "You won! You waited patiently, and I had to take a card and went over 21.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Building a Hand (Multi-Hit)",
+      "goal": "Show that sometimes you need to hit multiple times.",
+      "setup": {
+        "player_hand": ["2", "3"],
+        "dealer_up_card": "10",
+        "dealer_hidden_card": "7"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "You only have 5 points. The dealer has a strong 10. You must build your hand. Click HIT.",
+          "required_action": "HIT",
+          "cards_added": ["5"],
+          "player_score_after": 10
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "C",
+          "text": "You have 10 points. Still not enough against a dealer's 10. Be brave! Click HIT again.",
+          "required_action": "HIT",
+          "cards_added": ["K"],
+          "player_score_after": 20
+        },
+        {
+          "step_order": 3,
+          "avatar_pose": "B",
+          "text": "You have 20! Great. Don't risk it now. Click STAND.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 17,
+        "avatar_pose": "B",
+        "text": "Bravo! You turned 5 points into 20. Sometimes you have to fight to the end.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 4,
+      "title": "DOUBLE DOWN Mechanics",
+      "goal": "Learn to double the bet.",
+      "setup": {
+        "player_hand": ["5", "6"],
+        "dealer_up_card": "5",
+        "dealer_hidden_card": "9"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "You have 11, I have a weak 5. The odds are in your favor. Double the bet (Double Down) to get one single decisive card.",
+          "required_action": "DOUBLE",
+          "cards_added": ["9"],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["K"],
+        "dealer_final_score": 24,
+        "avatar_pose": "B",
+        "text": "Perfect! You doubled your bet at the best moment.",
+        "result_status": "WIN_DOUBLE"
+      }
+    },
+    {
+      "id": 5,
+      "title": "SPLIT Mechanics",
+      "goal": "Learn to split pairs.",
+      "setup": {
+        "player_hand": ["8", "8"],
+        "dealer_up_card": "9",
+        "dealer_hidden_card": "8"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "You have two eights (16). That's the worst hand in the game. Save yourself and SPLIT them into two separate hands.",
+          "required_action": "SPLIT",
+          "cards_added_hand_1": ["10"],
+          "cards_added_hand_2": ["A"],
+          "player_score_hand_1": 18,
+          "player_score_hand_2": 19
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 17,
+        "avatar_pose": "B",
+        "text": "Saved! You turned a lousy 16 into 18 and 19. You won both hands!",
+        "result_status": "WIN_BOTH"
+      }
+    }
+  ],
+  "conclusion": {
+    "avatar_pose": "A",
+    "text": "Great job! You now know the rules and my limits. In the next lesson, we stop guessing. We will start learning Basic Strategy – the mathematical way to beat the casino. Ready?"
+  }
+}
