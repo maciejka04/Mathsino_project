@@ -63,6 +63,14 @@ public class GameService(ILogger<GameService>? logger, IServiceScopeFactory scop
         return game;
     }
 
+    public Game.Game PlayerDouble(Guid gameId, Guid playerId)
+    {
+        logger?.LogInformation("Player {PlayerId} doubles in game {GameId}", playerId, gameId);
+        var game = GetGameById(gameId);
+        game.PlayerDouble(playerId);
+        return game;
+    }
+
     public Game.Game CheckResults(Guid gameId, Guid playerId)
     {
         logger?.LogInformation(

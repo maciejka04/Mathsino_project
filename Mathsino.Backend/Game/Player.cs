@@ -28,4 +28,6 @@ public class Player
     }
 
     public GameResult? Result { get; set; } = null;
+
+    public bool HasDoubled { get; set; } = false;
 }

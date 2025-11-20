@@ -90,6 +90,11 @@ public void PlayerHit(Guid playerId)
         throw new InvalidOperationException("Cannot hit when the game is not in progress.");
     }
 
+    if (player.HasDoubled)
+    {
+        throw new InvalidOperationException("Cannot hit after doubling.");
+    }
+
     player.Hand.Add(Deck.DrawCard());
 
 
@@ -104,6 +109,8 @@ public void PlayerHit(Guid playerId)
             Status = GameStatus.Completed;
         }
     }
+
+    
 }
 
     public void PlayerPass(Guid playerId)
@@ -132,6 +139,53 @@ public void PlayerHit(Guid playerId)
             return;
         }
     }
+
+    public void PlayerDouble(Guid playerId)
+    {
+        var player = Players.FirstOrDefault(p => p.PlayerId == playerId);
+        if (player == null)
+        {
+            throw new InvalidOperationException("Player not found in the game.");
+        }
+        if (Status != GameStatus.InProgress)
+        {
+            throw new InvalidOperationException("Cannot double when the game is not in progress.");
+        }
+
+        if (player.Hand.Count != 2)
+        {
+            throw new InvalidOperationException("Double is only allowed on the initial two-card hand.");
+        }
+
+        if (player.HasDoubled)
+        {
+            throw new InvalidOperationException("Player has already doubled.");
+        }
+
+        player.HasDoubled = true;
+
+        player.Hand.Add(Deck.DrawCard());
+
+        if (player.HandValue > 21)
+        {
+            player.Result = GameResult.Lose;
+            player.Status = PlayerStatus.Passed;
+
+            if (Type == GameType.SinglePlayer)
+            {
+                Status = GameStatus.Completed;
+            }
+            return;
+        }
+
+        player.Status = PlayerStatus.Passed;
+
+        if (Type == GameType.SinglePlayer)
+        {
+            EndGame();
+        }
+    }
+
 
     public void CheckResults(Guid playerId)
     {
