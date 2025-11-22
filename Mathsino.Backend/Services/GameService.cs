@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-
+using System.Linq;
+using Mathsino.Backend.Game;
+using Mathsino.Backend.Models;
 namespace Mathsino.Backend.Services
 {
     public class GameService
@@ -111,5 +113,32 @@ namespace Mathsino.Backend.Services
             game.CheckResults(playerId);
             return game;
         }
+        public AnalysisResult AnalyzeMove(AnalyzeMoveRequest request)
+    {
+        var playerHand = request.PlayerHandCards
+            .Select(c => new Card { Rank = c.Rank, Suit = c.Suit })
+            .ToList();
+        
+        var dealerCard = new Card 
+        { 
+            Rank = request.DealerCard.Rank, 
+            Suit = request.DealerCard.Suit 
+        };
+        
+        if (!Enum.TryParse<BlackjackStrategy.Move>(request.Action, true, out var action))
+        {
+            throw new ArgumentException($"Invalid action: {request.Action}");
+        }
+
+        var result = BlackjackStrategy.AnalyzeMove(
+            playerHand, 
+            dealerCard, 
+            action, 
+            request.CanSplit, 
+            request.CanDouble
+        );
+
+        return new AnalysisResult(result.IsCorrect, result.CorrectMove, result.Reasoning);
+    }
     }
 }
