@@ -17,6 +17,13 @@ public class User
     [StringLength(50), EmailAddress]
     public string Email { get; set; } = string.Empty;
 
+    [StringLength(50)]
+    public string Provider { get; set; } = string.Empty; 
+
+    [StringLength(100)]
+    public string ProviderId { get; set; } = string.Empty; 
+    // ---------------------------
+
     public List<UserFriend> Friends { get; set; } = [];
 }
 

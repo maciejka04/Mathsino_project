@@ -1,7 +1,7 @@
 // src/Layout.js (Gotowa, zaktualizowana wersja)
 
 import './App.css'; 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // === ZMIANA 1: Dodajemy 'Link' do importów ===
 // Będziemy go używać do podlinkowania logo
@@ -11,11 +11,52 @@ import { Outlet, NavLink, Link, useLocation } from 'react-router-dom';
 import awatar from './assets/profilowe_smok.png';
 import logo from './assets/logo.png';
 
+const BACKEND_URL = 'http://localhost:5126';
+
 function Layout() {
   
+  const [user, setUser] = useState({
+    name: "",
+    email: ""
+  });
   const location = useLocation();
   const menuRef = useRef(null);
 
+
+    useEffect(() => {
+        fetch(`${BACKEND_URL}/api/auth/profile`, {
+            method: "GET",
+            credentials: "include" // Wysłanie ciasteczka
+        })
+        .then(res => {
+            // Jeśli użytkownik jest niezalogowany (401), rzucamy błąd, 
+            // aby przejść do .catch i ustawić "Gość".
+            if (res.status === 401) {
+                throw new Error("Unauthorized");
+            }
+            // Parsujemy JSON dla statusów 2xx.
+            return res.json(); 
+        })
+        .then(data => {
+            // Ta sekcja działa tylko, jeśli status był 200 OK
+            console.log("Layout API response:", data);
+              setUser({ 
+                  name: data.userName || "Brak imienia",
+                  email: data.email,
+                  isAuthenticated: true
+              });
+        })
+        .catch(err => {
+            // Obsługa błędu 401 lub błędu sieciowego
+            if (err.message === "Unauthorized") {
+                 console.log("Użytkownik niezalogowany. Ustawiam 'Gość'.");
+            } else {
+                 console.error("Layout user load error:", err);
+            }
+            setUser({ name: "Gość", isAuthenticated: false });
+        });
+        
+    }, []);
   // 2. Poprawiony useEffect dla animacji menu (bez zmian)
   useEffect(() => {
     if (!menuRef.current) {
@@ -26,7 +67,6 @@ function Layout() {
     const mouseEnterHandler = (e) => {
       const item = e.currentTarget; 
       const highlight = document.createElement('div');
-      // ... (reszta kodu animacji zostaje bez zmian) ...
       highlight.style.background = `radial-gradient(circle at ${e.offsetX}px ${e.offsetY}px, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%)`;
       highlight.style.pointerEvents = 'none';
       
@@ -60,7 +100,6 @@ function Layout() {
 return (
   <>
     <div className="container">
-      {/* Sidebar (menu) pojawia się tylko wtedy, gdy NIE jesteś w /online ani /offline */}
       {!hideMenu && (
         <aside className="sidebar">
           {/* Logo z linkiem do strony głównej */}
@@ -121,21 +160,21 @@ return (
             </ul>
           </nav>
 
-          {/* Profil użytkownika */}
-          <Link to="/profile" className="profile">
-            <div className="avatar">
-              <img src={awatar} alt="Profile" />
-            </div>
-            <div className="user-info">
-              <h3>User</h3>
-            </div>
-          </Link>
+            <Link to={user.isAuthenticated ? "/profile" : "/login"} className="profile">
+                <div className="avatar">
+                    <img src={awatar} alt="Profile" />
+                </div>
+                <div className="user-info">
+                   
+                    <h3>{user.name}</h3> 
+                </div>
+            </Link>
         </aside>
       )}
 
       {/* Główna zawartość (podstrony) */}
       <main className="content">
-        <Outlet />
+        <Outlet context={{ user }} />
       </main>
     </div>
   </>
