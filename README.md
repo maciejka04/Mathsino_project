@@ -94,6 +94,7 @@ npm install
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 npm install react-router-dom
 npm install chart.js react-chartjs-2
+npm install framer-motion@12.23.24
 ```
 
 ```bash
