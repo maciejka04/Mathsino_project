@@ -29,6 +29,7 @@ namespace Mathsino.Backend.Game
             if (Type == GameType.MultiPlayer && Players.Count > 3)
                 throw new InvalidOperationException("Cannot join a multi-player game that already has 3 players.");
             Players.Add(player);
+
         }
 
         public void StartGame()
@@ -38,6 +39,14 @@ namespace Mathsino.Backend.Game
 
             DrawCards();
             DrawCards();
+
+            var player = Players.First();
+
+            if (player.Hand.Count == 2 && player.HandValue == 21)
+            {
+                player.Status = PlayerStatus.Passed;
+                EndGame(); 
+            }
         }
 
         public void DrawCards()
@@ -255,14 +264,30 @@ namespace Mathsino.Backend.Game
 
         private GameResult EvaluateHandAgainstDealer(int playerValue, List<Card> hand)
         {
+
+            bool playerHasBlackjack = hand.Count == 2 && playerValue == 21;
+            bool dealerHasBlackjack = Dealer.Hand.Count == 2 && Dealer.HandValue == 21;
+
             if (playerValue > 21) return GameResult.Lose;
 
-            if (playerValue == 21 && hand.Count == 2 && Dealer.HandValue != 21)
+            if (playerHasBlackjack && dealerHasBlackjack)
+            {
+                return GameResult.Push;
+            }
+
+            if (playerHasBlackjack)
+            {
+
                 return GameResult.Blackjack;
+            }
+
+            if (dealerHasBlackjack)
+            {
+                return GameResult.Lose;
+            }
 
             if (Dealer.HandValue > 21) return GameResult.Win;
 
-            if (playerValue == 21 && Dealer.HandValue != 21) return GameResult.Win;
             if (playerValue > Dealer.HandValue) return GameResult.Win;
             if (playerValue < Dealer.HandValue) return GameResult.Lose;
 

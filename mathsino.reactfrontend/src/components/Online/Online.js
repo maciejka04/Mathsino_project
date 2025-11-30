@@ -164,6 +164,12 @@ function Online() {
 
       setIsShuffling(false);
       updateGameState(gameData);
+
+      if (gameData.status === "Completed") {
+      await fetch(`${API_URL}/games/${gameData.id}/check-results/${gameData.players[0].playerId}`);
+      await fetchGameStatus(gameData.id);
+      }
+
     } catch (error) {
       console.error("Nie udało się rozpocząć gry:", error);
       alert("Błąd połączenia. Środki zostały zwrócone.");
@@ -313,6 +319,15 @@ function Online() {
     return data;
   };
 
+  React.useEffect(() => {
+  if (gameStatus === "Completed" && !resultProcessed && gameId && playerId) {
+    fetch(`${API_URL}/games/${gameId}/check-results/${playerId}`)
+      .then(() => fetchGameStatus(gameId));
+  }
+}, [gameStatus, playerId]);
+
+
+
   // --- ANALIZA RUCHU (TRENER) ---
   const analyzeMove = async (action) => {
     // 1. Wybierz rękę, którą teraz gramy (split lub main)
@@ -379,6 +394,13 @@ function Online() {
         await fetch(`${API_URL}/games/${gameId}/player-hit/${playerId}`);
       }
       await fetchGameStatus(gameId);
+
+      const gameData = await fetchGameStatus(gameId);
+      if (gameData.status === "Completed") {
+        await fetch(`${API_URL}/games/${gameId}/check-results/${playerId}`);
+        await fetchGameStatus(gameId);
+      }
+
     } catch (error) {
       console.error("Błąd Hit:", error);
     }

@@ -23,6 +23,7 @@ namespace Mathsino.Backend.Game
         public bool HasDoubledMain { get; set; } = false;
         public bool HasDoubledSplit { get; set; } = false;
 
+
         public bool HasSplit => SplitHand != null;
 
         public int HandValue => CalculateHandValue(Hand);
@@ -41,5 +42,6 @@ namespace Mathsino.Backend.Game
 
             return value;
         }
+
     }
 }
