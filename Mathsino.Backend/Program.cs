@@ -157,6 +157,8 @@ app.MapGet("/api/auth/profile", (HttpContext context) =>
 app.MapUserEndPoints();
 app.MapGameEndPoints();
 
+app.MapBalanceEndPoints();
+
 await app.RunAsync();
 
 // =======================================================
