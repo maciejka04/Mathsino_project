@@ -17,6 +17,7 @@ import Login from './components/Login/Login';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import DataDeletion from './components/DataDeletion';
 import ProtectedRoute from './components/ProtectedRoute';
+import LessonPage from './components/Lesson/LessonPage';
 
 
 
@@ -38,6 +39,9 @@ function App() {
         } />
         <Route path="learn" element={
           <ProtectedRoute><Learn /></ProtectedRoute>
+        } />
+        <Route path="lesson/:id" element={
+          <ProtectedRoute><LessonPage /></ProtectedRoute>
         } />
         <Route path="statistics" element={
           <ProtectedRoute><Statistics /></ProtectedRoute>
