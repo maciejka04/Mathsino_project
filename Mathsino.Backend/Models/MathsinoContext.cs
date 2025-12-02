@@ -1,3 +1,4 @@
+using Mathsino.Backend.Game;
 using Microsoft.EntityFrameworkCore;
 
 namespace Mathsino.Backend.Models;
@@ -11,6 +12,8 @@ public class MathsinoContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<UserFriend> UserFriends => Set<UserFriend>();
+
+    public DbSet<SingleGame> SingleGames => Set<SingleGame>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
