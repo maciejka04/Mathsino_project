@@ -101,6 +101,24 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        // TUTAJ WPISZ SWOJĄ NAZWĘ KONTEKSTU (np. MathsinoDbContext)
+        var context = services.GetRequiredService<MathsinoContext>();
+        
+        // Ta komenda robi to samo co "dotnet ef database update", ale automatycznie!
+        context.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Wystąpił błąd podczas tworzenia bazy danych.");
+    }
+}
+
 // =======================================================
 // === 3. KONFIGURACJA MIDDLEWARE ===
 // =======================================================
