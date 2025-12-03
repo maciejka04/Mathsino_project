@@ -1,13 +1,14 @@
+using System.Security.Claims;
 using Mathsino.Backend.Models;
 using Mathsino.Backend.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authentication.Facebook;
-using Microsoft.AspNetCore.Authentication.OAuth;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.EntityFrameworkCore;
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var builder = WebApplication.CreateBuilder(args);
 
 // =======================================================
@@ -15,7 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 // =======================================================
 
 // Używamy ciasteczek do przechowywania stanu zalogowania
-builder.Services.AddAuthentication(options =>
+builder
+    .Services.AddAuthentication(options =>
     {
         // Ustawienie domyślnego schematu dla wszystkich operacji związanych z uwierzytelnianiem
         options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -31,27 +33,34 @@ builder.Services.AddAuthentication(options =>
         // Opcje Cookie (np. SecurePolicy = CookieSecurePolicy.Always dla produkcji)
     })
     // Dodajemy strategię Google OAuth
-    .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
-    {
-        options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
-        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
-        options.Scope.Add("profile");
-        options.Scope.Add("email");
-        options.CallbackPath = "/signin-google"; 
+    .AddGoogle(
+        GoogleDefaults.AuthenticationScheme,
+        options =>
+        {
+            options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
+            options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+            options.Scope.Add("profile");
+            options.Scope.Add("email");
+            options.CallbackPath = "/signin-google";
 
-        options.Events.OnCreatingTicket = context => OnCreatingTicketHandler(context, "Google", builder.Services);
-    })
+            options.Events.OnCreatingTicket = context =>
+                OnCreatingTicketHandler(context, "Google", builder.Services);
+        }
+    )
     // Dodajemy strategię Facebook OAuth
-    .AddFacebook(FacebookDefaults.AuthenticationScheme, options =>
-    {
-        options.AppId = builder.Configuration["Authentication:Facebook:AppId"]!;
-        options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"]!;
-        options.Scope.Add("email");
+    .AddFacebook(
+        FacebookDefaults.AuthenticationScheme,
+        options =>
+        {
+            options.AppId = builder.Configuration["Authentication:Facebook:AppId"]!;
+            options.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"]!;
+            options.Scope.Add("email");
 
-        // Kluczowy handler do zapisu/odczytu użytkownika z DB
-        options.Events.OnCreatingTicket = context => OnCreatingTicketHandler(context, "Facebook", builder.Services);
-    });
-
+            // Kluczowy handler do zapisu/odczytu użytkownika z DB
+            options.Events.OnCreatingTicket = context =>
+                OnCreatingTicketHandler(context, "Facebook", builder.Services);
+        }
+    );
 
 // =======================================================
 // === 2. STANDARDOWA KONFIGURACJA USŁUG ===
@@ -62,30 +71,33 @@ builder.AddServiceDefaults();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Konfiguracja CORS 
+// Konfiguracja CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp",
+    options.AddPolicy(
+        "AllowReactApp",
         policy =>
         {
-            policy.WithOrigins("http://localhost:3000") 
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials();
-        });
+            policy
+                .WithOrigins("http://localhost:3000")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+        }
+    );
 });
 
 // Konfiguracja kontekstu bazy danych z odczytem Connection String (sprawdzamy mathsino-db)
 builder.Services.AddDbContextPool<MathsinoContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection") 
-                      ?? builder.Configuration.GetConnectionString("mathsino-db"))
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+            ?? builder.Configuration.GetConnectionString("mathsino-db")
+    )
 );
 
 builder.Services.AddScoped<UsersService>();
 builder.Services.AddSingleton<GameService>();
 builder.Services.AddAuthorization();
-
-
 
 var app = builder.Build();
 
@@ -99,7 +111,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 // Ważne: Włącz uwierzytelnianie i autoryzację
-app.UseAuthentication(); 
+app.UseAuthentication();
 app.UseAuthorization();
 
 MigrateDatabase(app);
@@ -109,53 +121,70 @@ MigrateDatabase(app);
 // =======================================================
 
 // Endpoint do inicjacji logowania Google
-app.MapGet("/api/auth/google", (HttpContext context) =>
-{
-    return Results.Challenge(
-        properties: new AuthenticationProperties { RedirectUri = "http://localhost:3000/" }, // Przekierowanie do root po sukcesie
-        authenticationSchemes: new[] { GoogleDefaults.AuthenticationScheme }
-    );
-});
+app.MapGet(
+    "/api/auth/google",
+    (HttpContext context) =>
+    {
+        return Results.Challenge(
+            properties: new AuthenticationProperties { RedirectUri = "http://localhost:3000/" }, // Przekierowanie do root po sukcesie
+            authenticationSchemes: new[] { GoogleDefaults.AuthenticationScheme }
+        );
+    }
+);
 
 // Endpoint do inicjacji logowania Facebook
-app.MapGet("/api/auth/facebook", (HttpContext context) =>
-{
-    return Results.Challenge(
-        properties: new AuthenticationProperties { RedirectUri = "http://localhost:3000/" }, // Przekierowanie do root po sukcesie
-        authenticationSchemes: new[] { FacebookDefaults.AuthenticationScheme }
-    );
-});
+app.MapGet(
+    "/api/auth/facebook",
+    (HttpContext context) =>
+    {
+        return Results.Challenge(
+            properties: new AuthenticationProperties { RedirectUri = "http://localhost:3000/" }, // Przekierowanie do root po sukcesie
+            authenticationSchemes: new[] { FacebookDefaults.AuthenticationScheme }
+        );
+    }
+);
 
 // Endpoint wylogowania
-app.MapPost("/api/auth/logout", async (HttpContext context) =>
-{
-    await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-    context.Response.StatusCode = 200;
-});
+app.MapPost(
+    "/api/auth/logout",
+    async (HttpContext context) =>
+    {
+        await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        context.Response.StatusCode = 200;
+    }
+);
 
 // Endpoint testowy statusu/profilu
-app.MapGet("/api/auth/profile", (HttpContext context) =>
-{
-    if (context.User.Identity?.IsAuthenticated == true)
-    {
-        var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var userName = context.User.FindFirst(ClaimTypes.Name)?.Value;
-        var email = context.User.FindFirst(ClaimTypes.Email)?.Value; 
+app.MapGet(
+        "/api/auth/profile",
+        (HttpContext context) =>
+        {
+            if (context.User.Identity?.IsAuthenticated == true)
+            {
+                var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var userName = context.User.FindFirst(ClaimTypes.Name)?.Value;
+                var email = context.User.FindFirst(ClaimTypes.Email)?.Value;
 
-        return Results.Ok(new { 
-            IsAuthenticated = true, 
-            UserId = userId, 
-            UserName = userName,
-            Email = email, 
-            Message = "Zalogowano pomyślnie!"
-        });
-    }
-    return Results.Unauthorized();
-}).RequireAuthorization();
-
+                return Results.Ok(
+                    new
+                    {
+                        IsAuthenticated = true,
+                        UserId = userId,
+                        UserName = userName,
+                        Email = email,
+                        Message = "Zalogowano pomyślnie!",
+                    }
+                );
+            }
+            return Results.Unauthorized();
+        }
+    )
+    .RequireAuthorization();
 
 app.MapUserEndPoints();
 app.MapGameEndPoints();
+
+app.MapBalanceEndPoints();
 
 await app.RunAsync();
 
@@ -164,7 +193,11 @@ await app.RunAsync();
 // =======================================================
 
 // Handler obsługujący callback OAuth - logikę zapisu/odczytu z DB
-static async Task OnCreatingTicketHandler(OAuthCreatingTicketContext context, string provider, IServiceCollection services)
+static async Task OnCreatingTicketHandler(
+    OAuthCreatingTicketContext context,
+    string provider,
+    IServiceCollection services
+)
 {
     // Pobieramy Service Provider
     using var scope = services.BuildServiceProvider().CreateScope();
@@ -180,15 +213,17 @@ static async Task OnCreatingTicketHandler(OAuthCreatingTicketContext context, st
     }
 
     // 1. Znajdź istniejącego użytkownika (po Provider i ProviderId)
-    var user = await dbContext.Users
-        .FirstOrDefaultAsync(u => u.Provider == provider && u.ProviderId == providerId);
+    var user = await dbContext.Users.FirstOrDefaultAsync(u =>
+        u.Provider == provider && u.ProviderId == providerId
+    );
 
     if (user == null)
     {
         // 2. Utwórz nowego użytkownika, jeśli nie istnieje
-        var firstName = context.Principal?.FindFirst(ClaimTypes.GivenName)?.Value
-                ?? context.Principal?.FindFirst("given_name")?.Value
-                ?? "Użytkownik";
+        var firstName =
+            context.Principal?.FindFirst(ClaimTypes.GivenName)?.Value
+            ?? context.Principal?.FindFirst("given_name")?.Value
+            ?? "Użytkownik";
         var lastName = context.Principal?.FindFirst(ClaimTypes.Surname)?.Value ?? "";
 
         user = new User
@@ -197,18 +232,18 @@ static async Task OnCreatingTicketHandler(OAuthCreatingTicketContext context, st
             LastName = lastName,
             Email = email,
             Provider = provider,
-            ProviderId = providerId
+            ProviderId = providerId,
         };
         dbContext.Users.Add(user);
         await dbContext.SaveChangesAsync();
     }
-    
+
     // 3. Utwórz ClaimsPrincipal z użyciem wewnętrznego ID użytkownika z bazy
     var claims = new List<Claim>
     {
         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
         new Claim(ClaimTypes.Name, user.FirstName),
-        new Claim(ClaimTypes.Email, user.Email) 
+        new Claim(ClaimTypes.Email, user.Email),
     };
 
     var appIdentity = new ClaimsIdentity(claims, context.Scheme.Name);

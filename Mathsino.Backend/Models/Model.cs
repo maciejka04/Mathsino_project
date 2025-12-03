@@ -25,6 +25,8 @@ public class User
     // ---------------------------
 
     public List<UserFriend> Friends { get; set; } = [];
+
+    public int Balance { get; set; } = 0;
 }
 
 public class UserFriend
@@ -36,12 +38,13 @@ public class UserFriend
     public User Friend { get; set; } = null!;
 }
 
-public record FriendDto(int Id, string FirstName, string LastName, string Email);
+public record FriendDto(int Id, string FirstName, string LastName, string Email, int Balance);
 
 public record UserDto(
     int Id,
     string FirstName,
     string LastName,
     string Email,
-    List<FriendDto> Friends
+    List<FriendDto> Friends,
+    int Balance
 );
