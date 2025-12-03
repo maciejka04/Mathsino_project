@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useRef } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import "./Online.css";
 import tableImage from "../../assets/table4.png";
 import dziesiecImage from "../../assets/zetony/dziesiec.png";
@@ -7,8 +7,10 @@ import piecdziesiatImage from "../../assets/zetony/piecdziesiat.png";
 import stoImage from "../../assets/zetony/sto.png";
 import piecsetImage from "../../assets/zetony/piecset.png";
 import { motion } from "framer-motion";
+import Fireworks from 'fireworks-js';
 
-import reverseCardImage from "../../assets/karty/reverse.png";
+import reverseCardImage from "../../assets/karty/reverse2.png";
+import defaultAvatar from "../../assets/profilepic/snake.png";
 
 import { useOutletContext } from "react-router-dom";
 
@@ -97,9 +99,13 @@ const mapBackendCardToFilename = (card) => {
 
 function Online() {
   const navigate = useNavigate();
+<<<<<<< HEAD
 
   const { user } = useOutletContext();
 
+=======
+  const { user } = useOutletContext();
+>>>>>>> 34a9f89 (Poprawki css, efekt blackjack, aktualizacja grafik)
   const [currentBalance, setCurrentBalance] = useState(5000);
   const [currentBet, setCurrentBet] = useState(0);
 
@@ -118,6 +124,9 @@ function Online() {
   const [showModal, setShowModal] = useState(false);
   const [isShuffling, setIsShuffling] = useState(false);
 
+  const [showFireworks, setShowFireworks] = useState(false);
+  const fireworksContainerRef = useRef(null);
+
   const [canSplit, setCanSplit] = useState(false);
   const [canDouble, setCanDouble] = useState(false);
   const [isSplitActive, setIsSplitActive] = useState(false);
@@ -132,6 +141,37 @@ function Online() {
   const USER_ID = user?.id || 1;
 
   console.log("ONLINE USER ID:", USER_ID);
+
+  React.useEffect(() => {
+    let fireworks;
+    if (showFireworks && fireworksContainerRef.current) {
+        fireworks = new Fireworks(fireworksContainerRef.current, {
+            autoresize: true,
+            opacity: 0.9,
+            acceleration: 1.05,
+            friction: 0.97,
+            particles: 50,
+            gravity: 1.5,
+            traceSpeed: 0.5,
+            delay: { min: 15, max: 30 },
+            mouse: { click: false, move: false }, 
+            boundaries: { 
+                x: 50,
+                y: 50,
+                width: fireworksContainerRef.current.clientWidth - 100,
+                height: fireworksContainerRef.current.clientHeight * 0.7,
+            },
+        });
+        
+        fireworks.start();
+    }
+    
+    return () => {
+        if (fireworks) {
+            fireworks.stop();
+        }
+    };
+  }, [showFireworks]);
 
   const resetGameFlags = () => {
     setMainDoubled(false);
@@ -285,6 +325,13 @@ function Online() {
     isSplitDoubledNow
   ) => {
     setResultProcessed(true);
+
+    if (mainResult === "Blackjack" || splitRes === "Blackjack") {
+    setShowFireworks(true);
+    setTimeout(() => {
+    setShowFireworks(false);
+   }, 8000); 
+  }
 
     setTimeout(() => {
       setShowModal(true);
@@ -557,11 +604,24 @@ function Online() {
   };
 
   return (
-    <div className="Online-container">
+    <div className="online-container">
+      {showFireworks && (
+         <div 
+            className="fireworks-container" 
+            ref={fireworksContainerRef} 
+        />
+       )}
       <button className="back-button" onClick={handleGoBack}>
         &#8592; Exit
       </button>
-
+      <div className="user-info-panel">
+       <img 
+          src={defaultAvatar} 
+          alt="Awatar" 
+          className="user-avatar" 
+       />
+       <span className="user-name">{user?.name || "Gość"}</span>
+      </div>
       {/* FEEDBACK TRENERA */}
       {strategyFeedback && (
         <div
@@ -682,12 +742,13 @@ function Online() {
           const finalLeft = 46 + index * 3;
           const startX = `${DECK_POSITION.left - finalLeft}vw`;
           const startY = `${DECK_POSITION.top - 10}vh`;
+          const cardZIndex = index === 0 ? 51 : 49;
 
           return (
             <motion.div
               key={`dealer-${index}`}
               className="card-image dealer-card"
-              style={{ left: `${finalLeft}%` }}
+              style={{ left: `${finalLeft}%`}}
               initial={{
                 x: startX,
                 y: startY,
@@ -794,6 +855,35 @@ function Online() {
               />
             );
           })}
+
+          <div className="betting-ui">
+        <div className="chip-selection">
+          <img
+            src={dziesiecImage}
+            alt="10"
+            className="chip-image chip-z4"
+            onClick={() => handleChipSelect(10)}
+          />
+          <img
+            src={piecdziesiatImage}
+            alt="50"
+            className="chip-image chip-z3"
+            onClick={() => handleChipSelect(50)}
+          />
+          <img
+            src={stoImage}
+            alt="100"
+            className="chip-image chip-z2"
+            onClick={() => handleChipSelect(100)}
+          />
+          <img
+            src={piecsetImage}
+            alt="500"
+            className="chip-image chip-z1"
+            onClick={() => handleChipSelect(500)}
+          />
+        </div>
+      </div>
       </div>
 
       {/* PANEL LEWY DOLNY */}
@@ -831,34 +921,7 @@ function Online() {
       </div>
 
       {/* Żetony */}
-      <div className="betting-ui">
-        <div className="chip-selection">
-          <img
-            src={dziesiecImage}
-            alt="10"
-            className="chip-image chip-z4"
-            onClick={() => handleChipSelect(10)}
-          />
-          <img
-            src={piecdziesiatImage}
-            alt="50"
-            className="chip-image chip-z3"
-            onClick={() => handleChipSelect(50)}
-          />
-          <img
-            src={stoImage}
-            alt="100"
-            className="chip-image chip-z2"
-            onClick={() => handleChipSelect(100)}
-          />
-          <img
-            src={piecsetImage}
-            alt="500"
-            className="chip-image chip-z1"
-            onClick={() => handleChipSelect(500)}
-          />
-        </div>
-      </div>
+      
 
       {/* Przyciski Akcji */}
       <div className="game-actions">

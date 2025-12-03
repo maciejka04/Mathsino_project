@@ -7,7 +7,7 @@ body {
     overflow: hidden;
 }
 
-.offline-container {
+.online-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -19,7 +19,33 @@ body {
     overflow: hidden;
     position: relative;
 }
+.user-info-panel {
+    position: absolute;
+    bottom: 20px;
+    right: 0px; /* Przesunięte, by nie kolidować z przyciskiem Exit */
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
 
+.user-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid gold;
+    object-fit: cover;
+}
+
+.user-name {
+    font-size: 1.1em;
+    font-weight: bold;
+}
 .game-table-area {
     width: 100%;
     max-width: 100vw;
@@ -70,17 +96,42 @@ body {
 /* --- UI Żetonów --- */
 .betting-ui {
     position: absolute;
-    top: 440px; 
-    left: 255px;
+    top: 60%; 
+    left: 15%; 
     z-index: 10;
     display: flex;
     gap: 10px;
-    padding: 15px;
+    padding: 0; 
 }
 
+
 .chip-selection {
-    display: flex;
-    gap: 10px;
+    position: relative;
+    flex-direction: row; 
+    align-items: flex-end;
+}
+
+
+.chip-selection .chip-image {
+    margin-left: -20px; 
+    transition: transform 0.2s, box-shadow 0.2s, z-index 0s;
+    margin-top: -20px;
+}
+
+.chip-selection .chip-image:first-child {
+    margin-left: 0; 
+}
+
+.chip-selection .chip-image:nth-child(2) { 
+    margin-top: -30px; /* Nieco wyżej */
+}
+/* Trzeci żeton (stoImage) */
+.chip-selection .chip-image:nth-child(3) { 
+    margin-top: -50px; /* Jeszcze wyżej */
+}
+/* Czwarty żeton (piecsetImage) */
+.chip-selection .chip-image:nth-child(4) { 
+    margin-top: -70px; /* Najwyżej */
 }
 
 .chip-z4 { z-index: 4; }
@@ -88,17 +139,13 @@ body {
 .chip-z2 { z-index: 2; }
 .chip-z1 { z-index: 1; }
 
-.chip-selection .chip-image:nth-child(2) { margin-top: 17px; }
-.chip-selection .chip-image:nth-child(3) { margin-top: 34px; }
-.chip-selection .chip-image:nth-child(4) { margin-top: 51px; }
-
 .chip-image {
-    width: 60px;
-    height: 60px;
+    width: 4.5vw; 
+    height: 4.5vw; /* Zachowanie proporcji */
     cursor: pointer;
     border-radius: 50%;
-    transition: transform 0.2s, box-shadow 0.2s;
     position: relative; 
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .chip-image:hover {
@@ -194,7 +241,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
-.dealer-card { top: 10%; }
+.dealer-card { top: 15%; }
 .player-card { top: 40%; }
 
 /* --- Przyciski Akcji (Środek Dół) --- */
@@ -294,8 +341,27 @@ body {
     .left-bottom-panel { bottom: 10px; left: 10px; font-size: 0.9em; }
     .btn-clear, .btn-deal { padding: 8px 12px; font-size: 0.9em; }
     .back-button { top: 10px; left: 10px; padding: 8px 12px; font-size: 0.9em; }
-    .betting-ui { top: 60px; left: 10px; padding: 10px; }
-    .chip-image { width: 40px; height: 40px; }
+    .betting-ui { 
+        bottom: 20%; 
+        left: 10%; 
+        padding: 10px; 
+    }
+    .chip-selection .chip-image {
+        margin-left: -15px; 
+    }
+    .chip-image { width: 6vw; height: 6vw; }
     .game-actions { bottom: 15px; gap: 10px; width: 90%; }
     .action-button { padding: 12px 15px; font-size: 1em; min-width: 80px; }
+}
+
+
+
+.fireworks-container {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; 
+  z-index: 1000; 
 }

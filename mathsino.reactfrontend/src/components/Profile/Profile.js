@@ -5,15 +5,20 @@ import './Profile.css';
 // Zaimportuj swój domyślny awatar
 import smok from '../../assets/profilowe_smok.png'; 
 import panda from '../../assets/profilowe_panda.png'; 
-
-const avatars = [smok, panda, panda, panda, panda, panda, panda];
+import snake from '../../assets/profilepic/snake.png';
+import mouse from '../../assets/profilepic/mouse.png';
+import racoon from '../../assets/profilepic/racoon.png';
+import boar from '../../assets/profilepic/boar.png';
+import owl from '../../assets/profilepic/owl.png';
+import fox from '../../assets/profilepic/fox.png';
+const avatars = [snake, mouse, racoon, boar, owl, fox ];
 
 
 
 
 function Profile() {
 
-   const [selectedAvatar, setSelectedAvatar] = useState(panda);
+   const [selectedAvatar, setSelectedAvatar] = useState(snake);
   const [user, setUser] = useState({
     name: "",
     email: ""

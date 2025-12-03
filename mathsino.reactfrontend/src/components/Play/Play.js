@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef } from 'react';
 import './Play.css';
-import offline from '../../assets/offline.jpg';
-import online from '../../assets/online.jpg';
+import offline from '../../assets/singleplayer.png';
+import online from '../../assets/multiplayer.png';
 import { Link } from 'react-router-dom';
 
 function Play() {
