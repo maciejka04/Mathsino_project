@@ -10,6 +10,8 @@ import { motion } from "framer-motion";
 
 import reverseCardImage from "../../assets/karty/reverse.png";
 
+import { useOutletContext } from "react-router-dom";
+
 const DECK_POSITION = { left: 15, top: 30 };
 
 const allCardFileNames = [
@@ -70,7 +72,7 @@ const allCardFileNames = [
 const cardImagesMap = allCardFileNames.reduce((acc, cardName) => {
   try {
     acc[cardName] = require(`../../assets/karty/${cardName}.png`);
-  } catch (e) {}
+  } catch (e) { }
   return acc;
 }, {});
 
@@ -95,6 +97,9 @@ const mapBackendCardToFilename = (card) => {
 
 function Online() {
   const navigate = useNavigate();
+
+  const { user } = useOutletContext();
+
   const [currentBalance, setCurrentBalance] = useState(5000);
   const [currentBet, setCurrentBet] = useState(0);
 
@@ -124,7 +129,9 @@ function Online() {
   const [strategyFeedback, setStrategyFeedback] = useState(null);
 
   const API_URL = "http://localhost:5126";
-  const USER_ID = 1;
+  const USER_ID = user?.id || 1;
+
+  console.log("ONLINE USER ID:", USER_ID);
 
   const resetGameFlags = () => {
     setMainDoubled(false);
@@ -166,8 +173,8 @@ function Online() {
       updateGameState(gameData);
 
       if (gameData.status === "Completed") {
-      await fetch(`${API_URL}/games/${gameData.id}/check-results/${gameData.players[0].playerId}`);
-      await fetchGameStatus(gameData.id);
+        await fetch(`${API_URL}/games/${gameData.id}/check-results/${gameData.players[0].playerId}`);
+        await fetchGameStatus(gameData.id);
       }
 
     } catch (error) {
@@ -211,9 +218,9 @@ function Online() {
         setSplitCards(
           player.splitHand
             ? player.splitHand.map((c) => ({
-                name: mapBackendCardToFilename(c),
-                src: cardImagesMap[mapBackendCardToFilename(c)],
-              }))
+              name: mapBackendCardToFilename(c),
+              src: cardImagesMap[mapBackendCardToFilename(c)],
+            }))
             : []
         );
 
@@ -320,11 +327,11 @@ function Online() {
   };
 
   React.useEffect(() => {
-  if (gameStatus === "Completed" && !resultProcessed && gameId && playerId) {
-    fetch(`${API_URL}/games/${gameId}/check-results/${playerId}`)
-      .then(() => fetchGameStatus(gameId));
-  }
-}, [gameStatus, playerId]);
+    if (gameStatus === "Completed" && !resultProcessed && gameId && playerId) {
+      fetch(`${API_URL}/games/${gameId}/check-results/${playerId}`)
+        .then(() => fetchGameStatus(gameId));
+    }
+  }, [gameStatus, playerId]);
 
 
 
@@ -659,10 +666,10 @@ function Online() {
             animate={
               isShuffling
                 ? {
-                    x: [0, -20, 20, -20, 20, 0],
-                    y: [0, -5, 5, -5, 5, 0],
-                    rotateZ: [0, -10, 10, -10, 10, 0],
-                  }
+                  x: [0, -20, 20, -20, 20, 0],
+                  y: [0, -5, 5, -5, 5, 0],
+                  rotateZ: [0, -10, 10, -10, 10, 0],
+                }
                 : { x: 0, y: 0, rotateZ: 0 }
             }
             transition={{ duration: 0.8, ease: "easeInOut" }}
@@ -864,9 +871,8 @@ function Online() {
         </button>
 
         <button
-          className={`action-button split ${
-            !canSplit ? "disabled-action" : ""
-          }`}
+          className={`action-button split ${!canSplit ? "disabled-action" : ""
+            }`}
           onClick={handleSplitAction}
           disabled={!canSplit || gameStatus !== "InProgress"}
         >
@@ -882,9 +888,8 @@ function Online() {
         </button>
 
         <button
-          className={`action-button double ${
-            !canDouble ? "disabled-action" : ""
-          }`}
+          className={`action-button double ${!canDouble ? "disabled-action" : ""
+            }`}
           onClick={handleDouble}
           disabled={!canDouble || gameStatus !== "InProgress"}
         >

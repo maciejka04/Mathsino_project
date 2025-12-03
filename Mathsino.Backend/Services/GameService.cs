@@ -1,18 +1,21 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System.Linq;
+using System.Threading.Tasks;
 using Mathsino.Backend.Game;
 using Mathsino.Backend.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
 namespace Mathsino.Backend.Services
 {
     public class GameService
     {
         private readonly ILogger<GameService>? logger;
         private readonly IServiceScopeFactory scopeFactory;
-        private readonly Dictionary<Guid, Mathsino.Backend.Game.Game> _games = new Dictionary<Guid, Mathsino.Backend.Game.Game>();
+        private readonly Dictionary<Guid, Mathsino.Backend.Game.Game> _games =
+            new Dictionary<Guid, Mathsino.Backend.Game.Game>();
 
         public GameService(ILogger<GameService>? logger, IServiceScopeFactory scopeFactory)
         {
@@ -29,7 +32,10 @@ namespace Mathsino.Backend.Services
             var user = await usersService.GetUserByIdAsync(userId);
 
             var player = new Mathsino.Backend.Game.Player { User = user };
-            var game = new Mathsino.Backend.Game.Game { Type = Mathsino.Backend.Game.GameType.SinglePlayer };
+            var game = new Mathsino.Backend.Game.Game
+            {
+                Type = Mathsino.Backend.Game.GameType.SinglePlayer,
+            };
             game.AddPlayer(player);
             _games[game.Id] = game;
             game.StartGame();
@@ -45,7 +51,10 @@ namespace Mathsino.Backend.Services
             var user = await usersService.GetUserByIdAsync(userId);
 
             var player = new Mathsino.Backend.Game.Player { User = user };
-            var game = new Mathsino.Backend.Game.Game { Type = Mathsino.Backend.Game.GameType.MultiPlayer };
+            var game = new Mathsino.Backend.Game.Game
+            {
+                Type = Mathsino.Backend.Game.GameType.MultiPlayer,
+            };
             game.AddPlayer(player);
             _games[game.Id] = game;
             return game;
@@ -54,7 +63,8 @@ namespace Mathsino.Backend.Services
         public Mathsino.Backend.Game.Game GetGameById(Guid gameId)
         {
             logger?.LogInformation("Fetching game with ID {GameId}", gameId);
-            if (_games.TryGetValue(gameId, out var game)) return game;
+            if (_games.TryGetValue(gameId, out var game))
+                return game;
             throw new KeyNotFoundException($"Game with ID {gameId} not found.");
         }
 
@@ -92,7 +102,11 @@ namespace Mathsino.Backend.Services
 
         public Mathsino.Backend.Game.Game PlayerHitSplit(Guid gameId, Guid playerId)
         {
-            logger?.LogInformation("Player {PlayerId} hits split in game {GameId}", playerId, gameId);
+            logger?.LogInformation(
+                "Player {PlayerId} hits split in game {GameId}",
+                playerId,
+                gameId
+            );
             var game = GetGameById(gameId);
             game.PlayerHitSplit(playerId);
             return game;
@@ -100,45 +114,99 @@ namespace Mathsino.Backend.Services
 
         public Mathsino.Backend.Game.Game PlayerDoubleSplit(Guid gameId, Guid playerId)
         {
-            logger?.LogInformation("Player {PlayerId} doubles split in game {GameId}", playerId, gameId);
+            logger?.LogInformation(
+                "Player {PlayerId} doubles split in game {GameId}",
+                playerId,
+                gameId
+            );
             var game = GetGameById(gameId);
             game.PlayerDoubleSplit(playerId);
             return game;
         }
 
-        public Mathsino.Backend.Game.Game CheckResults(Guid gameId, Guid playerId)
+        public async Task<Mathsino.Backend.Game.Game> CheckResults(Guid gameId, Guid playerId)
         {
-            logger?.LogInformation("Checking results for player {PlayerId} in game {GameId}", playerId, gameId);
+            logger?.LogInformation(
+                "Checking results for player {PlayerId} in game {GameId}",
+                playerId,
+                gameId
+            );
             var game = GetGameById(gameId);
             game.CheckResults(playerId);
+            await SaveResultsInDB(game);
             return game;
         }
-        public AnalysisResult AnalyzeMove(AnalyzeMoveRequest request)
-    {
-        var playerHand = request.PlayerHandCards
-            .Select(c => new Card { Rank = c.Rank, Suit = c.Suit })
-            .ToList();
-        
-        var dealerCard = new Card 
-        { 
-            Rank = request.DealerCard.Rank, 
-            Suit = request.DealerCard.Suit 
-        };
-        
-        if (!Enum.TryParse<BlackjackStrategy.Move>(request.Action, true, out var action))
+
+        private async Task SaveResultsInDB(Game.Game game)
         {
-            throw new ArgumentException($"Invalid action: {request.Action}");
+            logger?.LogInformation("Saving game results to database for game ID {GameId}", game.Id);
+            using var scope = scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<MathsinoContext>();
+
+            foreach (var player in game.Players)
+            {
+                var existingRecord = await dbContext.SingleGames.FirstOrDefaultAsync(sg =>
+                    sg.GameId == game.Id && sg.PlayerId == player.PlayerId
+                );
+
+                if (existingRecord != null)
+                {
+                    logger?.LogWarning(
+                        "Game result already exists for player {PlayerId} in game {GameId}. Skipping.",
+                        player.PlayerId,
+                        game.Id
+                    );
+                    continue;
+                }
+
+                logger?.LogInformation(
+                    "Saving result for player ID {PlayerId} in game ID {GameId}",
+                    player.PlayerId,
+                    game.Id
+                );
+                var singleGameRecord = new SingleGame
+                {
+                    GameId = game.Id,
+                    UserId = player.User.Id,
+                    PlayerId = player.PlayerId,
+                    StartTime = game.StartTime,
+                    EndTime = DateTime.Now,
+                    SingleGameResult = player.Result,
+                    SingleGameSplitResult = player.SplitResult,
+                    BalanceAfterGame = player.User.Balance,
+                };
+                dbContext.SingleGames.Add(singleGameRecord);
+            }
+            await dbContext.SaveChangesAsync();
+            logger?.LogInformation("Game results saved successfully for game ID {GameId}", game.Id);
         }
 
-        var result = BlackjackStrategy.AnalyzeMove(
-            playerHand, 
-            dealerCard, 
-            action, 
-            request.CanSplit, 
-            request.CanDouble
-        );
+        public AnalysisResult AnalyzeMove(AnalyzeMoveRequest request)
+        {
+            var playerHand = request
+                .PlayerHandCards.Select(c => new Card { Rank = c.Rank, Suit = c.Suit })
+                .ToList();
 
-        return new AnalysisResult(result.IsCorrect, result.CorrectMove, result.Reasoning);
-    }
+            var dealerCard = new Card
+            {
+                Rank = request.DealerCard.Rank,
+                Suit = request.DealerCard.Suit,
+            };
+
+            if (!Enum.TryParse<BlackjackStrategy.Move>(request.Action, true, out var action))
+            {
+                throw new ArgumentException($"Invalid action: {request.Action}");
+            }
+
+            var result = BlackjackStrategy.AnalyzeMove(
+                playerHand,
+                dealerCard,
+                action,
+                request.CanSplit,
+                request.CanDouble
+            );
+
+            return new AnalysisResult(result.IsCorrect, result.CorrectMove, result.Reasoning);
+        }
     }
 }

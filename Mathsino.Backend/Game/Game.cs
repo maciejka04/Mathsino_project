@@ -13,28 +13,40 @@ namespace Mathsino.Backend.Game
         public GameStatus Status { get; set; } = GameStatus.WaitingForPlayers;
         public List<Player> Players { get; set; } = new List<Player>();
 
+        public DateTime StartTime { get; set; } = DateTime.Now;
+
         [JsonIgnore]
         public Deck Deck { get; set; } = new Deck();
 
-        public Player Dealer { get; set; } = new Player { User = new User { Id = 0, FirstName = "Dealer" } };
+        public Player Dealer { get; set; } =
+            new Player
+            {
+                User = new User { Id = 0, FirstName = "Dealer" },
+            };
 
         public void AddPlayer(Player player)
         {
             if (Status != GameStatus.WaitingForPlayers)
-                throw new InvalidOperationException("Cannot join a game that is already in progress or completed.");
+                throw new InvalidOperationException(
+                    "Cannot join a game that is already in progress or completed."
+                );
             if (Type == GameType.SinglePlayer && Players.Count >= 1)
-                throw new InvalidOperationException("Cannot join a single-player game that already has a player.");
+                throw new InvalidOperationException(
+                    "Cannot join a single-player game that already has a player."
+                );
             if (Players.Any(p => p.User.Id == player.User.Id))
                 throw new InvalidOperationException("Player is already in the game.");
             if (Type == GameType.MultiPlayer && Players.Count > 3)
-                throw new InvalidOperationException("Cannot join a multi-player game that already has 3 players.");
+                throw new InvalidOperationException(
+                    "Cannot join a multi-player game that already has 3 players."
+                );
             Players.Add(player);
-
         }
 
         public void StartGame()
         {
-            if (Players.Count == 0) throw new InvalidOperationException("Cannot start a game with no players.");
+            if (Players.Count == 0)
+                throw new InvalidOperationException("Cannot start a game with no players.");
             Status = GameStatus.InProgress;
 
             DrawCards();
@@ -45,7 +57,7 @@ namespace Mathsino.Backend.Game
             if (player.Hand.Count == 2 && player.HandValue == 21)
             {
                 player.Status = PlayerStatus.Passed;
-                EndGame(); 
+                EndGame();
             }
         }
 
@@ -69,8 +81,10 @@ namespace Mathsino.Backend.Game
         public void PlayerHit(Guid playerId)
         {
             var player = Players.FirstOrDefault(p => p.PlayerId == playerId);
-            if (player == null) throw new InvalidOperationException("Player not found in the game.");
-            if (Status != GameStatus.InProgress) throw new InvalidOperationException("Cannot hit when the game is not in progress.");
+            if (player == null)
+                throw new InvalidOperationException("Player not found in the game.");
+            if (Status != GameStatus.InProgress)
+                throw new InvalidOperationException("Cannot hit when the game is not in progress.");
 
             if (player.Status != PlayerStatus.Active)
                 throw new InvalidOperationException("Main hand is not active.");
@@ -95,13 +109,18 @@ namespace Mathsino.Backend.Game
 
         public void PlayerPass(Guid playerId)
         {
-            if (Status != GameStatus.InProgress) throw new InvalidOperationException("Cannot pass when the game is not in progress.");
+            if (Status != GameStatus.InProgress)
+                throw new InvalidOperationException(
+                    "Cannot pass when the game is not in progress."
+                );
             var player = Players.FirstOrDefault(p => p.PlayerId == playerId);
-            if (player == null) throw new InvalidOperationException("Player not found in the game.");
+            if (player == null)
+                throw new InvalidOperationException("Player not found in the game.");
 
             if (!player.HasSplit)
             {
-                if (player.Status != PlayerStatus.Active) throw new InvalidOperationException("Player has already passed.");
+                if (player.Status != PlayerStatus.Active)
+                    throw new InvalidOperationException("Player has already passed.");
                 player.Status = PlayerStatus.Passed;
                 if (Type == GameType.SinglePlayer)
                 {
@@ -131,11 +150,18 @@ namespace Mathsino.Backend.Game
         public void PlayerSplit(Guid playerId)
         {
             var player = Players.FirstOrDefault(p => p.PlayerId == playerId);
-            if (player == null) throw new InvalidOperationException("Player not found.");
-            if (Status != GameStatus.InProgress) throw new InvalidOperationException("Cannot split when game is not in progress.");
-            if (player.Hand.Count != 2) throw new InvalidOperationException("Split allowed only with initial two-card hand.");
-            if (player.HasSplit) throw new InvalidOperationException("Player already split.");
-            if (player.Hand[0].Rank != player.Hand[1].Rank) throw new InvalidOperationException("Cards must have same rank to split.");
+            if (player == null)
+                throw new InvalidOperationException("Player not found.");
+            if (Status != GameStatus.InProgress)
+                throw new InvalidOperationException("Cannot split when game is not in progress.");
+            if (player.Hand.Count != 2)
+                throw new InvalidOperationException(
+                    "Split allowed only with initial two-card hand."
+                );
+            if (player.HasSplit)
+                throw new InvalidOperationException("Player already split.");
+            if (player.Hand[0].Rank != player.Hand[1].Rank)
+                throw new InvalidOperationException("Cards must have same rank to split.");
 
             player.SplitHand = new List<Card>();
             var second = player.Hand[1];
@@ -152,12 +178,17 @@ namespace Mathsino.Backend.Game
         public void PlayerHitSplit(Guid playerId)
         {
             var player = Players.FirstOrDefault(p => p.PlayerId == playerId);
-            if (player == null) throw new InvalidOperationException("Player not found.");
-            if (Status != GameStatus.InProgress) throw new InvalidOperationException("Cannot hit when game is not in progress.");
-            if (!player.HasSplit) throw new InvalidOperationException("Player has no split hand.");
+            if (player == null)
+                throw new InvalidOperationException("Player not found.");
+            if (Status != GameStatus.InProgress)
+                throw new InvalidOperationException("Cannot hit when game is not in progress.");
+            if (!player.HasSplit)
+                throw new InvalidOperationException("Player has no split hand.");
 
             if (player.Status == PlayerStatus.Active)
-                throw new InvalidOperationException("You must finish the main hand before hitting the split hand.");
+                throw new InvalidOperationException(
+                    "You must finish the main hand before hitting the split hand."
+                );
 
             if (player.SplitStatus != PlayerStatus.Active)
                 throw new InvalidOperationException("Split hand is not active.");
@@ -183,12 +214,21 @@ namespace Mathsino.Backend.Game
         public void PlayerDouble(Guid playerId)
         {
             var player = Players.FirstOrDefault(p => p.PlayerId == playerId);
-            if (player == null) throw new InvalidOperationException("Player not found.");
-            if (Status != GameStatus.InProgress) throw new InvalidOperationException("Cannot double when the game is not in progress.");
+            if (player == null)
+                throw new InvalidOperationException("Player not found.");
+            if (Status != GameStatus.InProgress)
+                throw new InvalidOperationException(
+                    "Cannot double when the game is not in progress."
+                );
 
-            if (player.Hand.Count != 2) throw new InvalidOperationException("Double is only allowed on the initial two-card hand.");
-            if (player.HasDoubledMain) throw new InvalidOperationException("Player has already doubled on main hand.");
-            if (player.Status != PlayerStatus.Active) throw new InvalidOperationException("Main hand is not active.");
+            if (player.Hand.Count != 2)
+                throw new InvalidOperationException(
+                    "Double is only allowed on the initial two-card hand."
+                );
+            if (player.HasDoubledMain)
+                throw new InvalidOperationException("Player has already doubled on main hand.");
+            if (player.Status != PlayerStatus.Active)
+                throw new InvalidOperationException("Main hand is not active.");
 
             player.HasDoubledMain = true;
             player.Hand.Add(Deck.DrawCard());
@@ -214,14 +254,27 @@ namespace Mathsino.Backend.Game
         public void PlayerDoubleSplit(Guid playerId)
         {
             var player = Players.FirstOrDefault(p => p.PlayerId == playerId);
-            if (player == null) throw new InvalidOperationException("Player not found.");
-            if (Status != GameStatus.InProgress) throw new InvalidOperationException("Cannot double when the game is not in progress.");
-            if (!player.HasSplit) throw new InvalidOperationException("Player has no split hand.");
-            if (player.Status == PlayerStatus.Active) throw new InvalidOperationException("You must finish the main hand before doubling the split hand.");
+            if (player == null)
+                throw new InvalidOperationException("Player not found.");
+            if (Status != GameStatus.InProgress)
+                throw new InvalidOperationException(
+                    "Cannot double when the game is not in progress."
+                );
+            if (!player.HasSplit)
+                throw new InvalidOperationException("Player has no split hand.");
+            if (player.Status == PlayerStatus.Active)
+                throw new InvalidOperationException(
+                    "You must finish the main hand before doubling the split hand."
+                );
 
-            if (player.SplitHand!.Count != 2) throw new InvalidOperationException("Double is only allowed on the initial two-card split hand.");
-            if (player.HasDoubledSplit) throw new InvalidOperationException("Player has already doubled on split hand.");
-            if (player.SplitStatus != PlayerStatus.Active) throw new InvalidOperationException("Split hand is not active.");
+            if (player.SplitHand!.Count != 2)
+                throw new InvalidOperationException(
+                    "Double is only allowed on the initial two-card split hand."
+                );
+            if (player.HasDoubledSplit)
+                throw new InvalidOperationException("Player has already doubled on split hand.");
+            if (player.SplitStatus != PlayerStatus.Active)
+                throw new InvalidOperationException("Split hand is not active.");
 
             player.HasDoubledSplit = true;
             player.SplitHand.Add(Deck.DrawCard());
@@ -246,11 +299,12 @@ namespace Mathsino.Backend.Game
 
         public void CheckResults(Guid playerId)
         {
-            if (Status != GameStatus.Completed) 
+            if (Status != GameStatus.Completed)
                 throw new InvalidOperationException("Game is not yet completed.");
 
             var player = Players.FirstOrDefault(p => p.PlayerId == playerId);
-            if (player == null) throw new InvalidOperationException("Player not found.");
+            if (player == null)
+                throw new InvalidOperationException("Player not found.");
 
             // Główna ręka
             player.Result = EvaluateHandAgainstDealer(player.HandValue, player.Hand);
@@ -258,17 +312,20 @@ namespace Mathsino.Backend.Game
             // Split (jeśli istnieje)
             if (player.HasSplit && player.SplitHandValue.HasValue && player.SplitHand != null)
             {
-                player.SplitResult = EvaluateHandAgainstDealer(player.SplitHandValue.Value, player.SplitHand);
+                player.SplitResult = EvaluateHandAgainstDealer(
+                    player.SplitHandValue.Value,
+                    player.SplitHand
+                );
             }
         }
 
         private GameResult EvaluateHandAgainstDealer(int playerValue, List<Card> hand)
         {
-
             bool playerHasBlackjack = hand.Count == 2 && playerValue == 21;
             bool dealerHasBlackjack = Dealer.Hand.Count == 2 && Dealer.HandValue == 21;
 
-            if (playerValue > 21) return GameResult.Lose;
+            if (playerValue > 21)
+                return GameResult.Lose;
 
             if (playerHasBlackjack && dealerHasBlackjack)
             {
@@ -277,7 +334,6 @@ namespace Mathsino.Backend.Game
 
             if (playerHasBlackjack)
             {
-
                 return GameResult.Blackjack;
             }
 
@@ -286,10 +342,13 @@ namespace Mathsino.Backend.Game
                 return GameResult.Lose;
             }
 
-            if (Dealer.HandValue > 21) return GameResult.Win;
+            if (Dealer.HandValue > 21)
+                return GameResult.Win;
 
-            if (playerValue > Dealer.HandValue) return GameResult.Win;
-            if (playerValue < Dealer.HandValue) return GameResult.Lose;
+            if (playerValue > Dealer.HandValue)
+                return GameResult.Win;
+            if (playerValue < Dealer.HandValue)
+                return GameResult.Lose;
 
             return GameResult.Push;
         }
@@ -324,8 +383,10 @@ namespace Mathsino.Backend.Game
         {
             foreach (var p in Players)
             {
-                if (p.Status == PlayerStatus.Active) return;
-                if (p.HasSplit && p.SplitStatus == PlayerStatus.Active) return;
+                if (p.Status == PlayerStatus.Active)
+                    return;
+                if (p.HasSplit && p.SplitStatus == PlayerStatus.Active)
+                    return;
             }
 
             EndGame();
