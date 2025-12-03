@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mathsino.Backend.Migrations
 {
     [DbContext(typeof(MathsinoContext))]
-    [Migration("20251202174203_SingleGame")]
-    partial class SingleGame
+    [Migration("20251203133238_ResultsToDb")]
+    partial class ResultsToDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,6 +48,9 @@ namespace Mathsino.Backend.Migrations
                     b.Property<int?>("SingleGameResult")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("SingleGameSplitResult")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp without time zone");
 
@@ -55,6 +58,8 @@ namespace Mathsino.Backend.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("SingleGames");
                 });
@@ -147,6 +152,17 @@ namespace Mathsino.Backend.Migrations
                             UserId = 2,
                             FriendId = 1
                         });
+                });
+
+            modelBuilder.Entity("Mathsino.Backend.Game.SingleGame", b =>
+                {
+                    b.HasOne("Mathsino.Backend.Models.User", "Player")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Player");
                 });
 
             modelBuilder.Entity("Mathsino.Backend.Models.UserFriend", b =>

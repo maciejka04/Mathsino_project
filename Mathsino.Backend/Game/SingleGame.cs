@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Mathsino.Backend.Models;
 
 namespace Mathsino.Backend.Game
 {
@@ -19,7 +20,11 @@ namespace Mathsino.Backend.Game
         public DateTime EndTime { get; set; }
 
         public GameResult? SingleGameResult { get; set; } = null;
-
+        public GameResult? SingleGameSplitResult { get; set; } = null;
+        public bool HasSplit => SingleGameSplitResult != null;
         public int BalanceAfterGame { get; set; }
+
+        [ForeignKey("UserId")]
+        public User? Player { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mathsino.Backend.Game;
 using Mathsino.Backend.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -144,6 +145,20 @@ namespace Mathsino.Backend.Services
 
             foreach (var player in game.Players)
             {
+                var existingRecord = await dbContext.SingleGames.FirstOrDefaultAsync(sg =>
+                    sg.GameId == game.Id && sg.PlayerId == player.PlayerId
+                );
+
+                if (existingRecord != null)
+                {
+                    logger?.LogWarning(
+                        "Game result already exists for player {PlayerId} in game {GameId}. Skipping.",
+                        player.PlayerId,
+                        game.Id
+                    );
+                    continue;
+                }
+
                 logger?.LogInformation(
                     "Saving result for player ID {PlayerId} in game ID {GameId}",
                     player.PlayerId,
@@ -157,6 +172,7 @@ namespace Mathsino.Backend.Services
                     StartTime = game.StartTime,
                     EndTime = DateTime.Now,
                     SingleGameResult = player.Result,
+                    SingleGameSplitResult = player.SplitResult,
                     BalanceAfterGame = player.User.Balance,
                 };
                 dbContext.SingleGames.Add(singleGameRecord);
