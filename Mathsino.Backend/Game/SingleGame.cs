@@ -27,4 +27,16 @@ namespace Mathsino.Backend.Game
         [ForeignKey("UserId")]
         public User? Player { get; set; }
     }
+
+    public record SingleGameDto(
+        int Id,
+        Guid GameId,
+        int UserId,
+        Guid PlayerId,
+        DateTime StartTime,
+        DateTime EndTime,
+        GameResult? SingleGameResult,
+        GameResult? SingleGameSplitResult,
+        int BalanceAfterGame
+    );
 }
