@@ -11,9 +11,9 @@
       "title": "Safe Zone (Total 8)",
       "goal": "Show that hitting on 8 or less is risk-free.",
       "setup": {
-        "player_hand": ["3", "5"],
-        "dealer_up_card": "6",
-        "dealer_hidden_card": "10"
+        "player_hand": ["3_of_clubs", "5_of_diamonds"],
+        "dealer_up_card": "6_of_spades",
+        "dealer_hidden_card": "10_of_hearts"
       },
       "sequence": [
         {
@@ -21,12 +21,12 @@
           "avatar_pose": "A",
           "text": "You have 8 points. Many players are afraid to hit here, but that's a mistake. The highest card is 10. 8 + 10 = 18. You cannot Bust. Always HIT!",
           "required_action": "HIT",
-          "cards_added": ["9"],
+          "cards_added": ["9_of_clubs"],
           "player_score_after": 17
         }
       ],
       "finish": {
-        "dealer_draws": ["Q"],
+        "dealer_draws": ["queen_of_diamonds"],
         "dealer_final_score": 26,
         "avatar_pose": "B",
         "text": "See? You turned a weak 8 into a solid 17. I had 16, so I had to hit and I busted with 26. Safe win.",
@@ -38,9 +38,9 @@
       "title": "Desperation (Total 5)",
       "goal": "Reinforce hitting on very low hands against strong dealers.",
       "setup": {
-        "player_hand": ["2", "3"],
-        "dealer_up_card": "A",
-        "dealer_hidden_card": "9"
+        "player_hand": ["2_of_hearts", "3_of_spades"],
+        "dealer_up_card": "ace_of_diamonds",
+        "dealer_hidden_card": "9_of_clubs"
       },
       "sequence": [
         {
@@ -48,7 +48,7 @@
           "avatar_pose": "C",
           "text": "You have 5 points. That's basically nothing. The dealer shows an Ace - a monster. No time for fancy moves. You just need points. Click HIT.",
           "required_action": "HIT",
-          "cards_added": ["Q"],
+          "cards_added": ["queen_of_hearts"],
           "player_score_after": 15
         }
       ],
@@ -56,7 +56,7 @@
         "dealer_draws": [],
         "dealer_final_score": 20,
         "avatar_pose": "A",
-        "text": "You got a Queen and now have 15. Still tricky against my Ace, but you played correctly by building your hand. Let's move on.",
+        "text": "You got a Queen and now have 15. I have 20. You lost, but you played correctly. You can't win every hand, but you must play right.",
         "result_status": "LESSON_PASSED"
       }
     },
@@ -65,9 +65,9 @@
       "title": "Hard 17 vs Ace (The Trap)",
       "goal": "Teach the player NEVER to hit on Hard 17.",
       "setup": {
-        "player_hand": ["10", "7"],
-        "dealer_up_card": "A",
-        "dealer_hidden_card": "7"
+        "player_hand": ["10_of_clubs", "7_of_hearts"],
+        "dealer_up_card": "ace_of_spades",
+        "dealer_hidden_card": "7_of_diamonds"
       },
       "sequence": [
         {
@@ -92,9 +92,9 @@
       "title": "Obvious Stand (Total 20)",
       "goal": "Confirm standing on high totals.",
       "setup": {
-        "player_hand": ["J", "K"],
-        "dealer_up_card": "9",
-        "dealer_hidden_card": "10"
+        "player_hand": ["jack_of_spades", "king_of_diamonds"],
+        "dealer_up_card": "9_of_hearts",
+        "dealer_hidden_card": "10_of_clubs"
       },
       "sequence": [
         {
@@ -119,9 +119,9 @@
       "title": "Scary Stand (18 vs 9)",
       "goal": "Teach discipline on 18.",
       "setup": {
-        "player_hand": ["10", "8"],
-        "dealer_up_card": "9",
-        "dealer_hidden_card": "6"
+        "player_hand": ["10_of_hearts", "8_of_spades"],
+        "dealer_up_card": "9_of_diamonds",
+        "dealer_hidden_card": "6_of_clubs"
       },
       "sequence": [
         {
@@ -134,7 +134,7 @@
         }
       ],
       "finish": {
-        "dealer_draws": ["10"],
+        "dealer_draws": ["10_of_spades"],
         "dealer_final_score": 25,
         "avatar_pose": "B",
         "text": "Dealer Bust! See? I had 15 (9+6), so I had to hit and caught a 10. If you had panicked, you might have lost against yourself.",

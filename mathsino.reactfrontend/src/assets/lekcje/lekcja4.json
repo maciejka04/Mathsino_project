@@ -11,9 +11,9 @@
       "title": "The Classic Standoff (16 vs 6)",
       "goal": "Teach standing on 16 against a weak 6.",
       "setup": {
-        "player_hand": ["10", "6"],
-        "dealer_up_card": "6",
-        "dealer_hidden_card": "9"
+        "player_hand": ["10_of_clubs", "6_of_diamonds"],
+        "dealer_up_card": "6_of_spades",
+        "dealer_hidden_card": "9_of_hearts"
       },
       "sequence": [
         {
@@ -26,7 +26,7 @@
         }
       ],
       "finish": {
-        "dealer_draws": ["10"],
+        "dealer_draws": ["10_of_diamonds"],
         "dealer_final_score": 25,
         "avatar_pose": "B",
         "text": "Exactly! I had 15, had to hit, and caught a 10. I busted. You won with a weak 16 just by doing nothing.",
@@ -38,9 +38,9 @@
       "title": "The Nervous 13 (13 vs 3)",
       "goal": "Reinforce standing on 13+ against weak cards.",
       "setup": {
-        "player_hand": ["10", "3"],
-        "dealer_up_card": "3",
-        "dealer_hidden_card": "10"
+        "player_hand": ["10_of_spades", "3_of_hearts"],
+        "dealer_up_card": "3_of_diamonds",
+        "dealer_hidden_card": "10_of_clubs"
       },
       "sequence": [
         {
@@ -53,7 +53,7 @@
         }
       ],
       "finish": {
-        "dealer_draws": ["K"],
+        "dealer_draws": ["king_of_hearts"],
         "dealer_final_score": 23,
         "avatar_pose": "B",
         "text": "Phew! I had 13, drew a King, and busted. Playing defensively pays off.",
@@ -65,9 +65,9 @@
       "title": "The Exception (12 vs 2)",
       "goal": "Teach that 12 vs 2 requires a HIT.",
       "setup": {
-        "player_hand": ["10", "2"],
-        "dealer_up_card": "2",
-        "dealer_hidden_card": "8"
+        "player_hand": ["10_of_hearts", "2_of_clubs"],
+        "dealer_up_card": "2_of_spades",
+        "dealer_hidden_card": "8_of_diamonds"
       },
       "sequence": [
         {
@@ -75,7 +75,7 @@
           "avatar_pose": "C",
           "text": "You have 12. Dealer has 2. BE CAREFUL! 12 is a special case. Dealer's 2 is not weak enough to guarantee a bust. We must take one card. Hit!",
           "required_action": "HIT",
-          "cards_added": ["8"],
+          "cards_added": ["8_of_clubs"],
           "player_score_after": 20
         },
         {
@@ -88,7 +88,7 @@
         }
       ],
       "finish": {
-        "dealer_draws": ["7"],
+        "dealer_draws": ["7_of_spades"],
         "dealer_final_score": 17,
         "avatar_pose": "B",
         "text": "Good call. I ended up with 17. Your 12 would have lost, but your 20 wins.",
@@ -100,9 +100,9 @@
       "title": "The Trap (12 vs 4)",
       "goal": "Contrast with previous scenario: 12 vs 4 is a Stand.",
       "setup": {
-        "player_hand": ["Q", "2"],
-        "dealer_up_card": "4",
-        "dealer_hidden_card": "10"
+        "player_hand": ["queen_of_diamonds", "2_of_hearts"],
+        "dealer_up_card": "4_of_clubs",
+        "dealer_hidden_card": "10_of_spades"
       },
       "sequence": [
         {
@@ -115,7 +115,7 @@
         }
       ],
       "finish": {
-        "dealer_draws": ["8"],
+        "dealer_draws": ["8_of_hearts"],
         "dealer_final_score": 22,
         "avatar_pose": "B",
         "text": "Correct. I had 14, hit an 8, and busted. You survived with just 12 points.",
@@ -127,9 +127,9 @@
       "title": "Bust Magnet (15 vs 5)",
       "goal": "Handling the worst hand vs a weak dealer.",
       "setup": {
-        "player_hand": ["9", "6"],
-        "dealer_up_card": "5",
-        "dealer_hidden_card": "9"
+        "player_hand": ["9_of_spades", "6_of_clubs"],
+        "dealer_up_card": "5_of_diamonds",
+        "dealer_hidden_card": "9_of_hearts"
       },
       "sequence": [
         {
@@ -142,7 +142,7 @@
         }
       ],
       "finish": {
-        "dealer_draws": ["K"],
+        "dealer_draws": ["king_of_spades"],
         "dealer_final_score": 24,
         "avatar_pose": "B",
         "text": "Dealer Bust! I had 14 and drew a King. Remember: When the dealer is weak, patience is your weapon.",

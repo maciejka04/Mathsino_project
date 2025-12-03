@@ -11,17 +11,17 @@
       "title": "HIT & BUST Mechanics",
       "goal": "Demonstrate losing by exceeding 21 (Bust).",
       "setup": {
-        "player_hand": ["7", "5"],
-        "dealer_up_card": "6",
-        "dealer_hidden_card": "10"
+        "player_hand": ["7_of_clubs", "5_of_diamonds"],
+        "dealer_up_card": "6_of_spades",
+        "dealer_hidden_card": "10_of_hearts"
       },
       "sequence": [
         {
           "step_order": 1,
           "avatar_pose": "A",
-          "text": "You have 12 points. That's too low to be safe. You need to take a card. Click HIT.",
+          "text": "You have 12 points (7 + 5). That's too low to be safe against my 6. You need to take a card. Click HIT.",
           "required_action": "HIT",
-          "cards_added": ["J"],
+          "cards_added": ["jack_of_diamonds"],
           "player_score_after": 22
         }
       ],
@@ -36,9 +36,9 @@
       "title": "STAND Mechanics",
       "goal": "Demonstrate winning by standing (Dealer Bust).",
       "setup": {
-        "player_hand": ["K", "9"],
-        "dealer_up_card": "8",
-        "dealer_hidden_card": "5"
+        "player_hand": ["king_of_hearts", "9_of_clubs"],
+        "dealer_up_card": "8_of_diamonds",
+        "dealer_hidden_card": "5_of_spades"
       },
       "sequence": [
         {
@@ -51,10 +51,10 @@
         }
       ],
       "finish": {
-        "dealer_draws": ["Q"],
+        "dealer_draws": ["queen_of_spades"],
         "dealer_final_score": 23,
         "avatar_pose": "B",
-        "text": "You won! You waited patiently, and I had to take a card and went over 21.",
+        "text": "You won! You waited patiently with 19. I had 13, had to hit, and busted with 23.",
         "result_status": "WIN"
       }
     },
@@ -63,31 +63,31 @@
       "title": "Building a Hand (Multi-Hit)",
       "goal": "Show that sometimes you need to hit multiple times.",
       "setup": {
-        "player_hand": ["2", "3"],
-        "dealer_up_card": "10",
-        "dealer_hidden_card": "7"
+        "player_hand": ["2_of_hearts", "3_of_clubs"],
+        "dealer_up_card": "10_of_diamonds",
+        "dealer_hidden_card": "7_of_spades"
       },
       "sequence": [
         {
           "step_order": 1,
           "avatar_pose": "A",
-          "text": "You only have 5 points. The dealer has a strong 10. You must build your hand. Click HIT.",
+          "text": "You only have 5 points. I have a strong 10. You must build your hand. Click HIT.",
           "required_action": "HIT",
-          "cards_added": ["5"],
+          "cards_added": ["5_of_hearts"],
           "player_score_after": 10
         },
         {
           "step_order": 2,
           "avatar_pose": "C",
-          "text": "You have 10 points. Still not enough against a dealer's 10. Be brave! Click HIT again.",
+          "text": "You have 10 points. Still not enough against my 10. Be brave! Click HIT again.",
           "required_action": "HIT",
-          "cards_added": ["K"],
+          "cards_added": ["king_of_clubs"],
           "player_score_after": 20
         },
         {
           "step_order": 3,
           "avatar_pose": "B",
-          "text": "You have 20! Great. Don't risk it now. Click STAND.",
+          "text": "Now you have 20! Great score. Don't risk it now. Click STAND.",
           "required_action": "STAND",
           "cards_added": [],
           "player_score_after": 20
@@ -97,7 +97,7 @@
         "dealer_draws": [],
         "dealer_final_score": 17,
         "avatar_pose": "B",
-        "text": "Bravo! You turned 5 points into 20. Sometimes you have to fight to the end.",
+        "text": "Bravo! You turned 5 points into 20. I have 17, so you win.",
         "result_status": "WIN"
       }
     },
@@ -106,25 +106,25 @@
       "title": "DOUBLE DOWN Mechanics",
       "goal": "Learn to double the bet.",
       "setup": {
-        "player_hand": ["5", "6"],
-        "dealer_up_card": "5",
-        "dealer_hidden_card": "9"
+        "player_hand": ["5_of_clubs", "6_of_diamonds"],
+        "dealer_up_card": "5_of_hearts",
+        "dealer_hidden_card": "9_of_clubs"
       },
       "sequence": [
         {
           "step_order": 1,
           "avatar_pose": "C",
-          "text": "You have 11, I have a weak 5. The odds are in your favor. Double the bet (Double Down) to get one single decisive card.",
+          "text": "You have 11. I have a weak 5. The odds are heavily in your favor. Use DOUBLE DOWN to double your bet and get exactly one card.",
           "required_action": "DOUBLE",
-          "cards_added": ["9"],
+          "cards_added": ["9_of_spades"],
           "player_score_after": 20
         }
       ],
       "finish": {
-        "dealer_draws": ["K"],
+        "dealer_draws": ["king_of_diamonds"],
         "dealer_final_score": 24,
         "avatar_pose": "B",
-        "text": "Perfect! You doubled your bet at the best moment.",
+        "text": "Perfect! You got a 9 for a total of 20. I busted. You win double the money!",
         "result_status": "WIN_DOUBLE"
       }
     },
@@ -133,9 +133,9 @@
       "title": "SPLIT Mechanics",
       "goal": "Learn to split pairs.",
       "setup": {
-        "player_hand": ["8", "8"],
-        "dealer_up_card": "9",
-        "dealer_hidden_card": "8"
+        "player_hand": ["8_of_spades", "8_of_hearts"],
+        "dealer_up_card": "9_of_clubs",
+        "dealer_hidden_card": "8_of_diamonds"
       },
       "sequence": [
         {
@@ -143,8 +143,8 @@
           "avatar_pose": "A",
           "text": "You have two eights (16). That's the worst hand in the game. Save yourself and SPLIT them into two separate hands.",
           "required_action": "SPLIT",
-          "cards_added_hand_1": ["10"],
-          "cards_added_hand_2": ["A"],
+          "cards_added_hand_1": ["10_of_diamonds"],
+          "cards_added_hand_2": ["ace_of_clubs"],
           "player_score_hand_1": 18,
           "player_score_hand_2": 19
         }
@@ -153,7 +153,7 @@
         "dealer_draws": [],
         "dealer_final_score": 17,
         "avatar_pose": "B",
-        "text": "Saved! You turned a lousy 16 into 18 and 19. You won both hands!",
+        "text": "Saved! You turned a lousy 16 into 18 and 19. You won both hands! Splitting saved the day.",
         "result_status": "WIN_BOTH"
       }
     }

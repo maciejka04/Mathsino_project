@@ -9,8 +9,8 @@ const cardData = [
     topic: 'wave', 
     alt: 'wave', 
     image: lekcja1, 
-    title: 'Lekcja 1',
-    subtitle: 'Podtytuł lekcji 1',
+    title: 'Lesson 1',
+    subtitle: 'Basic Rules & Mechanics',
     description: 'Opis lekcji 1'
   },
  { 

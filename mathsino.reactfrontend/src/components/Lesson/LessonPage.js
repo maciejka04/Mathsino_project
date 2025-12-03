@@ -2,12 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
-// --- IMPORTY STYLÓW I GRAFIK ---
+// --- STYLES & ASSETS ---
 import '../Offline/Offline.css'; 
+import './LessonPage.css';
 import tableImage from '../../assets/table4.png';
 import reverseCardImage from '../../assets/karty/reverse.png';
 
-// --- IMPORTY LEKCJI ---
+// --- AVATARS ---
+import avatarImgA from '../../assets/avatar_A.png'; // Neutral
+import avatarImgB from '../../assets/avatar_B.png'; // Happy
+import avatarImgC from '../../assets/avatar_C.png'; // Worried
+
+// --- LESSON DATA IMPORTS ---
 import lesson1 from '../../assets/lekcje/lekcja1.json';
 import lesson2 from '../../assets/lekcje/lekcja2.json';
 import lesson3 from '../../assets/lekcje/lekcja3.json';
@@ -18,20 +24,20 @@ import lesson7 from '../../assets/lekcje/lekcja7.json';
 import lesson8 from '../../assets/lekcje/lekcja8.json';
 import lesson9 from '../../assets/lekcje/lekcja9.json';
 
-// Mapa lekcji
+// Lessons Map
 const lessonsMap = {
-  1: lesson1,
-  2: lesson2,
-  3: lesson3,
-  4: lesson4,
-  5: lesson5,
-  6: lesson6,
-  7: lesson7,
-  8: lesson8,
-  9: lesson9
+  1: lesson1, 2: lesson2, 3: lesson3, 4: lesson4, 5: lesson5,
+  6: lesson6, 7: lesson7, 8: lesson8, 9: lesson9
 };
 
-// --- HELPERY DO KART ---
+// Avatar Map
+const avatarMap = {
+    "A": avatarImgA,
+    "B": avatarImgB,
+    "C": avatarImgC
+};
+
+// --- CARD HELPERS ---
 const allCardFileNames = [
     '2_of_hearts', '3_of_hearts', '4_of_hearts', '5_of_hearts', '6_of_hearts', '7_of_hearts', '8_of_hearts', '9_of_hearts', '10_of_hearts', 'jack_of_hearts', 'queen_of_hearts', 'king_of_hearts', 'ace_of_hearts',
     '2_of_diamonds', '3_of_diamonds', '4_of_diamonds', '5_of_diamonds', '6_of_diamonds', '7_of_diamonds', '8_of_diamonds', '9_of_diamonds', '10_of_diamonds', 'jack_of_diamonds', 'queen_of_diamonds', 'king_of_diamonds', 'ace_of_diamonds',
@@ -40,35 +46,29 @@ const allCardFileNames = [
 ];
 
 const cardImagesMap = allCardFileNames.reduce((acc, cardName) => {
-    try {
-        acc[cardName] = require(`../../assets/karty/${cardName}.png`);
-    } catch (e) {}
+    try { acc[cardName] = require(`../../assets/karty/${cardName}.png`); } catch (e) {}
     return acc;
 }, {});
 
-const mapJsonCardToFilename = (cardCode) => {
-    if (!cardCode) return null;
-    let rank = cardCode.toUpperCase();
-    
-    if (rank === '10') rank = '10';
-    else if (rank === 'A') rank = 'ace';
-    else if (rank === 'K') rank = 'king';
-    else if (rank === 'Q') rank = 'queen';
-    else if (rank === 'J') rank = 'jack';
-    
-    return `${rank.toLowerCase()}_of_spades`; 
+const mapJsonCardToFilename = (jsonValue) => {
+    if (!jsonValue) return null;
+    if (!jsonValue.includes('_')) {
+         let rank = jsonValue.toLowerCase();
+         if (rank === 'a') rank = 'ace';
+         if (rank === 'k') rank = 'king';
+         if (rank === 'q') rank = 'queen';
+         if (rank === 'j') rank = 'jack';
+         return `${rank}_of_spades`;
+    }
+    return jsonValue;
 };
 
 const LessonPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
   const currentLessonData = lessonsMap[id];
 
-  // --- STAN APLIKACJI ---
-  // NOWOŚĆ: lessonPhase steruje tym, co wyświetlamy: 'INTRO', 'GAME', 'CONCLUSION'
   const [lessonPhase, setLessonPhase] = useState('INTRO'); 
-
   const [currentScenarioIndex, setCurrentScenarioIndex] = useState(0);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   
@@ -82,13 +82,11 @@ const LessonPage = () => {
   const [isScenarioFinished, setIsScenarioFinished] = useState(false);
   const [isWrongAction, setIsWrongAction] = useState(false);
 
-  // Pobieramy scenariusz (bezpiecznie)
   const scenario = currentLessonData ? currentLessonData.scenarios[currentScenarioIndex] : null;
 
-  // --- 1. SETUP PRZY ZMIANIE LEKCJI (Reset) ---
+  // --- 1. SETUP ON LESSON CHANGE ---
   useEffect(() => {
     if (currentLessonData) {
-        // Zawsze zaczynamy od INTRO
         setLessonPhase('INTRO');
         setCurrentScenarioIndex(0);
         setCurrentStepIndex(0);
@@ -96,18 +94,15 @@ const LessonPage = () => {
         setPlayerCards([]);
         setSplitCards([]);
         
-        // Ładujemy tekst powitalny
         if (currentLessonData.introduction) {
             setFeedbackText(currentLessonData.introduction.text);
             setAvatarPose(currentLessonData.introduction.avatar_pose);
         }
     }
-  }, [currentLessonData]); // Wykona się tylko jak zmienimy lekcję (np. z 1 na 2)
+  }, [currentLessonData]);
 
-
-  // --- 2. SETUP SCENARIUSZA (Tylko w fazie GAME) ---
+  // --- 2. SETUP SCENARIO (GAME PHASE ONLY) ---
   useEffect(() => {
-    // Uruchamiamy tylko jeśli jesteśmy w fazie gry i mamy scenariusz
     if (lessonPhase === 'GAME' && scenario) {
       setHasSplit(false);
       setSplitCards([]);
@@ -115,8 +110,7 @@ const LessonPage = () => {
       setIsWrongAction(false);
       
       const pCards = scenario.setup.player_hand.map(code => ({
-          name: code,
-          src: cardImagesMap[mapJsonCardToFilename(code)]
+          name: code, src: cardImagesMap[mapJsonCardToFilename(code)]
       }));
       setPlayerCards(pCards);
 
@@ -132,15 +126,10 @@ const LessonPage = () => {
         setAvatarPose(scenario.sequence[0].avatar_pose);
       }
     }
-  }, [lessonPhase, currentScenarioIndex, scenario]); // Zależy od Fazy i Numeru scenariusza
+  }, [lessonPhase, currentScenarioIndex, scenario]);
 
-
-  // --- FUNKCJE NAWIGACJI ---
-
-  // Kliknięcie "Let's Start" po Intro
-  const startLesson = () => {
-      setLessonPhase('GAME');
-  };
+  // --- ACTIONS ---
+  const startLesson = () => setLessonPhase('GAME');
 
   const handleAction = (actionType) => {
     if (lessonPhase !== 'GAME' || isScenarioFinished || !scenario) return;
@@ -150,6 +139,7 @@ const LessonPage = () => {
     if (actionType === currentStep.required_action) {
       setIsWrongAction(false);
 
+      // 1. Add cards to MAIN Hand
       if (currentStep.cards_added && currentStep.cards_added.length > 0) {
          const newCards = currentStep.cards_added.map(code => ({
             name: code,
@@ -158,6 +148,16 @@ const LessonPage = () => {
          setPlayerCards(prev => [...prev, ...newCards]);
       }
 
+      // 2. Add cards to SPLIT Hand
+      if (currentStep.cards_added_to_split && currentStep.cards_added_to_split.length > 0) {
+         const newSplitCards = currentStep.cards_added_to_split.map(code => ({
+            name: code,
+            src: cardImagesMap[mapJsonCardToFilename(code)]
+         }));
+         setSplitCards(prev => [...prev, ...newSplitCards]);
+      }
+
+      // 3. Handle SPLIT logic
       if (actionType === 'SPLIT') {
           setHasSplit(true);
           const card1 = playerCards[0];
@@ -168,6 +168,7 @@ const LessonPage = () => {
           setSplitCards([playerCards[1], newCard2]);
       }
 
+      // Proceed to next step
       const nextStepIndex = currentStepIndex + 1;
       
       if (nextStepIndex < scenario.sequence.length) {
@@ -180,7 +181,7 @@ const LessonPage = () => {
 
     } else {
       setIsWrongAction(true);
-      setFeedbackText("Nie, to nie jest dobra decyzja w tej sytuacji. Spróbuj czegoś innego!");
+      setFeedbackText("Nope! That's not the best move here. Try something else!");
       setAvatarPose("C");
     }
   };
@@ -200,8 +201,7 @@ const LessonPage = () => {
         
         if (finishData.dealer_draws) {
              const extraCards = finishData.dealer_draws.map(code => ({
-                name: code,
-                src: cardImagesMap[mapJsonCardToFilename(code)]
+                name: code, src: cardImagesMap[mapJsonCardToFilename(code)]
              }));
              return [...newCards, ...extraCards];
         }
@@ -210,16 +210,13 @@ const LessonPage = () => {
   };
 
   const nextStep = () => {
-    // Jeśli to był ostatni scenariusz -> idziemy do CONCLUSION
     if (currentScenarioIndex + 1 < currentLessonData.scenarios.length) {
       setCurrentScenarioIndex(prev => prev + 1);
     } else {
-      // Koniec scenariuszy, wczytujemy podsumowanie
       setLessonPhase('CONCLUSION');
       if (currentLessonData.conclusion) {
           setFeedbackText(currentLessonData.conclusion.text);
           setAvatarPose(currentLessonData.conclusion.avatar_pose);
-          // Możemy wyczyścić stół na koniec
           setDealerCards([]);
           setPlayerCards([]);
           setSplitCards([]);
@@ -227,80 +224,24 @@ const LessonPage = () => {
     }
   };
 
-  // --- OCHRONA PRZED BRAKIEM DANYCH ---
   if (!currentLessonData) {
       return (
         <div className="offline-container">
-            <h1 style={{color: 'white'}}>Nie znaleziono lekcji nr {id}</h1>
-            <button className="back-button" onClick={() => navigate('/learn')}>Wróć</button>
+            <h1 style={{color: 'white'}}>Lesson {id} not found</h1>
+            <button className="back-button" onClick={() => navigate('/learn')}>Go Back</button>
         </div>
       );
   }
 
-  // --- RENDEROWANIE ---
   return (
     <div className="offline-container">
-        <button className="back-button" onClick={() => navigate('/learn')}>&#8592; Wróć do Lekcji</button>
+        <button className="back-button" onClick={() => navigate('/learn')}>&#8592; Exit Lesson</button>
 
-        {/* --- OKNO INSTRUKTORA --- */}
-        <div style={{
-            position: 'absolute',
-            top: '10%',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 100,
-            background: isWrongAction ? 'rgba(100, 0, 0, 0.9)' : 'rgba(0, 0, 0, 0.8)',
-            border: isWrongAction ? '2px solid red' : '2px solid gold',
-            borderRadius: '15px',
-            padding: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '20px',
-            maxWidth: '600px',
-            boxShadow: '0 0 20px rgba(0,0,0,0.8)'
-        }}>
-            <div style={{ fontSize: '3rem' }}>
-                {avatarPose === "A" && "👨‍🏫"} 
-                {avatarPose === "B" && "😎"}
-                {avatarPose === "C" && "😱"}
-            </div>
-            <div>
-                {/* Tytuł zależny od fazy */}
-                <h3 style={{color: 'gold', margin: 0}}>
-                    {lessonPhase === 'INTRO' && "Wstęp"}
-                    {lessonPhase === 'GAME' && scenario && scenario.title}
-                    {lessonPhase === 'CONCLUSION' && "Podsumowanie"}
-                </h3>
-                
-                <p style={{color: 'white', fontSize: '1.1rem', margin: '10px 0'}}>{feedbackText}</p>
-                
-                {/* PRZYCISKI STEROWANIA LEKCJĄ */}
-                
-                {lessonPhase === 'INTRO' && (
-                    <button onClick={startLesson} style={nextBtnStyle}>
-                        ROZPOCZNIJ LEKCJĘ &gt;&gt;
-                    </button>
-                )}
-
-                {lessonPhase === 'GAME' && isScenarioFinished && (
-                    <button onClick={nextStep} style={nextBtnStyle}>
-                        NASTĘPNE WYZWANIE &gt;&gt;
-                    </button>
-                )}
-
-                {lessonPhase === 'CONCLUSION' && (
-                    <button onClick={() => navigate('/learn')} style={nextBtnStyle}>
-                        ZAKOŃCZ LEKCJĘ (MENU)
-                    </button>
-                )}
-            </div>
-        </div>
-
-        {/* --- STÓŁ (Wyświetlamy zawsze, ale w INTRO może być pusty) --- */}
+        {/* --- GAME TABLE --- */}
         <div className="game-table-area">
-            <img src={tableImage} alt="Stół do gry" className="game-table-image" />
+            <img src={tableImage} alt="Game Table" className="game-table-image" />
 
-            {/* Renderowanie kart tylko w fazie GAME */}
+            {/* Render cards ONLY in GAME phase */}
             {lessonPhase === 'GAME' && (
                 <>
                     {dealerCards.map((card, index) => {
@@ -350,7 +291,51 @@ const LessonPage = () => {
             )}
         </div>
 
-        {/* PRZYCISKI AKCJI (Tylko w fazie gry i gdy scenariusz trwa) */}
+        {/* --- INSTRUCTOR UI --- */}
+        <div className="instructor-wrapper">
+            
+            <div className="speech-bubble">
+                <h3 className="bubble-title">
+                    {lessonPhase === 'INTRO' && "Introduction"}
+                    {lessonPhase === 'GAME' && scenario && scenario.title}
+                    {lessonPhase === 'CONCLUSION' && "Conclusion"}
+                </h3>
+                
+                <p className="bubble-text">{feedbackText}</p>
+
+                {/* Buttons inside Bubble */}
+                {lessonPhase === 'INTRO' && (
+                    <button onClick={startLesson} className="bubble-btn">
+                        START LESSON
+                    </button>
+                )}
+
+                {lessonPhase === 'GAME' && isScenarioFinished && (
+                    <button onClick={nextStep} className="bubble-btn">
+                        NEXT CHALLENGE
+                    </button>
+                )}
+
+                {lessonPhase === 'CONCLUSION' && (
+                    <button onClick={() => navigate('/learn')} className="bubble-btn menu">
+                        BACK TO MENU
+                    </button>
+                )}
+            </div>
+
+            {/* Avatar Image */}
+            <motion.img 
+                key={avatarPose}
+                src={avatarMap[avatarPose] || avatarMap['A']} 
+                alt="Instructor" 
+                className="instructor-avatar"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+            />
+        </div>
+
+        {/* --- ACTION BUTTONS --- */}
         {lessonPhase === 'GAME' && (
             <div className="game-actions">
                 <button className="action-button stand" onClick={() => handleAction('STAND')}>Stand</button>
@@ -361,18 +346,6 @@ const LessonPage = () => {
         )}
     </div>
   );
-};
-
-// Styl dla przycisku "Dalej"
-const nextBtnStyle = {
-    background: 'gold', 
-    color: 'black', 
-    border: 'none', 
-    padding: '10px 20px', 
-    borderRadius: '5px', 
-    fontWeight: 'bold', 
-    cursor: 'pointer',
-    marginTop: '10px'
 };
 
 export default LessonPage;

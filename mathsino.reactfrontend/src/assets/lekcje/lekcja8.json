@@ -3,7 +3,7 @@
   "lesson_title": "Pairs Part 1: The Golden Rules",
   "introduction": {
     "avatar_pose": "A",
-    "text": "We are entering the final mechanic: SPLIT. When you have two identical cards, you can pay extra to play two hands. But should you? Today we learn the 'Golden Rules'. There are pairs we ALWAYS split, and pairs we NEVER split. Memorize these, and you avoid the biggest mistakes in Blackjack."
+    "text": "We are entering the final mechanic: SPLIT. When you have two identical cards, you can pay extra to play two hands. But should you? Today we learn the 'Golden Rules'. There are pairs we ALWAYS split, and pairs we NEVER split."
   },
   "scenarios": [
     {
@@ -11,9 +11,9 @@
       "title": "Always Split Aces (A,A vs 9)",
       "goal": "Teach the most important split: Aces.",
       "setup": {
-        "player_hand": ["A", "A"],
-        "dealer_up_card": "9",
-        "dealer_hidden_card": "8"
+        "player_hand": ["ace_of_spades", "ace_of_diamonds"],
+        "dealer_up_card": "9_of_clubs",
+        "dealer_hidden_card": "8_of_hearts"
       },
       "sequence": [
         {
@@ -21,8 +21,8 @@
           "avatar_pose": "B",
           "text": "Two Aces. Together they are just 2 or 12. But separate? They are two elevens! This is the strongest move in the game. ALWAYS Split Aces.",
           "required_action": "SPLIT",
-          "cards_added_hand_1": ["K"],
-          "cards_added_hand_2": ["Q"],
+          "cards_added_hand_1": ["king_of_hearts"],
+          "cards_added_hand_2": ["queen_of_clubs"],
           "player_score_hand_1": 21,
           "player_score_hand_2": 21
         }
@@ -37,23 +37,84 @@
     },
     {
       "id": 2,
+      "title": "How Split Works (Training)",
+      "goal": "Explain that after splitting, you play each hand separately.",
+      "setup": {
+        "player_hand": ["8_of_diamonds", "8_of_clubs"],
+        "dealer_up_card": "6_of_spades",
+        "dealer_hidden_card": "10_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Wait! Before we continue, let's understand HOW Split works. When you click Split, your cards separate. Then, you play Hand 1 (Left) until you Stand or Bust. ONLY THEN you move to Hand 2 (Right). Try it with these 8s against my 6.",
+          "required_action": "SPLIT",
+          "cards_added_hand_1": ["3_of_hearts"],
+          "cards_added_hand_2": ["10_of_diamonds"],
+          "player_score_hand_1": 11,
+          "player_score_hand_2": 18
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "A",
+          "text": "See? Hand 1 has 11 (8+3). We are focusing ONLY on this hand now. Ignore the other one. You have 11 vs 6. You know what to do!",
+          "required_action": "DOUBLE",
+          "cards_added": ["king_of_spades"],
+          "player_score_after": 21
+        },
+        {
+          "step_order": 3,
+          "avatar_pose": "B",
+          "text": "Great! Hand 1 is finished (21). Now focus moves to Hand 2. You have 18 (8+10). That's a good score. Don't ruin it. Stand.",
+          "required_action": "STAND",
+          "cards_added_to_split": [],
+          "player_score_after": 18
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["queen_of_hearts"],
+        "dealer_final_score": 26,
+        "avatar_pose": "B",
+        "text": "Perfect. You played two separate mini-games. I busted, so both your hands win!",
+        "result_status": "WIN_BOTH"
+      }
+    },
+    {
+      "id": 3,
       "title": "The Rescue Mission (8,8 vs 10)",
       "goal": "Teach splitting 8s to save a losing hand.",
       "setup": {
-        "player_hand": ["8", "8"],
-        "dealer_up_card": "10",
-        "dealer_hidden_card": "7"
+        "player_hand": ["8_of_spades", "8_of_hearts"],
+        "dealer_up_card": "10_of_diamonds",
+        "dealer_hidden_card": "7_of_hearts"
       },
       "sequence": [
         {
           "step_order": 1,
           "avatar_pose": "C",
-          "text": "Two Eights. Total 16. Against a 10, this is a guaranteed loss if you Hit or Stand. You have nothing to lose. SPLIT them to fight with two starting 8s.",
+          "text": "Now a real test. Two Eights vs 10. Total 16 is a loser. But two starting 8s give you a fighting chance. ALWAYS split 8s, even against a 10.",
           "required_action": "SPLIT",
-          "cards_added_hand_1": ["10"],
-          "cards_added_hand_2": ["A"],
+          "cards_added_hand_1": ["10_of_spades"],
+          "cards_added_hand_2": ["ace_of_hearts"],
           "player_score_hand_1": 18,
           "player_score_hand_2": 19
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "A",
+          "text": "Hand 1 is 18. Against a 10, that's the best we can hope for. Stand.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 18
+        },
+        {
+          "step_order": 3,
+          "avatar_pose": "B",
+          "text": "Hand 2 is 19. Excellent. Stand.",
+          "required_action": "STAND",
+          "cards_added_to_split": [],
+          "player_score_after": 19
         }
       ],
       "finish": {
@@ -65,13 +126,13 @@
       }
     },
     {
-      "id": 3,
+      "id": 4,
       "title": "Greed Kills (K,K vs 6)",
       "goal": "Teach NEVER splitting 10s/Faces.",
       "setup": {
-        "player_hand": ["K", "K"],
-        "dealer_up_card": "6",
-        "dealer_hidden_card": "9"
+        "player_hand": ["king_of_spades", "king_of_clubs"],
+        "dealer_up_card": "6_of_diamonds",
+        "dealer_hidden_card": "9_of_hearts"
       },
       "sequence": [
         {
@@ -84,7 +145,7 @@
         }
       ],
       "finish": {
-        "dealer_draws": ["10"],
+        "dealer_draws": ["10_of_diamonds"],
         "dealer_final_score": 25,
         "avatar_pose": "B",
         "text": "I busted. You win. Simple. Never split 20.",
@@ -92,13 +153,13 @@
       }
     },
     {
-      "id": 4,
+      "id": 5,
       "title": "The Fake Pair (5,5 vs 5)",
       "goal": "Teach that 5,5 is treated as Hard 10 (Double).",
       "setup": {
-        "player_hand": ["5", "5"],
-        "dealer_up_card": "5",
-        "dealer_hidden_card": "8"
+        "player_hand": ["5_of_hearts", "5_of_diamonds"],
+        "dealer_up_card": "5_of_spades",
+        "dealer_hidden_card": "8_of_clubs"
       },
       "sequence": [
         {
@@ -106,12 +167,12 @@
           "avatar_pose": "C",
           "text": "Two Fives. Is it a pair? No, it's a 10! If you split, you have two hands starting with 5 (very weak). If you keep them, you have 10. Treat it like a Hard 10. DOUBLE!",
           "required_action": "DOUBLE",
-          "cards_added": ["K"],
+          "cards_added": ["king_of_hearts"],
           "player_score_after": 20
         }
       ],
       "finish": {
-        "dealer_draws": ["K"],
+        "dealer_draws": ["king_of_clubs"],
         "dealer_final_score": 23,
         "avatar_pose": "B",
         "text": "Correct. You got 20. Splitting 5s is a rookie mistake. Doubling 5s is a pro move.",
@@ -119,13 +180,13 @@
       }
     },
     {
-      "id": 5,
+      "id": 6,
       "title": "Review: Aces vs Ace",
       "goal": "Reinforce: We split Aces even against an Ace.",
       "setup": {
-        "player_hand": ["A", "A"],
-        "dealer_up_card": "A",
-        "dealer_hidden_card": "9"
+        "player_hand": ["ace_of_hearts", "ace_of_clubs"],
+        "dealer_up_card": "ace_of_spades",
+        "dealer_hidden_card": "9_of_diamonds"
       },
       "sequence": [
         {
@@ -133,8 +194,8 @@
           "avatar_pose": "A",
           "text": "Aces again. I have an Ace too. It's scary, but the rule doesn't change. Aces are too powerful to keep together. SPLIT.",
           "required_action": "SPLIT",
-          "cards_added_hand_1": ["10"],
-          "cards_added_hand_2": ["9"],
+          "cards_added_hand_1": ["10_of_clubs"],
+          "cards_added_hand_2": ["9_of_hearts"],
           "player_score_hand_1": 21,
           "player_score_hand_2": 20
         }
