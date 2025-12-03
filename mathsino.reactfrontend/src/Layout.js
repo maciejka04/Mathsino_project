@@ -11,6 +11,7 @@ import { Outlet, NavLink, Link, useLocation } from 'react-router-dom';
 import awatar from './assets/profilowe_smok.png';
 import logo from './assets/logo.png';
 
+
 const BACKEND_URL = 'http://localhost:5126';
 
 function Layout() {
