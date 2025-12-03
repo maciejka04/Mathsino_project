@@ -11,9 +11,9 @@
       "title": "The Nightmare (16 vs 7)",
       "goal": "Teach hitting on 16 against 7.",
       "setup": {
-        "player_hand": ["10", "6"],
-        "dealer_up_card": "7",
-        "dealer_hidden_card": "10"
+        "player_hand": ["10_of_spades", "6_of_clubs"],
+        "dealer_up_card": "7_of_diamonds",
+        "dealer_hidden_card": "10_of_hearts"
       },
       "sequence": [
         {
@@ -21,7 +21,7 @@
           "avatar_pose": "C",
           "text": "You have 16. I have 7. If you Stand, I likely have 17 (giving me a win). You are losing anyway. You have to take a chance. Click HIT.",
           "required_action": "HIT",
-          "cards_added": ["5"],
+          "cards_added": ["5_of_diamonds"],
           "player_score_after": 21
         }
       ],
@@ -38,9 +38,9 @@
       "title": "Accepting the Risk (15 vs 10)",
       "goal": "Show that hitting is correct even if you bust.",
       "setup": {
-        "player_hand": ["9", "6"],
-        "dealer_up_card": "10",
-        "dealer_hidden_card": "8"
+        "player_hand": ["9_of_diamonds", "6_of_spades"],
+        "dealer_up_card": "10_of_clubs",
+        "dealer_hidden_card": "8_of_hearts"
       },
       "sequence": [
         {
@@ -48,7 +48,7 @@
           "avatar_pose": "C",
           "text": "You have 15. I have 10. This is a desperate situation. Standing is surrender. You must hit and hope for a small card.",
           "required_action": "HIT",
-          "cards_added": ["Q"],
+          "cards_added": ["queen_of_hearts"],
           "player_score_after": 25
         }
       ],
@@ -62,12 +62,12 @@
     },
     {
       "id": 3,
-      "title": "Don't be fooled (12 vs 3 vs 12 vs 8)",
+      "title": "Don't be fooled (12 vs 8)",
       "goal": "Contrast: 12 vs 2/3 (Hit/Stand depending) vs 12 vs 8 (Always Hit).",
       "setup": {
-        "player_hand": ["10", "2"],
-        "dealer_up_card": "8",
-        "dealer_hidden_card": "9"
+        "player_hand": ["10_of_hearts", "2_of_clubs"],
+        "dealer_up_card": "8_of_spades",
+        "dealer_hidden_card": "9_of_diamonds"
       },
       "sequence": [
         {
@@ -75,7 +75,15 @@
           "avatar_pose": "A",
           "text": "You have 12. In the last lesson (vs weak dealer), we stood. But now I have an 8. An 8 is strong. You must assume I have 18. You need to improve. Hit!",
           "required_action": "HIT",
-          "cards_added": ["7"],
+          "cards_added": ["7_of_clubs"],
+          "player_score_after": 19
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "B",
+          "text": "You have 19. That is excellent. Now Stand.",
+          "required_action": "STAND",
+          "cards_added": [],
           "player_score_after": 19
         }
       ],
@@ -92,9 +100,9 @@
       "title": "Against the Ace (13 vs A)",
       "goal": "Playing weak hands against the strongest card.",
       "setup": {
-        "player_hand": ["10", "3"],
-        "dealer_up_card": "A",
-        "dealer_hidden_card": "8"
+        "player_hand": ["10_of_diamonds", "3_of_spades"],
+        "dealer_up_card": "ace_of_hearts",
+        "dealer_hidden_card": "8_of_clubs"
       },
       "sequence": [
         {
@@ -102,7 +110,7 @@
           "avatar_pose": "C",
           "text": "13 against Ace. The worst feeling in the world. But math doesn't have feelings. Hit it.",
           "required_action": "HIT",
-          "cards_added": ["5"],
+          "cards_added": ["5_of_hearts"],
           "player_score_after": 18
         },
         {
@@ -127,9 +135,9 @@
       "title": "The Reward (14 vs 9)",
       "goal": "Show successful recovery from a bad hand.",
       "setup": {
-        "player_hand": ["7", "7"],
-        "dealer_up_card": "9",
-        "dealer_hidden_card": "8"
+        "player_hand": ["10_of_clubs", "4_of_hearts"],
+        "dealer_up_card": "9_of_spades",
+        "dealer_hidden_card": "8_of_diamonds"
       },
       "sequence": [
         {
@@ -137,7 +145,7 @@
           "avatar_pose": "C",
           "text": "14 vs 9. Danger zone. If you stand, you wait for execution. Hit!",
           "required_action": "HIT",
-          "cards_added": ["6"],
+          "cards_added": ["6_of_diamonds"],
           "player_score_after": 20
         }
       ],

@@ -1,0 +1,91 @@
+/* src/components/Lesson/LessonPage.css */
+
+/* --- UI INSTRUKTORA (Tylko dla Lekcji) --- */
+.instructor-wrapper {
+    position: absolute;
+    bottom: 0;
+    right: 20px; /* Odległość od prawej krawędzi */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Wyrównanie do prawej */
+    z-index: 200; /* Musi być nad kartami */
+    pointer-events: none; /* Żeby przeźroczyste tło nie blokowało klikania w stół */
+}
+
+.instructor-avatar {
+    height: 45vh; /* Zwiększyłem lekko, żeby był wyraźny */
+    max-height: 500px;
+    object-fit: contain;
+    margin-right: -30px; /* Lekkie przesunięcie w prawo */
+    filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+    transition: transform 0.3s ease;
+}
+
+.speech-bubble {
+    position: relative;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 10px; /* Odstęp od głowy awatara */
+    margin-right: 60px; /* Przesunięcie dymku, żeby celował w usta/głowę */
+    max-width: 350px;
+    color: #000000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    pointer-events: auto; /* Dymek i przyciski w nim muszą być klikalne! */
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid gold; /* Dodatkowy styl pasujący do gry */
+}
+
+/* Ogonek dymku */
+.speech-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -10px; 
+    right: 40px;   
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: #ffffff transparent;
+    display: block;
+    width: 0;
+}
+
+.bubble-title {
+    margin: 0 0 5px 0;
+    color: #d32f2f; /* Czerwony kolor dla tytułu */
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.bubble-text {
+    font-size: 1rem;
+    line-height: 1.4;
+    margin-bottom: 15px;
+}
+
+.bubble-btn {
+    background: #28a745; /* Zielony */
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.2s;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.bubble-btn:hover {
+    background: #218838;
+}
+
+.bubble-btn.menu {
+    background: #007bff; /* Niebieski dla powrotu */
+}
+
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.8) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}

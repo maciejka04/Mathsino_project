@@ -39,6 +39,7 @@ public class MathsinoContext : DbContext
                     FirstName = "Alice",
                     LastName = "Smith",
                     Email = "alice.smith@example.com",
+                    Balance = 5000,
                 },
                 new User
                 {
@@ -46,6 +47,7 @@ public class MathsinoContext : DbContext
                     FirstName = "Bob",
                     LastName = "Johnson",
                     Email = "bob.johnson@example.com",
+                    Balance = 3000,
                 }
             );
         modelBuilder

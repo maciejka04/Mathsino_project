@@ -11,9 +11,9 @@
       "title": "The Soft 17 Myth (A,6 vs 7)",
       "goal": "Teach that Soft 17 is a weak hand that must be hit.",
       "setup": {
-        "player_hand": ["A", "6"],
-        "dealer_up_card": "7",
-        "dealer_hidden_card": "10"
+        "player_hand": ["ace_of_hearts", "6_of_clubs"],
+        "dealer_up_card": "7_of_diamonds",
+        "dealer_hidden_card": "10_of_spades"
       },
       "sequence": [
         {
@@ -21,7 +21,15 @@
           "avatar_pose": "A",
           "text": "You have Soft 17 (Ace+6). Many players Stand here. Wrong! 17 is not enough to beat the Dealer comfortably. Since you cannot bust, you MUST try to improve. Hit!",
           "required_action": "HIT",
-          "cards_added": ["3"],
+          "cards_added": ["3_of_hearts"],
+          "player_score_after": 20
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "B",
+          "text": "Now you have 20. Much better than 17. Stand.",
+          "required_action": "STAND",
+          "cards_added": [],
           "player_score_after": 20
         }
       ],
@@ -38,9 +46,9 @@
       "title": "Soft 13 Safety (A,2 vs 8)",
       "goal": "Demonstrate the safety of hitting low soft hands.",
       "setup": {
-        "player_hand": ["A", "2"],
-        "dealer_up_card": "8",
-        "dealer_hidden_card": "9"
+        "player_hand": ["ace_of_diamonds", "2_of_spades"],
+        "dealer_up_card": "8_of_hearts",
+        "dealer_hidden_card": "9_of_clubs"
       },
       "sequence": [
         {
@@ -48,7 +56,7 @@
           "avatar_pose": "A",
           "text": "You have Soft 13 (Ace+2). It's either 3 or 13. You have absolutely nothing to lose. Hit to improve.",
           "required_action": "HIT",
-          "cards_added": ["Q"],
+          "cards_added": ["queen_of_clubs"],
           "player_score_after": 13
         },
         {
@@ -56,7 +64,15 @@
           "avatar_pose": "C",
           "text": "You drew a Queen (10). 13 + 10 = 23? No! The Ace becomes 1. So 1 + 2 + 10 = 13. You are back to where you started (Hard 13). Now play it like a Hard Hand vs 8. Hit again!",
           "required_action": "HIT",
-          "cards_added": ["6"],
+          "cards_added": ["6_of_diamonds"],
+          "player_score_after": 19
+        },
+        {
+          "step_order": 3,
+          "avatar_pose": "B",
+          "text": "You got a 6. Total 19. Now you are safe. Stand.",
+          "required_action": "STAND",
+          "cards_added": [],
           "player_score_after": 19
         }
       ],
@@ -73,9 +89,9 @@
       "title": "The Tricky Soft 18 (A,7 vs 9)",
       "goal": "Teach hitting Soft 18 against strong dealer cards.",
       "setup": {
-        "player_hand": ["A", "7"],
-        "dealer_up_card": "9",
-        "dealer_hidden_card": "10"
+        "player_hand": ["ace_of_clubs", "7_of_hearts"],
+        "dealer_up_card": "9_of_diamonds",
+        "dealer_hidden_card": "10_of_hearts"
       },
       "sequence": [
         {
@@ -83,7 +99,15 @@
           "avatar_pose": "C",
           "text": "You have Soft 18. 18 feels good, but I have a 9 (likely 19). You are behind. Since you cannot bust, you must Hit Soft 18 against 9, 10, or Ace.",
           "required_action": "HIT",
-          "cards_added": ["2"],
+          "cards_added": ["2_of_clubs"],
+          "player_score_after": 20
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "B",
+          "text": "Soft 18 became 20. Perfect. Stand.",
+          "required_action": "STAND",
+          "cards_added": [],
           "player_score_after": 20
         }
       ],
@@ -100,9 +124,9 @@
       "title": "Soft 19 Power (A,8 vs 10)",
       "goal": "Teach Standing on Soft 19.",
       "setup": {
-        "player_hand": ["A", "8"],
-        "dealer_up_card": "10",
-        "dealer_hidden_card": "9"
+        "player_hand": ["ace_of_spades", "8_of_diamonds"],
+        "dealer_up_card": "10_of_clubs",
+        "dealer_hidden_card": "9_of_spades"
       },
       "sequence": [
         {
@@ -127,9 +151,9 @@
       "title": "Soft 20 Lock (A,9 vs 5)",
       "goal": "Teach Standing on Soft 20.",
       "setup": {
-        "player_hand": ["A", "9"],
-        "dealer_up_card": "5",
-        "dealer_hidden_card": "10"
+        "player_hand": ["ace_of_hearts", "9_of_spades"],
+        "dealer_up_card": "5_of_diamonds",
+        "dealer_hidden_card": "10_of_clubs"
       },
       "sequence": [
         {
@@ -142,7 +166,7 @@
         }
       ],
       "finish": {
-        "dealer_draws": ["8"],
+        "dealer_draws": ["8_of_hearts"],
         "dealer_final_score": 23,
         "avatar_pose": "B",
         "text": "I busted. Easy win.",
