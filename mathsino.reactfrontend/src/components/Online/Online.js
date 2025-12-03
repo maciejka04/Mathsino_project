@@ -12,7 +12,6 @@ import Fireworks from 'fireworks-js';
 import reverseCardImage from "../../assets/karty/reverse2.png";
 import defaultAvatar from "../../assets/profilepic/snake.png";
 
-import { useOutletContext } from "react-router-dom";
 
 const DECK_POSITION = { left: 15, top: 30 };
 
@@ -99,13 +98,7 @@ const mapBackendCardToFilename = (card) => {
 
 function Online() {
   const navigate = useNavigate();
-<<<<<<< HEAD
-
   const { user } = useOutletContext();
-
-=======
-  const { user } = useOutletContext();
->>>>>>> 34a9f89 (Poprawki css, efekt blackjack, aktualizacja grafik)
   const [currentBalance, setCurrentBalance] = useState(5000);
   const [currentBet, setCurrentBet] = useState(0);
 
