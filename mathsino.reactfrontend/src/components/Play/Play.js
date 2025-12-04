@@ -1,22 +1,14 @@
-// src/components/Play/Play.js (PEŁNY, POPRAWNY KOD)
-
 import React, { useEffect, useRef } from 'react';
 import './Play.css';
-import offline from '../../assets/singleplayer.png';
-import online from '../../assets/multiplayer.png';
+import online from '../../assets/singleplayer.png';
 import { Link } from 'react-router-dom';
 
 function Play() {
-  // 1. Hook useRef jest potrzebny
   const cardContainerRef = useRef(null);
 
-  // 2. Cała logika animacji kart musi być tutaj, wewnątrz useEffect
   useEffect(() => {
-    // Sprawdzenie, czy ref już istnieje
-    if (!cardContainerRef.current) {
-      return;
-    }
-    
+    if (!cardContainerRef.current) return;
+
     const cards = cardContainerRef.current.querySelectorAll('.card');
 
     const mouseMoveHandler = (e) => {
@@ -41,29 +33,16 @@ function Play() {
       card.addEventListener('mouseleave', mouseLeaveHandler);
     });
 
-    // Funkcja czyszcząca
     return () => {
       cards.forEach(card => {
         card.removeEventListener('mousemove', mouseMoveHandler);
         card.removeEventListener('mouseleave', mouseLeaveHandler);
       });
     };
-  }, []); // Pusta tablica = uruchom tylko raz
+  }, []);
 
-return (
-    // 3. 'ref' musi być podpięty do kontenera
+  return (
     <div className="card-container" ref={cardContainerRef}>
-      
-      {/* === 1. Karta Offline (Używamy <Link> zamiast <div> i onClick) === */}
-      <Link to="/offline" className="card-link">
-        <div className="card">
-          <div className="card-info">
-            <img src={offline} alt="Play Offline" />
-          </div>
-        </div>
-      </Link>
-      
-      {/* === 2. Karta Online (Używamy <Link> zamiast <div> i onClick) === */}
       <Link to="/online" className="card-link">
         <div className="card">
           <div className="card-info">
@@ -71,7 +50,6 @@ return (
           </div>
         </div>
       </Link>
-      
     </div>
   );
 }
