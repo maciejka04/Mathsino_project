@@ -3,17 +3,33 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
+import { useOutletContext } from "react-router-dom";
+
 function Home() {
+  const { user } = useOutletContext();
+   const isLogged = user?.isAuthenticated;
   return (
     <>
-      {/* Nagłówek zostaje, jest dobry */}
       <header>
-        <h1>Welcome Back, User</h1>
-        <p>log in to save your progress</p>
+        {isLogged ? (
+          <>
+            <h1>Welcome back, {user.name} 👋</h1>
+          </>
+        ) : (
+          <>
+            <h1>Witaj!</h1>
+            <p>Zaloguj się, aby zapisywać progres i odblokować pełne statystyki.</p>
+
+            <Link to="/login" className="login-button">
+              Zaloguj się
+            </Link>
+          </>
+        )}
       </header>
       
       <div className="dashboard-grid">
-
+    {isLogged && (
+      <>
         {/* === 1. KARTA POWITALNA ZE STATYSTYKAMI (Szeroka) === */}
         <div className="dashboard-card welcome-stats-card">
           <div className="dashboard-card-text">
@@ -62,8 +78,9 @@ function Home() {
             <p>Twój najczęstszy błąd to **stanie na "Soft 17"**. Poćwicz ten scenariusz.</p>
           </div>
         </div>
-
-      </div>
+      </>
+    )}
+  </div>
     </>
   );
 }

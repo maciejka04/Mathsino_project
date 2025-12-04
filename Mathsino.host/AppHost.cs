@@ -1,20 +1,27 @@
 using Projects;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
-var backend = builder.AddProject<Mathsino_Backend>("backend");
+var pgUser = builder.AddParameter("pg-username", "postgres");
+var pgPassword = builder.AddParameter("pg-password", "test");
 
-var frontend = builder
-    .AddProject<Mathsino_Frontend>("frontend")
+var postgres = builder
+    .AddPostgres("postgres", pgUser, pgPassword)
+    .WithPgAdmin(pgAdmin => pgAdmin.WithHostPort(5050))
+    .WithDataBindMount(source: "postgres-data");
+
+var postgresDb = postgres.AddDatabase("mathsino-db");
+
+var backend = builder
+    .AddProject<Mathsino_Backend>("backend")
+    .WithReference(postgresDb)
+    .WaitFor(postgresDb)
+    .WaitFor(postgres);
+
+builder
+    .AddNpmApp(name: "reactfrontend", workingDirectory: "../mathsino.reactfrontend")
     .WithReference(backend)
-    .WaitFor(backend);
+    .WaitFor(backend)
+    .WithHttpEndpoint(targetPort: 3000, name: "react-http");
 
-
-builder.AddNpmApp(
-        name: "reactfrontend", 
-        workingDirectory: "../mathsino.reactfrontend") 
-    .WithReference(backend) 
-    .WithHttpEndpoint(
-        targetPort: 3000,
-        name: "react-http");
-
-builder.Build().Run();
+await builder.Build().RunAsync();

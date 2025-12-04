@@ -65,11 +65,10 @@ function Resources() {
 
         {/* === Karta 2: Zasoby === */}
         <div className="dashboard-card">
+           <div className="setting-label">
           <h4>Resources</h4>
-          <p style={{opacity: 0.7, fontSize: '14px', marginBottom: '16px'}}>
-            Quick links to help you master the game.
-          </p>
-
+          <p>Quick links to help you master the game.</p>
+          </div>
           <a href="#" className="resource-link">
             <span>How to Play Blackjack</span>
             <i className="fa-solid fa-arrow-up-right-from-square"></i>
@@ -86,15 +85,17 @@ function Resources() {
 
         {/* === Karta 3: O Aplikacji === */}
         <div className="dashboard-card about-section">
+           <div className="setting-label">
           <h4>About Mathsino</h4>
           <p>
             Version 1.0.0 <br />
             This application is for educational purposes only (18+). 
             Please play responsibly.
           </p>
-          <p style={{marginTop: '10px'}}>
+          </div>
+          <div className='about-links'>
             <a href="#">Responsible Gaming</a> &middot; <a href="#">Privacy Policy</a> &middot; <a href="#">Terms of Service</a>
-          </p>
+          </div>
         </div>
 
       </div>

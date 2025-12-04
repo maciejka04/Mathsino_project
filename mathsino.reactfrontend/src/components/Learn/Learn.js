@@ -1,18 +1,20 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom'; // <--- 1. NOWY IMPORT
 import lekcja1 from '../../assets/lekcja1.jpg';
 import styles from './Learn.module.css'; 
 
-
 const cardData = [
  { 
+    id: 1, 
     topic: 'wave', 
     alt: 'wave', 
     image: lekcja1, 
-    title: 'Lekcja 1',
-    subtitle: 'Podtytuł lekcji 1',
+    title: 'Lesson 1',
+    subtitle: 'Basic Rules & Mechanics',
     description: 'Opis lekcji 1'
   },
  { 
+    id: 2,
     topic: 'beach', 
     alt: 'beach', 
     image: lekcja1, 
@@ -21,6 +23,7 @@ const cardData = [
     description: 'Opis lekcji 2'
   },
  { 
+    id: 3,
     topic: 'mountain', 
     alt: 'mountain', 
     image: lekcja1, 
@@ -29,6 +32,7 @@ const cardData = [
     description: 'Opis lekcji 3'
   },
  { 
+    id: 4,
     topic: 'field', 
     alt: 'field', 
     image: lekcja1, 
@@ -37,6 +41,7 @@ const cardData = [
     description: 'Opis lekcji 4'
   },
  { 
+    id: 5,
     topic: 'water', 
     alt: 'water', 
     image: lekcja1, 
@@ -45,6 +50,7 @@ const cardData = [
     description: 'Opis lekcji 5'
   },
  { 
+    id: 6,
     topic: 'river', 
     alt: 'river', 
     image: lekcja1, 
@@ -53,6 +59,7 @@ const cardData = [
     description: 'Opis lekcji 6'
   },
  { 
+    id: 7,
     topic: 'kite', 
     alt: 'kite', 
     image: lekcja1, 
@@ -61,6 +68,7 @@ const cardData = [
     description: 'Opis lekcji 7'
   },
  { 
+    id: 8,
     topic: 'underwater', 
     alt: 'underwater', 
     image: lekcja1, 
@@ -69,6 +77,7 @@ const cardData = [
     description: 'Opis lekcji 8'
   },
  { 
+    id: 9,
     topic: 'desert', 
     alt: 'desert', 
     image: lekcja1, 
@@ -78,9 +87,8 @@ const cardData = [
   },
 ];
 
-
-
-  function Learn({ image, alt, isShowing, zIndex, onClick, title, subtitle, description }) {
+// Odbieramy nową funkcję "onReadMore" w propsach
+function Learn({ image, alt, isShowing, zIndex, onClick, title, subtitle, description, onReadMore }) {
   return (
     <div
       className={`${styles.card} ${isShowing ? styles.show : ''}`}
@@ -92,8 +100,7 @@ const cardData = [
       </div>
       <div className={styles['card-title']}>
         
-        {}
-        <a href="#" className={`${styles['toggle-info']} ${styles.btn}`}>
+        <a href="#" className={`${styles['toggle-info']} ${styles.btn}`} onClick={(e) => e.preventDefault()}>
           <span className={styles.left}></span>
           <span className={styles.right}></span>
         </a>
@@ -109,10 +116,20 @@ const cardData = [
         </div>
         <div className={`${styles['card-flap']} ${styles.flap2}`}>
           <div className={styles['card-actions']}>
-            {}
-            <a href="#" className={styles.btn}>
+            
+            {/* ZMIANA: Obsługa kliknięcia Read More */}
+            <a 
+                href="#" 
+                className={styles.btn} 
+                onClick={(e) => {
+                    e.preventDefault(); // Nie przeładowuj strony
+                    e.stopPropagation(); // Nie zamykaj karty (bo karta ma onClick)
+                    onReadMore(); // Uruchom nawigację
+                }}
+            >
               Read more
             </a>
+
           </div>
         </div>
       </div>
@@ -125,6 +142,8 @@ function CardGrid() {
   const zIndexCounter = useRef(10);
   const [activeIndex, setActiveIndex] = useState(null);
   const [cardZIndexes, setCardZIndexes] = useState({});
+  
+  const navigate = useNavigate(); // <--- Inicjalizacja nawigacji
 
   const handleCardClick = (e, clickedIndex) => {
     e.preventDefault();
@@ -138,26 +157,30 @@ function CardGrid() {
     );
   };
 
+  // Nowa funkcja do przenoszenia do lekcji
+  const handleReadMoreClick = (lessonId) => {
+      navigate(`/lesson/${lessonId}`);
+  };
+
   const isShowing = activeIndex !== null;
 
   return (
     <div className={`${styles.cards} ${isShowing ? styles.showing : ''}`}>
       {cardData.map((card, index) => (
         <Learn
-
           key={card.topic} 
           image={card.image}
           alt={card.alt}
-
-
           title={card.title}
           subtitle={card.subtitle}
           description={card.description}
-
           
           isShowing={activeIndex === index}
           zIndex={cardZIndexes[index] || 1}
           onClick={(e) => handleCardClick(e, index)}
+          
+          // Przekazujemy funkcję do dziecka
+          onReadMore={() => handleReadMoreClick(card.id)} 
         />
       ))}
     </div>

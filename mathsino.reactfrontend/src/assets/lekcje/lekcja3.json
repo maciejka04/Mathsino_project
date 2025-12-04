@@ -1,0 +1,157 @@
+{
+  "lesson_id": 3,
+  "lesson_title": "Aggressive Play: When to Double Down",
+  "introduction": {
+    "avatar_pose": "A",
+    "text": "Welcome to the 'Money Zone'. In this lesson, you will learn how to double your potential winnings. The rule is simple: When you have a strong starting hand and I have a weak card, you must attack! We use the 'Double Down' button. You double the bet, but you get ONLY one card. Let's make some money!"
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "title": "The Holy Grail (11 vs 6)",
+      "goal": "Teach that 11 is the best hand to Double.",
+      "setup": {
+        "player_hand": ["6_of_clubs", "5_of_hearts"],
+        "dealer_up_card": "6_of_spades",
+        "dealer_hidden_card": "10_of_diamonds"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "B",
+          "text": "You have 11 (6+5). This is the best starting hand in Blackjack! I have a weak 6. You have a huge statistical advantage. Don't just Hit. CRUSH me. Click DOUBLE.",
+          "required_action": "DOUBLE",
+          "cards_added": ["king_of_hearts"],
+          "player_score_after": 21
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["queen_of_clubs"],
+        "dealer_final_score": 26,
+        "avatar_pose": "B",
+        "text": "BOOM! You got a King for a total of 21. I had 16 and busted. You win double the money!",
+        "result_status": "WIN_DOUBLE"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Strong 10 (10 vs 9)",
+      "goal": "Teach Doubling on 10 against anything weaker than 10.",
+      "setup": {
+        "player_hand": ["2_of_spades", "8_of_diamonds"],
+        "dealer_up_card": "9_of_clubs",
+        "dealer_hidden_card": "6_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "You have 10. I have 9. It looks close, but math is on your side. With 10, you have a high chance of landing a 20. Attack! Click DOUBLE.",
+          "required_action": "DOUBLE",
+          "cards_added": ["jack_of_diamonds"],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["10_of_spades"],
+        "dealer_final_score": 25,
+        "avatar_pose": "B",
+        "text": "Nice! You landed a 20. I had 15 and had to hit, resulting in a bust. Aggression pays off.",
+        "result_status": "WIN_DOUBLE"
+      }
+    },
+    {
+      "id": 3,
+      "title": "The Sneaky 9 (9 vs 4)",
+      "goal": "Teach that 9 is only doubled against very weak dealers (3-6).",
+      "setup": {
+        "player_hand": ["4_of_clubs", "5_of_diamonds"],
+        "dealer_up_card": "4_of_spades",
+        "dealer_hidden_card": "8_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "You have 9. Usually, we just Hit. But look at my card: it's a 4 (very weak). This is a window of opportunity. Double Down on 9 ONLY against 3, 4, 5, or 6.",
+          "required_action": "DOUBLE",
+          "cards_added": ["10_of_clubs"],
+          "player_score_after": 19
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["queen_of_hearts"],
+        "dealer_final_score": 22,
+        "avatar_pose": "B",
+        "text": "Perfect execution. You got 19. I had 12, took a Queen, and busted.",
+        "result_status": "WIN_DOUBLE"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Don't Get Greedy (10 vs 10)",
+      "goal": "Teach NOT to double when the dealer is strong.",
+      "setup": {
+        "player_hand": ["5_of_spades", "5_of_hearts"],
+        "dealer_up_card": "king_of_clubs",
+        "dealer_hidden_card": "8_of_diamonds"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "You have 10 (5+5). Dealer has a King (10). BE CAREFUL! I am too strong. If you double and get a low card, you lose twice. Just play it safe. Click HIT.",
+          "required_action": "HIT",
+          "cards_added": ["9_of_diamonds"],
+          "player_score_after": 19
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "A",
+          "text": "You have 19. That is safe. Now Stand.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 19
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 18,
+        "avatar_pose": "A",
+        "text": "Smart move. You won with 19 vs 18. If you had doubled, you would have risked too much against my strong card.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Fearless 11 (11 vs Ace)",
+      "goal": "Teach that with 11 we Double even against an Ace.",
+      "setup": {
+        "player_hand": ["7_of_diamonds", "4_of_spades"],
+        "dealer_up_card": "ace_of_clubs",
+        "dealer_hidden_card": "6_of_diamonds"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "You have 11 against my Ace. Many players are scared here. But your table says: DOUBLE! 11 is too powerful to play passively. Take the risk.",
+          "required_action": "DOUBLE",
+          "cards_added": ["10_of_hearts"],
+          "player_score_after": 21
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 17,
+        "avatar_pose": "B",
+        "text": "Fortune favors the bold! You hit 21. I have 17 (Ace+6). You crushed the Ace!",
+        "result_status": "WIN_DOUBLE"
+      }
+    }
+  ],
+  "conclusion": {
+    "avatar_pose": "B",
+    "text": "You are becoming a shark! You know when to attack. But what if you have a weak hand and I have a strong card? That's the hardest part of the game. We will tackle 'Stiff Hands' in the next lesson."
+  }
+}

@@ -1,18 +1,54 @@
 // src/components/Profile/Profile.js
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Profile.css';
 // Zaimportuj swój domyślny awatar
 import smok from '../../assets/profilowe_smok.png'; 
 import panda from '../../assets/profilowe_panda.png'; 
+import snake from '../../assets/profilepic/snake.png';
+import mouse from '../../assets/profilepic/mouse.png';
+import racoon from '../../assets/profilepic/racoon.png';
+import boar from '../../assets/profilepic/boar.png';
+import owl from '../../assets/profilepic/owl.png';
+import fox from '../../assets/profilepic/fox.png';
+const avatars = [snake, mouse, racoon, boar, owl, fox ];
 
-const avatars = [smok, panda, panda, panda, panda, panda, panda];
+
 
 
 function Profile() {
-  // Później ten stan będzie zapisywany na serwerze,
-  // ale na razie zarządzamy nim lokalnie.
-  const [selectedAvatar, setSelectedAvatar] = useState(panda);
+
+   const [selectedAvatar, setSelectedAvatar] = useState(snake);
+  const [user, setUser] = useState({
+    name: "",
+    email: ""
+  });
+
+  // Pobranie danych zalogowanego użytkownika (imię i email)
+useEffect(() => {
+  fetch("http://localhost:5126/api/auth/profile", {
+    method: "GET",
+    credentials: "include"
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log("Profile API response:", data);
+    setUser({ name: data.userName, email: data.email }); 
+  })
+  .catch(err => console.error("User load error:", err));
+}, []);
+
+  const handleLogout = async () => {
+    try {
+      await fetch("http://localhost:5126/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      window.location.href = "/login";
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   return (
     <div className="profile-page-container">
@@ -31,8 +67,8 @@ function Profile() {
             alt="Obecny awatar" 
             className="profile-page-avatar" 
           />
-          <h3>User</h3> {/* Docelowo z Google */}
-          <p>user.email@gmail.com</p> {/* Docelowo z Google */}
+          <h3>{user.name}</h3> 
+          <p>{user.email}</p> 
         </div>
 
         {/* Karta 2: Wybór awatara */}
@@ -55,7 +91,7 @@ function Profile() {
         {/* Karta 3: Zarządzanie kontem */}
         <div className="dashboard-card profile-actions-card">
           <h4>Zarządzanie kontem</h4>
-          <button className="logout-button">
+          <button className="logout-button" onClick={handleLogout}>
             <i className="fa-solid fa-right-from-bracket"></i>
             Wyloguj się
           </button>

@@ -107,6 +107,25 @@
   color: #28a745;
 }
 
+/* === ZMIANA: NOWY STYL DLA PRZYCISKU LOGOWANIA === */
+.login-button {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: var(--primary-color); /* Załóżmy, że masz zdefiniowaną zmienną --primary-color */
+  color: #000;
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 8px;
+  transition: background-color 0.2s, transform 0.1s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.login-button:hover {
+  background-color: #f0f0f0; /* Jaśniejszy kolor na hover */
+  transform: translateY(-1px);
+}
+/* ================================================= */
 
 @media (max-width: 1024px) {
   .dashboard-grid {

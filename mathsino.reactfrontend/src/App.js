@@ -13,6 +13,11 @@ import Statistics from './components/Statistics/Statistics';
 import Resources from './components/Resources/Resources';
 import Offline from './components/Offline/Offline';
 import Online from './components/Online/Online';
+import Login from './components/Login/Login';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import DataDeletion from './components/DataDeletion';
+import ProtectedRoute from './components/ProtectedRoute';
+import LessonPage from './components/Lesson/LessonPage';
 
 
 
@@ -20,21 +25,43 @@ import Online from './components/Online/Online';
 function App() {
   return (
     <Routes>
-      <Route path="online" element={<Online />} />
-      <Route path="offline" element={<Offline />} />
+      {/* Strony dostępne bez logowania */}
+      <Route path="login" element={<Login />} />
       <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} /> {/* Home dostępny dla wszystkich */}
         
-        {/* Strona główna */}
-        <Route index element={<Home />} />
-        
-        {/* Pozostałe podstrony */}
-        <Route path="play" element={<Play />} />
-        <Route path="profile" element={<Profile />} />
-        <Route path="learn" element={<Learn />} />
-        <Route path="statistics" element={<Statistics />} />
-        <Route path="friends" element={<Friends />} />
-        <Route path="resources" element={<Resources />} />
-        
+        {/* Strony chronione */}
+        <Route path="play" element={
+          <ProtectedRoute><Play /></ProtectedRoute>
+        } />
+        <Route path="profile" element={
+          <ProtectedRoute><Profile /></ProtectedRoute>
+        } />
+        <Route path="learn" element={
+          <ProtectedRoute><Learn /></ProtectedRoute>
+        } />
+        <Route path="lesson/:id" element={
+          <ProtectedRoute><LessonPage /></ProtectedRoute>
+        } />
+        <Route path="statistics" element={
+          <ProtectedRoute><Statistics /></ProtectedRoute>
+        } />
+        <Route path="friends" element={
+          <ProtectedRoute><Friends /></ProtectedRoute>
+        } />
+        <Route path="resources" element={
+          <ProtectedRoute><Resources /></ProtectedRoute>
+        } />
+        <Route path="offline" element={
+          <ProtectedRoute><Offline /></ProtectedRoute>
+        } />
+        <Route path="online" element={
+          <ProtectedRoute><Online /></ProtectedRoute>
+        } />
+
+        {/* Opcjonalne strony publiczne */}
+        <Route path="privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="data-deletion" element={<DataDeletion />} />
       </Route>
     </Routes>
   );
