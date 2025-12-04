@@ -96,6 +96,37 @@ const mapBackendCardToFilename = (card) => {
   return `${rankName}_of_${suitName}`;
 };
 
+const calculateHandValue = (hand) => {
+    let sum = 0;
+    let numAces = 0;
+
+    for (const card of hand) {
+        if (!card || !card.name) continue;
+        
+        const rank = card.name.split('_of_')[0].toLowerCase();
+
+        if (rank === 'ace') {
+            numAces += 1;
+            sum += 11; 
+        } else if (['king', 'queen', 'jack', '10'].includes(rank)) {
+            sum += 10;
+        } else {
+            const numericalRank = parseInt(rank, 10);
+            if (!isNaN(numericalRank)) {
+                sum += numericalRank;
+            }
+        }
+    }
+
+    // Korekta dla Asów
+    while (sum > 21 && numAces > 0) {
+        sum -= 10; 
+        numAces -= 1;
+    }
+
+    return sum;
+};
+
 function Online() {
   const navigate = useNavigate();
   const { user } = useOutletContext();
@@ -674,7 +705,47 @@ function Online() {
 
       <div className="game-table-area">
         <img src={tableImage} alt="Stół do gry" className="game-table-image" />
+        {/* WARTOSC REKI KRUPIERA */}
+        {dealerCards.length > 0 && (
+            <div className="hand-value dealer-value">
+                Krupier:{" "}
+                <span style={{ fontWeight: "bold" }}>
+                    {gameStatus === "InProgress" && dealerCards.length === 2
+                        ? calculateHandValue(dealerCards.slice(0, 1))
+                        : calculateHandValue(dealerCards)}
+                </span>
+            </div>
+        )}
+        
+        {/* WARTOSC REKI GRACZA (MAIN) */}
+        {playerCards.length > 0 && (
+            <div
+                className="hand-value player-main-value"
+                style={{
+                    left: hasSplit ? "40%" : "50%",
+                }}
+            >
+                {hasSplit ? "Ręka 1" : "Ty"}:{" "}
+                <span style={{ fontWeight: "bold" }}>
+                    {calculateHandValue(playerCards)}
+                </span>
+            </div>
+        )}
 
+        {/* WARTOSC REKI GRACZA (SPLIT) */}
+        {hasSplit && splitCards.length > 0 && (
+            <div
+                className="hand-value player-split-value"
+                style={{
+                    left: "60%",
+                }}
+            >
+                Ręka 2:{" "}
+                <span style={{ fontWeight: "bold" }}>
+                    {calculateHandValue(splitCards)}
+                </span>
+            </div>
+        )}
         {/* TASOWARKA */}
         <div
           style={{

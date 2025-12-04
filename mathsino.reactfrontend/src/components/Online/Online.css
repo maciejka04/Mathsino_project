@@ -109,11 +109,12 @@ body {
     position: relative;
     flex-direction: row; 
     align-items: flex-end;
+    margin-left: 10px;
 }
 
 
 .chip-selection .chip-image {
-    margin-left: -20px; 
+    margin-left: -15px; 
     transition: transform 0.2s, box-shadow 0.2s, z-index 0s;
     margin-top: -20px;
 }
@@ -364,4 +365,40 @@ body {
   height: 100%;
   pointer-events: none; 
   z-index: 1000; 
+}
+
+.hand-value {
+    position: absolute;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: normal;
+    text-shadow: 2px 2px 4px black;
+    z-index: 40; 
+    transform: translateX(-50%);
+}
+
+.dealer-value {
+    top: 30%; 
+    left: 50%;
+    padding: 5px;
+    border-radius: 20%;
+    border: 2px solid gold;
+    background-color: black;
+}
+
+.player-main-value {
+    top: 60%; 
+    padding: 5px;
+    border-radius: 20%;
+    border: 2px solid gold;
+    background-color: black;
+
+}
+
+.player-split-value {
+    top: 60%;
+    padding: 5px;
+    border-radius: 20%;
+    border: 2px solid gold;
+    background-color: black;
 }
