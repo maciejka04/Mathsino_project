@@ -9,9 +9,9 @@ import tableImage from '../../assets/table4.png';
 import reverseCardImage from '../../assets/karty/reverse.png';
 
 // --- AVATARS ---
-import avatarImgA from '../../assets/avatar_A.png'; // Neutral
-import avatarImgB from '../../assets/avatar_B.png'; // Happy
-import avatarImgC from '../../assets/avatar_C.png'; // Worried
+import avatarImgA from '../../assets/parrot-teacher.png'; // Neutral
+import avatarImgB from '../../assets/parrot-teacher-happy.png'; // Happy
+import avatarImgC from '../../assets/parrot-teacher-thinking.png'; // Worried
 
 // --- LESSON DATA IMPORTS ---
 import lesson1 from '../../assets/lekcje/lekcja1.json';
