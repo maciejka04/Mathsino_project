@@ -8,11 +8,8 @@ import stoImage from "../../assets/zetony/sto.png";
 import piecsetImage from "../../assets/zetony/piecset.png";
 import { motion } from "framer-motion";
 import Fireworks from 'fireworks-js';
-
 import reverseCardImage from "../../assets/karty/reverse2.png";
 import defaultAvatar from "../../assets/profilepic/snake.png";
-
-
 const DECK_POSITION = { left: 15, top: 30 };
 
 const allCardFileNames = [
