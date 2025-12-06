@@ -8,6 +8,15 @@ import stoImage from "../../assets/zetony/sto.png";
 import piecsetImage from "../../assets/zetony/piecset.png";
 import { motion } from "framer-motion";
 import Fireworks from 'fireworks-js';
+import casinoMusic from "../../assets/casino.mp3";
+import shuffleSound from "../../assets/shuffling-cards.mp3";
+import winSound from "../../assets/win.mp3";
+import loseSound from "../../assets/lose.mp3";
+import pushSound from "../../assets/push.mp3";
+import blackjackSound from "../../assets/blackjack.mp3";
+import fireworksSound from "../../assets/fireworks.mp3";
+
+
 import reverseCardImage from "../../assets/karty/reverse2.png";
 import defaultAvatar from "../../assets/profilepic/snake.png";
 const DECK_POSITION = { left: 15, top: 30 };
@@ -158,6 +167,12 @@ function Online() {
   const [splitDoubled, setSplitDoubled] = useState(false);
 
   const [strategyFeedback, setStrategyFeedback] = useState(null);
+  const shuffleAudio = useRef(null);
+  const winAudio = useRef(null);
+  const loseAudio = useRef(null);
+  const pushAudio = useRef(null);
+  const blackjackAudio = useRef(null);
+  const fireworksAudio = useRef(null);
 
   const API_URL = "http://localhost:5126";
   const USER_ID = user?.id || 1;
@@ -195,6 +210,41 @@ function Online() {
     };
   }, [showFireworks]);
 
+  React.useEffect(() => {
+    shuffleAudio.current = new Audio(shuffleSound);
+    shuffleAudio.current.volume = 0.8;
+  }, []);
+
+  React.useEffect(() => {
+  shuffleAudio.current = new Audio(shuffleSound);
+
+  winAudio.current = new Audio(winSound);
+  loseAudio.current = new Audio(loseSound);
+  pushAudio.current = new Audio(pushSound);
+  blackjackAudio.current = new Audio(blackjackSound);
+  fireworksAudio.current = new Audio(fireworksSound);
+
+  winAudio.current.volume = 1.0;
+  loseAudio.current.volume = 0.6;
+  pushAudio.current.volume = 0.9;
+  blackjackAudio.current.volume = 1.0;
+  fireworksAudio.current.volume = 0.7;
+}, []);
+
+
+  React.useEffect(() => {
+  const audio = new Audio(casinoMusic);
+  audio.loop = true;
+  audio.volume = 0.4;
+  audio.play().catch(() => {});
+
+  return () => {
+    audio.pause();
+    audio.currentTime = 0;
+  };
+}, []);
+
+
   const resetGameFlags = () => {
     setMainDoubled(false);
     setSplitDoubled(false);
@@ -223,6 +273,12 @@ function Online() {
     resetGameFlags();
 
     setIsShuffling(true);
+
+    if (shuffleAudio.current) {
+      shuffleAudio.current.currentTime = 0;
+      shuffleAudio.current.play().catch(() => {});
+    }
+
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     try {
@@ -347,6 +403,51 @@ function Online() {
     isSplitDoubledNow
   ) => {
     setResultProcessed(true);
+
+if (mainResult === "Win" && winAudio.current) {
+    winAudio.current.currentTime = 0;
+    winAudio.current.play().catch(() => {});
+}
+if (mainResult === "Lose" && loseAudio.current) {
+    loseAudio.current.currentTime = 0;
+    loseAudio.current.play().catch(() => {});
+}
+if (mainResult === "Push" && pushAudio.current) {
+    pushAudio.current.currentTime = 0;
+    pushAudio.current.play().catch(() => {});
+}
+if (mainResult === "Blackjack" && blackjackAudio.current) {
+    blackjackAudio.current.currentTime = 0;
+    blackjackAudio.current.play().catch(() => {});
+    if (fireworksAudio.current) {
+        fireworksAudio.current.currentTime = 0;
+        fireworksAudio.current.play().catch(() => {});
+    }
+}
+
+if (hasSplit && splitRes) {
+    if (splitRes === "Win" && winAudio.current) {
+        winAudio.current.currentTime = 0;
+        winAudio.current.play().catch(() => {});
+    }
+    if (splitRes === "Lose" && loseAudio.current) {
+        loseAudio.current.currentTime = 0;
+        loseAudio.current.play().catch(() => {});
+    }
+    if (splitRes === "Push" && pushAudio.current) {
+        pushAudio.current.currentTime = 0;
+        pushAudio.current.play().catch(() => {});
+    }
+    if (splitRes === "Blackjack" && blackjackAudio.current) {
+        blackjackAudio.current.currentTime = 0;
+        blackjackAudio.current.play().catch(() => {});
+        if (fireworksAudio.current) {
+            fireworksAudio.current.currentTime = 0;
+            fireworksAudio.current.play().catch(() => {});
+        }
+    }
+}
+
     resultProcessedRef.current = true;
 
     if (mainResult === "Blackjack" || splitRes === "Blackjack") {

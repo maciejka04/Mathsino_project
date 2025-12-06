@@ -24,11 +24,35 @@ import lesson7 from '../../assets/lekcje/lekcja7.json';
 import lesson8 from '../../assets/lekcje/lekcja8.json';
 import lesson9 from '../../assets/lekcje/lekcja9.json';
 
+import lesson1snd from '../../assets/lesson1.mp3';
+import lesson2snd from '../../assets/lesson2.mp3';
+import lesson3snd from '../../assets/lesson3.mp3';
+import lesson4snd from '../../assets/lesson4.mp3';
+import lesson5snd from '../../assets/lesson5.mp3';
+import lesson6snd from '../../assets/lesson6.mp3';
+import lesson7snd from '../../assets/lesson7.mp3';
+import lesson8snd from '../../assets/lesson8.mp3';
+import lesson9snd from '../../assets/lesson9.mp3';
+
+
 // Lessons Map
 const lessonsMap = {
   1: lesson1, 2: lesson2, 3: lesson3, 4: lesson4, 5: lesson5,
   6: lesson6, 7: lesson7, 8: lesson8, 9: lesson9
 };
+
+const lessonSoundMap = {
+  1: lesson1snd,
+  2: lesson2snd,
+  3: lesson3snd,
+  4: lesson4snd,
+  5: lesson5snd,
+  6: lesson6snd,
+  7: lesson7snd,
+  8: lesson8snd,
+  9: lesson9snd
+};
+
 
 // Avatar Map
 const avatarMap = {
@@ -87,6 +111,11 @@ const LessonPage = () => {
   // --- 1. SETUP ON LESSON CHANGE ---
   useEffect(() => {
     if (currentLessonData) {
+
+        const audio = new Audio(lessonSoundMap[id]);
+        audio.volume = 1.0;
+        audio.play();
+
         setLessonPhase('INTRO');
         setCurrentScenarioIndex(0);
         setCurrentStepIndex(0);
