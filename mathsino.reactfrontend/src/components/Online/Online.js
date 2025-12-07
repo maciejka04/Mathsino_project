@@ -138,8 +138,8 @@ const calculateHandValue = (hand) => {
 function Online() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user } = useOutletContext();
-  const [currentBalance, setCurrentBalance] = useState(5000);
+  const { user, refreshUser } = useOutletContext();
+  //const [currentBalance, setCurrentBalance] = useState(5000);
   const [currentBet, setCurrentBet] = useState(0);
 
   const [gameId, setGameId] = useState(null);
@@ -181,6 +181,33 @@ function Online() {
   const USER_ID = user?.id || 1;
 
   console.log("ONLINE USER ID:", USER_ID);
+
+  const updateBalance = async (type, amount) => {
+    const endpoint = `${API_URL}/user/${USER_ID}/balance/${type}?amount=${amount}`;
+    
+    try {
+        const response = await fetch(endpoint, {
+            method: 'POST', 
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (response.ok && refreshUser) {
+            refreshUser(); 
+            return true;
+        } else if (response.status === 400) {
+             const error = await response.text();
+             alert(`Błąd: ${error}`);
+             return false;
+        } else {
+            throw new Error(`Błąd serwera: ${response.status}`);
+        }
+    } catch (error) {
+        console.error("Błąd aktualizacji salda:", error);
+        return false;
+    }
+};
+
 
   React.useEffect(() => {
     let fireworks;
@@ -284,6 +311,13 @@ function Online() {
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
+    const success = await updateBalance('deduct', currentBet);
+    if (!success) {
+        setCurrentBet(0); 
+        setIsShuffling(false);
+        return; 
+    }
+
     try {
       const response = await fetch(
         `${API_URL}/games/create-singleplayer?userId=${USER_ID}`
@@ -302,7 +336,8 @@ function Online() {
     } catch (error) {
       console.error("Nie udało się rozpocząć gry:", error);
       alert("Błąd połączenia. Środki zostały zwrócone.");
-      setCurrentBalance((prev) => prev + currentBet);
+      updateBalance('add', currentBet);
+      //setCurrentBalance((prev) => prev + currentBet);
       setCurrentBet(0);
       setIsShuffling(false);
     }
@@ -487,10 +522,21 @@ if (hasSplit && splitRes) {
     if (hasSplit && splitRes) {
       totalWin += calculateWin(splitRes, currentBet, isSplitDoubledNow);
     }
-
+    /*
     if (totalWin > 0) {
       setCurrentBalance((prev) => prev + totalWin);
     }
+      */
+     const totalBetOnTable = displayedBetOnTable();
+    const netChange = totalWin - totalBetOnTable; // Zmiana netto (zysk lub strata)
+
+    // Wysyłamy do bazy tylko, jeśli jest jakaś zmiana
+    if (netChange !== 0) {
+        const type = netChange > 0 ? 'add' : 'deduct';
+        const amount = Math.abs(netChange);
+        updateBalance(type, amount); 
+    }
+    updateBalance('add', totalWin);
   };
 
   const fetchGameStatus = async (gId) => {
@@ -605,12 +651,13 @@ if (hasSplit && splitRes) {
   const handleSplitAction = async () => {
     analyzeMove("Split");
     if (!canSplit) return;
-    if (currentBalance < currentBet) {
+    if (user.balance < currentBet) {
       alert("Brak środków na Split!");
       return;
     }
     try {
-      setCurrentBalance((prev) => prev - currentBet);
+      //setCurrentBalance((prev) => prev - currentBet);
+      await updateBalance('deduct', currentBet);
       await fetch(`${API_URL}/games/${gameId}/player-split/${playerId}`, {
         method: "POST",
       });
@@ -623,13 +670,13 @@ if (hasSplit && splitRes) {
   const handleDouble = async () => {
     analyzeMove("Double");
     if (!canDouble) return;
-    if (currentBalance < currentBet) {
+    if (user.balance < currentBet) {
       alert("Brak środków na Double!");
       return;
     }
     try {
-      setCurrentBalance((prev) => prev - currentBet);
-
+      //setCurrentBalance((prev) => prev - currentBet);
+      await updateBalance('deduct', currentBet);
       if (isSplitActive) {
         await fetch(
           `${API_URL}/games/${gameId}/player-double-split/${playerId}`,
@@ -655,17 +702,19 @@ if (hasSplit && splitRes) {
 
   const handleChipSelect = (value) => {
     if (gameStatus === "InProgress" || isShuffling) return;
+    
     if (currentBalance < value) {
       alert(t('not_enough_funds'));
       return;
     }
-    setCurrentBalance((prev) => prev - value);
+    //setCurrentBalance((prev) => prev - value);
+    //setCurrentBet((prev) => prev + value);
     setCurrentBet((prev) => prev + value);
   };
 
   const clearBet = () => {
     if (gameStatus === "InProgress" || isShuffling) return;
-    setCurrentBalance((prev) => prev + currentBet);
+    //setCurrentBalance((prev) => prev + currentBet);
     setCurrentBet(0);
     resetGameFlags();
   };
@@ -745,7 +794,7 @@ if (hasSplit && splitRes) {
       </button>
       <div className="user-info-panel">
        <img 
-          src={defaultAvatar} 
+          src={user.avatarUrl || defaultAvatar}
           alt="Awatar" 
           className="user-avatar" 
        />
@@ -1061,7 +1110,7 @@ if (hasSplit && splitRes) {
         <span className="balance-label">
           Saldo:{" "}
           <span className="balance-amount">
-            {currentBalance.toLocaleString("pl-PL")} PLN
+            {user.balance?.toLocaleString("pl-PL") || 0} PLN
           </span>
         </span>
         <span className="balance-sublabel">

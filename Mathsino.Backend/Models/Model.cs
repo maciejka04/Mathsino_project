@@ -23,6 +23,8 @@ public class User
     [StringLength(100)]
     public string ProviderId { get; set; } = string.Empty; 
     // ---------------------------
+    [StringLength(255)] 
+    public string AvatarPath { get; set; } = "snake.png";
 
     public List<UserFriend> Friends { get; set; } = [];
 
@@ -41,7 +43,7 @@ public class UserFriend
     public User Friend { get; set; } = null!;
 }
 
-public record FriendDto(int Id, string FirstName, string LastName, string Email, int Balance);
+public record FriendDto(int Id, string FirstName, string LastName, string Email, int Balance, string AvatarPath);
 
 public record UserDto(
     int Id,
@@ -52,3 +54,5 @@ public record UserDto(
     int Balance,
     string Language
 );
+
+public record UpdateAvatarRequest(string AvatarPath);

@@ -1,7 +1,7 @@
 // src/components/Statistics/Statistics.js
 
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Statistics.css'; // Import the new CSS
 import { useOutletContext } from "react-router-dom";
 
@@ -35,11 +35,17 @@ ChartJS.register(
 
 function Statistics() {
 
-  const { user } = useOutletContext();
+  const { user,refreshUser } = useOutletContext();
   const [stats, setStats] = useState(null);
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [showAd, setShowAd] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [rewardAmount, setRewardAmount] = useState(0);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const intervalRef = useRef(null);
 
   useEffect(() => {
     if (!user?.id) {
@@ -135,6 +141,97 @@ function Statistics() {
     },
   };
 
+  useEffect(() => {
+    if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+    }
+
+    if (showAd && timeLeft > 0 && !isPaused) { 
+        
+        const id = setInterval(() => {
+            setTimeLeft(prevTime => prevTime - 1);
+        }, 1000);
+        
+        intervalRef.current = id;
+    }
+
+    return () => {
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        }
+    };
+    
+}, [showAd, timeLeft, isPaused]);
+
+useEffect(() => {
+    if (showAd && timeLeft === 0 && user?.id) {
+        
+        const USER_ID = user.id;
+
+        const giveReward = async () => {
+              try {
+                  const response = await fetch(`${API_URL}/user/${USER_ID}/balance/add?amount=${rewardAmount}`, {
+                      method: 'POST',
+                      credentials: 'include',
+                      headers: { 'Content-Type': 'application/json' },
+                  });
+                  if (response.ok) {
+                      
+                      if (refreshUser) {
+                          refreshUser(); 
+                      }
+                  } else {
+                      alert("Błąd podczas przyznawania nagrody.");
+                  }
+              } catch (error) {
+                  console.error("Błąd sieci:", error);
+                  alert("Błąd połączenia z serwerem.");
+              }
+        
+            setShowAd(false);
+            setTimeout(() => setIsDisabled(false), 60000); 
+        };
+        
+        giveReward();
+    }
+
+}, [showAd, timeLeft, user, rewardAmount, refreshUser]);
+ 
+ const handleWatchAd = () => {
+   if (isDisabled || showAd || !user?.id) return;
+   
+   const fixedRewardAmount = 50; 
+
+   setTimeLeft(20);           
+   setRewardAmount(fixedRewardAmount); 
+   setShowAd(true);          
+   setIsDisabled(true);        
+   setIsPaused(false);         
+ };
+
+  const handleCloseAd = () => {
+   setIsPaused(true);
+   setShowConfirmModal(true);
+ };
+
+
+const confirmCloseAd = () => {
+  setShowConfirmModal(false);
+  setShowAd(false); 
+  setTimeLeft(0);   
+  setIsPaused(false); 
+  setIsDisabled(false); 
+};
+
+
+const cancelCloseAd = () => {
+  setShowConfirmModal(false);
+  setIsPaused(false);
+};
+  
+
   if (loading) {
     return (
       <div className="statistics-container">
@@ -146,12 +243,67 @@ function Statistics() {
     );
   }
   return (
+  <>
+
+        {showConfirmModal && (
+          <div className="modal-overlay">
+              <div className="modal-content" onClick={e => e.stopPropagation()}>
+                  <h2 style={{ color: '#ff4d4d' }}>🚨 WARNING!</h2>
+                  <p style={{ color: '#DDD', fontSize: '1.1rem' }}>
+                      If you close now, you will lose the reward {rewardAmount} PLN.
+                      <br />
+                      Do you want to continue watching?
+                  </p>
+                  <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
+                      <button 
+                          className="danger-button" 
+                          onClick={confirmCloseAd}
+                          style={{ border: 'none' }}
+                      >
+                          Exit (No reward)
+                      </button>
+                      <button 
+                          className="logout-button" 
+                          onClick={cancelCloseAd}
+                          style={{ marginLeft: '10px' }}
+                      >
+                          Continiue watching
+                      </button>
+                  </div>
+              </div>
+          </div>
+      )}
+    {showAd && !showConfirmModal && (
+                <div className="ad-overlay">
+                    <div className="ad-content">
+                      <button className="ad-close-button" onClick={handleCloseAd}>
+                          x
+                      </button>
+                        <p>Be ready for the reward 50 PLN!</p>
+                        <p>This add will disappear in {timeLeft}s seconds...</p>
+                        
+                        <div className="fake-ad-box">
+                            <i className="fa-solid fa-gem" style={{ fontSize: '3rem', color: '#ffd700' }} />
+                            <h2>Mathsino Premium!</h2>
+                            <p>Buy now and get access to special avatars!</p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
     <div className="statistics-container">
       <header>
         <h1>Statistics</h1>
         <p>Track your performance and lesson progress.</p>
       </header>
 
+      <button 
+            className={`ad-reward-button ${isDisabled ? 'disabled' : ''}`}
+            disabled={isDisabled} 
+            onClick={handleWatchAd}
+        >
+            Want more money? Watch an ad <i className="fa-solid fa-clapperboard" />
+        </button>
       {/* Grid for your 3 stat ideas */}
       <div className="stats-overview-grid">
 
@@ -245,9 +397,8 @@ function Statistics() {
             Current Balance
           </span>
           <span className="stat-card-value">
-            {games.length > 0
-              ? games[games.length - 1].balanceAfterGame.toLocaleString()
-              : '5,000'} PLN
+              
+              {user.balance?.toLocaleString('pl-PL') || '0'} PLN
           </span>
         </div>
 
@@ -274,6 +425,7 @@ function Statistics() {
       </div>
 
     </div>
+    </>
   );
 }
 

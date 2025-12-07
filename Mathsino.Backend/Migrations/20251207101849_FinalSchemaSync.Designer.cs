@@ -3,6 +3,7 @@ using System;
 using Mathsino.Backend.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mathsino.Backend.Migrations
 {
     [DbContext(typeof(MathsinoContext))]
-    partial class MathsinoContextModelSnapshot : ModelSnapshot
+    [Migration("20251207101849_FinalSchemaSync")]
+    partial class FinalSchemaSync
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,11 +90,6 @@ namespace Mathsino.Backend.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
-                    b.Property<string>("Language")
-                        .IsRequired()
-                        .HasMaxLength(5)
-                        .HasColumnType("character varying(5)");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -119,7 +117,6 @@ namespace Mathsino.Backend.Migrations
                             Balance = 5000,
                             Email = "alice.smith@example.com",
                             FirstName = "Alice",
-                            Language = "en",
                             LastName = "Smith",
                             Provider = "",
                             ProviderId = ""
@@ -131,7 +128,6 @@ namespace Mathsino.Backend.Migrations
                             Balance = 3000,
                             Email = "bob.johnson@example.com",
                             FirstName = "Bob",
-                            Language = "en",
                             LastName = "Johnson",
                             Provider = "",
                             ProviderId = ""

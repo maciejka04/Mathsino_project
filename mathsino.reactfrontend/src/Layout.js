@@ -11,54 +11,78 @@ import { Outlet, NavLink, Link, useLocation } from 'react-router-dom';
 import awatar from './assets/profilowe_smok.png';
 import logo from './assets/logo.png';
 
+import snake from './assets/profilepic/snake.png';
+import mouse from './assets/profilepic/mouse.png';
+import racoon from './assets/profilepic/racoon.png';
+import boar from './assets/profilepic/boar.png';
+import owl from './assets/profilepic/owl.png';
+import fox from './assets/profilepic/fox.png';
+
+const AVATAR_MAP = {
+  'snake.png': snake,
+  'mouse.png': mouse,
+  'racoon.png': racoon,
+  'boar.png': boar,
+  'owl.png': owl,
+  'fox.png': fox,
+};
 
 const BACKEND_URL = 'http://localhost:5126';
 
 function Layout() {
 
   const [user, setUser] = useState({
-    name: "",
-    email: ""
-  });
+  name: "",
+  email: "",
+    avatarUrl: awatar,
+    avatarPath: 'snake.png', 
+
+ });
   const location = useLocation();
   const menuRef = useRef(null);
 
 
-  useEffect(() => {
-    fetch(`${BACKEND_URL}/api/auth/profile`, {
-      method: "GET",
-      credentials: "include" // Wysłanie ciasteczka
+const fetchUserProfile = () => {
+fetch(`${BACKEND_URL}/api/auth/profile`, {
+    method: "GET",
+    credentials: "include"
+  })
+    .then(res => {
+    if (res.status === 401) {
+      throw new Error("Unauthorized");
+    }
+      return res.json();
     })
-      .then(res => {
-        // Jeśli użytkownik jest niezalogowany (401), rzucamy błąd, 
-        // aby przejść do .catch i ustawić "Gość".
-        if (res.status === 401) {
-          throw new Error("Unauthorized");
-        }
-        // Parsujemy JSON dla statusów 2xx.
-        return res.json();
-      })
-      .then(data => {
-        // Ta sekcja działa tylko, jeśli status był 200 OK
-        console.log("Layout API response:", data);
-        setUser({
-          id: parseInt(data.userId),
-          name: data.userName || "Brak imienia",
-          email: data.email,
-          isAuthenticated: true
-        });
-      })
-      .catch(err => {
-        // Obsługa błędu 401 lub błędu sieciowego
-        if (err.message === "Unauthorized") {
-          console.log("Użytkownik niezalogowany. Ustawiam 'Gość'.");
-        } else {
-          console.error("Layout user load error:", err);
-        }
-        setUser({ name: "Gość", isAuthenticated: false });
-      });
+  .then(data => {
+        const avatarPathFromDb = data.avatarPath || 'profilowe_smok.png';
+        const finalAvatarUrl = AVATAR_MAP[avatarPathFromDb] || awatar;
+        const fetchedBalance = (data.balance !== undefined && data.balance !== null) 
+            ? parseInt(data.balance, 10) 
+            : 0;
 
-  }, []);
+setUser({
+  id: parseInt(data.userId),
+  name: data.userName || "Brak imienia",
+  email: data.email,
+  isAuthenticated: true,
+            avatarUrl: finalAvatarUrl, 
+            avatarPath: avatarPathFromDb,
+            balance: fetchedBalance,
+  });
+})
+.catch(err => {
+  if (err.message === "Unauthorized") {
+    console.log("Użytkownik niezalogowany. Ustawiam 'Gość'.");
+  } else {
+    console.error("Layout user load error:", err);
+  }
+    setUser({ name: "Gość", isAuthenticated: false, avatarUrl: awatar }); // Ustawienie domyślnego
+  });
+};
+
+useEffect(() => {
+  fetchUserProfile(); // Uruchom pobieranie przy montowaniu
+}, []);
   // 2. Poprawiony useEffect dla animacji menu (bez zmian)
   useEffect(() => {
     if (!menuRef.current) {
@@ -164,7 +188,7 @@ function Layout() {
 
             <Link to={user.isAuthenticated ? "/profile" : "/login"} className="profile">
               <div className="avatar">
-                <img src={awatar} alt="Profile" />
+                <img src={user.avatarUrl} alt="Profile" />
               </div>
               <div className="user-info">
 
@@ -176,7 +200,7 @@ function Layout() {
 
         {/* Główna zawartość (podstrony) */}
         <main className="content">
-          <Outlet context={{ user }} />
+          <Outlet context={{ user, refreshUser: fetchUserProfile }} />
         </main>
       </div>
     </>
