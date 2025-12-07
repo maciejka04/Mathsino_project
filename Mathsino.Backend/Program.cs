@@ -175,28 +175,61 @@ app.MapPost(
 // Endpoint testowy statusu/profilu
 app.MapGet(
         "/api/auth/profile",
-        (HttpContext context) =>
+        async (HttpContext context, MathsinoContext db) =>
         {
             if (context.User.Identity?.IsAuthenticated == true)
             {
-                var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                var userName = context.User.FindFirst(ClaimTypes.Name)?.Value;
-                var email = context.User.FindFirst(ClaimTypes.Email)?.Value;
+                var userIdString = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-                return Results.Ok(
-                    new
-                    {
-                        IsAuthenticated = true,
-                        UserId = userId,
-                        UserName = userName,
-                        Email = email,
-                        Message = "Zalogowano pomyślnie!",
-                    }
-                );
+                if (int.TryParse(userIdString, out var userIdInt))
+                {
+                    var user = await db.Users.FindAsync(userIdInt);
+
+                    var userName = context.User.FindFirst(ClaimTypes.Name)?.Value;
+                    var email = context.User.FindFirst(ClaimTypes.Email)?.Value;
+                    
+                    return Results.Ok(
+                        new
+                        {
+                            IsAuthenticated = true,
+                            UserId = userIdString,
+                            UserName = userName,
+                            Email = email,
+                            AvatarPath = user.AvatarPath,
+                            Balance = user.Balance,
+                            Message = "Zalogowano pomyślnie!",
+                        }
+                    );
+                }
             }
             return Results.Unauthorized();
         }
     )
+    .RequireAuthorization();
+
+app.MapPut(
+    "/api/user/avatar",
+    async (HttpContext context, UpdateAvatarRequest request, MathsinoContext db) =>
+    {
+        if (context.User.Identity?.IsAuthenticated == true)
+        {
+            var userIdString = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (int.TryParse(userIdString, out var userId))
+            {
+                var user = await db.Users.FindAsync(userId);
+                if (user != null)
+                {
+                    user.AvatarPath = request.AvatarPath;
+                    await db.SaveChangesAsync();
+                    
+                    return Results.Ok(new { message = "Awatar zaktualizowany pomyślnie." });
+                }
+                return Results.NotFound(new { message = "Użytkownik nie znaleziony." });
+            }
+        }
+        return Results.Unauthorized();
+    }
+)
     .RequireAuthorization();
 
 app.MapUserEndPoints();
@@ -235,6 +268,15 @@ static async Task OnCreatingTicketHandler(
         u.Provider == provider && u.ProviderId == providerId
     );
 
+    /*
+    if (user != null && user.Balance < 5000) 
+    {
+        // TYMCZASOWA LINIA: Zapewnienie, że istniejący użytkownik ma min. 5000 na start
+        user.Balance = 5000;
+        await dbContext.SaveChangesAsync();
+    }
+    */
+    
     if (user == null)
     {
         // 2. Utwórz nowego użytkownika, jeśli nie istnieje
@@ -251,6 +293,8 @@ static async Task OnCreatingTicketHandler(
             Email = email,
             Provider = provider,
             ProviderId = providerId,
+            AvatarPath = "snake.png",
+            Balance = 5000
         };
         dbContext.Users.Add(user);
         await dbContext.SaveChangesAsync();

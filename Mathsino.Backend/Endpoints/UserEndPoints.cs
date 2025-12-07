@@ -24,10 +24,12 @@ public static class UserEndPoints
                                 f.Friend.FirstName,
                                 f.Friend.LastName,
                                 f.Friend.Email,
-                                f.Friend.Balance
+                                f.Friend.Balance,
+                                f.Friend.AvatarPath
                             ))
                             .ToList(),
-                        u.Balance
+                        u.Balance,
+                        u.AvatarPath
                     ))
                     .ToListAsync();
 
@@ -53,10 +55,12 @@ public static class UserEndPoints
                                 f.Friend.FirstName,
                                 f.Friend.LastName,
                                 f.Friend.Email,
-                                f.Friend.Balance
+                                f.Friend.Balance,
+                                f.Friend.AvatarPath
                             ))
                             .ToList(),
-                        u.Balance
+                        u.Balance,
+                        u.AvatarPath
                     ))
                     .FirstOrDefaultAsync();
 
