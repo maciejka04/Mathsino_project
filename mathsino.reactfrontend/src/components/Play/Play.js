@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import './Play.css';
 import online from '../../assets/singleplayer.png';
 import { Link } from 'react-router-dom';
 
 function Play() {
+  const { t } = useTranslation();
   const cardContainerRef = useRef(null);
 
   useEffect(() => {
@@ -46,7 +48,7 @@ function Play() {
       <Link to="/online" className="card-link">
         <div className="card">
           <div className="card-info">
-            <img src={online} alt="Play Online" />
+            <img src={online} alt={t('play_online_alt')} />
           </div>
         </div>
       </Link>

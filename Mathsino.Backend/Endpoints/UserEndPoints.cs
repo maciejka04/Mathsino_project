@@ -3,6 +3,8 @@ using Mathsino.Backend.Models;
 using Mathsino.Backend.Services;
 using Microsoft.EntityFrameworkCore;
 
+public record UserLanguageDto(string Language);
+
 public static class UserEndPoints
 {
     public static void MapUserEndPoints(this WebApplication app)
@@ -27,7 +29,8 @@ public static class UserEndPoints
                                 f.Friend.Balance
                             ))
                             .ToList(),
-                        u.Balance
+                        u.Balance,
+                        u.Language
                     ))
                     .ToListAsync();
 
@@ -56,7 +59,8 @@ public static class UserEndPoints
                                 f.Friend.Balance
                             ))
                             .ToList(),
-                        u.Balance
+                        u.Balance,
+                        u.Language
                     ))
                     .FirstOrDefaultAsync();
 
@@ -76,6 +80,19 @@ public static class UserEndPoints
                 {
                     return Results.NotFound(new { message = ex.Message });
                 }
+            }
+        );
+
+        // Update user language preference
+        app.MapPut(
+            "/users/{id}/language",
+            async (int id, UserLanguageDto dto, MathsinoContext db) =>
+            {
+                var user = await db.Users.FindAsync(id);
+                if (user is null) return Results.NotFound();
+                user.Language = dto.Language;
+                await db.SaveChangesAsync();
+                return Results.NoContent();
             }
         );
 

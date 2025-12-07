@@ -1,8 +1,10 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import './Login.css';
 
 // Komponent Login przeznaczony do logowania przez OAuth (Google/Facebook)
 function Login() {
+  const { t } = useTranslation();
   // Funkcja, która docelowo przekieruje użytkownika do endpointu backendowego
   // np. /auth/google lub /auth/facebook, który rozpocznie proces OAuth.
  const handleLogin = (provider) => {
@@ -19,8 +21,8 @@ function Login() {
   return (
     <div className="login-container">
       <div className="login-box">
-        <h2 className="login-title">Zaloguj się, aby kontynuować</h2>
-        <p className="login-subtitle">Osiągaj postępy i zapisuj swoje wyniki.</p>
+        <h2 className="login-title">{t('login_title')}</h2>
+        <p className="login-subtitle">{t('login_subtitle')}</p>
 
         {/* Przycisk Logowania przez Google */}
         <button 
@@ -28,7 +30,7 @@ function Login() {
           onClick={() => handleLogin('google')}
         >
           <i className="fa-brands fa-google"></i>
-          Zaloguj się z Google
+          {t('login_google')}
         </button>
 
         {/* Przycisk Logowania przez Facebook */}
@@ -37,11 +39,11 @@ function Login() {
           onClick={() => handleLogin('facebook')}
         >
           <i className="fa-brands fa-facebook-f"></i>
-          Zaloguj się z Facebook
+          {t('login_facebook')}
         </button>
 
         <p className="login-info">
-          Kontynuując, zgadzasz się na naszą Politykę Prywatności.
+          {t('login_info')}
         </p>
       </div>
     </div>

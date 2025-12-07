@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import './Friends.css';
+
 import awatar from '../../assets/profilowe_smok.png';
 
 const initialFriendsData = [
@@ -13,6 +15,7 @@ const initialRequestsData = [
 ];
 
 function Friends() {
+  const { t } = useTranslation();
   const [friends, setFriends] = useState(initialFriendsData);
   const [searchTerm, setSearchTerm] = useState('');
   const [requests, setRequests] = useState(initialRequestsData);
@@ -69,30 +72,30 @@ const check_profile = (id) => {
 
   return (
     <div className="friends-page-container">
-      <h1>Friends</h1>
+      <h1>{t('friends_title')}</h1>
 
       <div className="add-friend-section card-style">
-        <h2>Add Friend</h2>
+        <h2>{t('friends_add_friend')}</h2>
         <form onSubmit={handleAddFriend} className="add-friend-form">
           <input
             type="text"
-            placeholder="Wpisz nazwę użytkownika..."
+            placeholder={t('friends_placeholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="add-friend-input"
           />
           <button type="submit" className="add-friend-button">
-            Add
+            {t('friends_add')}
           </button>
         </form>
       </div>
 
       {}
       <div className="friend-requests-section card-style">
-        <h2>Friend Requests ({requests.length})</h2>
+        <h2>{t('friends_requests', { count: requests.length })}</h2>
         <div className="friends-list">
           {requests.length === 0 ? (
-            <p>You have no new friend requests.</p>
+            <p>{t('friends_no_requests')}</p>
           ) : (
             requests.map(request => (
               <div key={request.id} className="friend-item">
@@ -105,13 +108,13 @@ const check_profile = (id) => {
                     onClick={() => handleAcceptRequest(request.id)}
                     className="check-btn"
                   >
-                    Accept
+                    {t('friends_accept')}
                   </button>
                   <button
                     onClick={() => handleDeclineRequest(request.id)}
                     className="remove-btn"
                   >
-                    Decline
+                    {t('friends_decline')}
                   </button>
                 </div>
               </div>
@@ -122,10 +125,10 @@ const check_profile = (id) => {
       {/* --- Koniec nowej sekcji --- */}
 
       <div className="friends-list-section card-style">
-        <h2>Your Friends ({friends.length})</h2>
+        <h2>{t('friends_your', { count: friends.length })}</h2>
         <div className="friends-list">
           {friends.length === 0 ? (
-            <p>You have no friends.</p>
+            <p>{t('friends_no')}</p>
           ) : (
             friends.map(friend => (
               <div key={friend.id} className="friend-item">
@@ -134,20 +137,20 @@ const check_profile = (id) => {
                   <span className="friend-name">{friend.name}</span>
                   {}
                   <span className={`status ${friend.online ? 'online' : 'offline'}`}>
-                    {friend.online ? 'Online' : 'Offline'}
+                    {friend.online ? t('friends_online') : t('friends_offline')}
                   </span>
                 </div>
                 <button
                   onClick={() => check_profile(friend.id)}
                   className="check-btn"
                 >
-                  Check Profile
+                  {t('friends_check')}
                 </button>
                 <button
                   onClick={() => handleRemoveFriend(friend.id)}
                   className="remove-btn"
                 >
-                  Delete
+                  {t('friends_delete')}
                 </button>
 
               </div>

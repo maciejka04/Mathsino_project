@@ -1,24 +1,26 @@
 // src/components/Home/Home.js (Wersja 'PRO')
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import './Home.css';
 import { useOutletContext } from "react-router-dom";
 
 function Home() {
   const { user } = useOutletContext();
+  const { t } = useTranslation();
    const isLogged = user?.isAuthenticated;
   return (
     <>
       <header>
         {isLogged ? (
           <>
-            <h1>Welcome back, {user.name} 👋</h1>
+            <h1>{t('welcome_back', { name: user.name })}</h1>
           </>
         ) : (
           <>
-            <h1>Witaj!</h1>
-            <p>Zaloguj się, aby zapisywać progres i odblokować pełne statystyki.</p>
+            <h1>{t('welcome')}</h1>
+            <p>{t('login_prompt')}</p>
 
             <Link to="/login" className="login-button">
               Zaloguj się
@@ -33,21 +35,21 @@ function Home() {
         {/* === 1. KARTA POWITALNA ZE STATYSTYKAMI (Szeroka) === */}
         <div className="dashboard-card welcome-stats-card">
           <div className="dashboard-card-text">
-            <h4>Twoje postępy</h4>
-            <p>Oto jak Ci idzie w tym tygodniu.</p>
+            <h4>{t('your_progress')}</h4>
+            <p>{t('weeks_performance')}</p>
           </div>
           <div className="stats-grid">
             <div className="stat-item">
               <span className="stat-value">1,204</span>
-              <span className="stat-label">Rozdania</span>
+              <span className="stat-label">{t('hands_played')}</span>
             </div>
             <div className="stat-item">
               <span className="stat-value">87%</span>
-              <span className="stat-label">Trafność</span>
+              <span className="stat-label">{t('accuracy')}</span>
             </div>
             <div className="stat-item">
               <span className="stat-value">3</span>
-              <span className="stat-label">Dni z rzędu</span>
+              <span className="stat-label">{t('days_streak')}</span>
             </div>
           </div>
         </div>
@@ -56,8 +58,8 @@ function Home() {
         <Link to="/play" className="dashboard-card primary-card">
           <i className="fa-solid fa-spade"></i>
           <div className="dashboard-card-text">
-            <h3>Zacznij Grę</h3>
-            <p>Wybierz tryb gry</p>
+            <h3>{t('start_game')}</h3>
+            <p>{t('choose_mode')}</p>
           </div>
         </Link>
 

@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useOutletContext } from "react-router-dom";
 import "./Online.css";
 import tableImage from "../../assets/table4.png";
@@ -19,6 +20,7 @@ import fireworksSound from "../../assets/fireworks.mp3";
 
 import reverseCardImage from "../../assets/karty/reverse2.png";
 import defaultAvatar from "../../assets/profilepic/snake.png";
+import LanguageToggle from '../LanguageToggle';
 const DECK_POSITION = { left: 15, top: 30 };
 
 const allCardFileNames = [
@@ -134,6 +136,7 @@ const calculateHandValue = (hand) => {
 };
 
 function Online() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { user } = useOutletContext();
   const [currentBalance, setCurrentBalance] = useState(5000);
@@ -258,7 +261,7 @@ function Online() {
 
   const startNewGame = async () => {
     if (currentBet <= 0) {
-      alert("Musisz postawić zakład, aby zagrać!");
+      alert(t('bet_must_place'));
       return;
     }
 
@@ -653,7 +656,7 @@ if (hasSplit && splitRes) {
   const handleChipSelect = (value) => {
     if (gameStatus === "InProgress" || isShuffling) return;
     if (currentBalance < value) {
-      alert("Nie masz wystarczająco środków!");
+      alert(t('not_enough_funds'));
       return;
     }
     setCurrentBalance((prev) => prev - value);
@@ -696,7 +699,7 @@ if (hasSplit && splitRes) {
     if (hasSplit) {
       const split = calc(splitResult, currentBet, splitDoubled);
       totalWin += split.val;
-      msg = `Ręka 1: ${getResultText(gameResult)} | Ręka 2: ${getResultText(
+      msg = `${t('hand')} 1: ${getResultText(gameResult)} | ${t('hand')} 2: ${getResultText(
         splitResult
       )}`;
     } else {
@@ -738,7 +741,7 @@ if (hasSplit && splitRes) {
         />
        )}
       <button className="back-button" onClick={handleGoBack}>
-        &#8592; Exit
+        &#8592; {t('exit')}
       </button>
       <div className="user-info-panel">
        <img 
@@ -747,6 +750,7 @@ if (hasSplit && splitRes) {
           className="user-avatar" 
        />
        <span className="user-name">{user?.name || "Gość"}</span>
+        <LanguageToggle userId={USER_ID} />
       </div>
       {/* FEEDBACK TRENERA */}
       {strategyFeedback && (
@@ -810,7 +814,7 @@ if (hasSplit && splitRes) {
         {/* WARTOSC REKI KRUPIERA */}
         {dealerCards.length > 0 && (
             <div className="hand-value dealer-value">
-                Krupier:{" "}
+                {`${t('dealer')}:`}{" "}
                 <span style={{ fontWeight: "bold" }}>
                     {gameStatus === "InProgress" && dealerCards.length === 2
                         ? calculateHandValue(dealerCards.slice(0, 1))
@@ -827,7 +831,7 @@ if (hasSplit && splitRes) {
                     left: hasSplit ? "40%" : "50%",
                 }}
             >
-                {hasSplit ? "Ręka 1" : "Ty"}:{" "}
+                {hasSplit ? `${t('hand')} 1` : "Ty"}:{" "}
                 <span style={{ fontWeight: "bold" }}>
                     {calculateHandValue(playerCards)}
                 </span>
@@ -842,7 +846,7 @@ if (hasSplit && splitRes) {
                     left: "60%",
                 }}
             >
-                Ręka 2:{" "}
+                {`${t('hand')} 2:`}{" "}
                 <span style={{ fontWeight: "bold" }}>
                     {calculateHandValue(splitCards)}
                 </span>

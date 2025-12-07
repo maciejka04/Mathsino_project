@@ -27,6 +27,9 @@ public class User
     public List<UserFriend> Friends { get; set; } = [];
 
     public int Balance { get; set; } = 0;
+
+    [StringLength(5)]
+    public string Language { get; set; } = "en";
 }
 
 public class UserFriend
@@ -46,5 +49,6 @@ public record UserDto(
     string LastName,
     string Email,
     List<FriendDto> Friends,
-    int Balance
+    int Balance,
+    string Language
 );
