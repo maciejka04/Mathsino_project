@@ -1,0 +1,39 @@
+/* Music Selection Buttons */
+.music-selection-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 15px;
+  margin-left: 30px;
+}
+
+.music-btn {
+  width: 50px;
+  height: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'SF Pro Display', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.music-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+.music-btn.active {
+  background: var(--primary-color, #0066ff);
+  color: #fff;
+  border-color: var(--primary-color, #0066ff);
+  box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3);
+}

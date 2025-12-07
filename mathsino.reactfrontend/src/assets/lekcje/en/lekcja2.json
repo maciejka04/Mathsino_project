@@ -1,0 +1,149 @@
+{
+  "lesson_id": 2,
+  "lesson_title": "Hard Hands: The Easy Decisions",
+  "introduction": {
+    "avatar_pose": "A",
+    "text": "Welcome back! Today we start with Basic Strategy. It's a map that tells you exactly what to do. We'll start with 'Hard Hands' (hands without an Ace). Look at the edges of the table: when you have very little, you take. When you have a lot, you wait. Simple, right? Let's prove it!"
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "title": "Safe Zone (Total 8)",
+      "goal": "Show that hitting on 8 or less is risk-free.",
+      "setup": {
+        "player_hand": ["3_of_clubs", "5_of_diamonds"],
+        "dealer_up_card": "6_of_spades",
+        "dealer_hidden_card": "10_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "You have 8 points. Many players are afraid to hit here, but that's a mistake. The highest card is 10. 8 + 10 = 18. You cannot Bust. Always HIT!",
+          "required_action": "HIT",
+          "cards_added": ["9_of_clubs"],
+          "player_score_after": 17
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["queen_of_diamonds"],
+        "dealer_final_score": 26,
+        "avatar_pose": "B",
+        "text": "See? You turned a weak 8 into a solid 17. I had 16, so I had to hit and I busted with 26. Safe win.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Desperation (Total 5)",
+      "goal": "Reinforce hitting on very low hands against strong dealers.",
+      "setup": {
+        "player_hand": ["2_of_hearts", "3_of_spades"],
+        "dealer_up_card": "ace_of_diamonds",
+        "dealer_hidden_card": "9_of_clubs"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "You have 5 points. That's basically nothing. The dealer shows an Ace - a monster. No time for fancy moves. You just need points. Click HIT.",
+          "required_action": "HIT",
+          "cards_added": ["queen_of_hearts"],
+          "player_score_after": 15
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 20,
+        "avatar_pose": "A",
+        "text": "You got a Queen and now have 15. I have 20. You lost, but you played correctly. You can't win every hand, but you must play right.",
+        "result_status": "LESSON_PASSED"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Hard 17 vs Ace (The Trap)",
+      "goal": "Teach the player NEVER to hit on Hard 17.",
+      "setup": {
+        "player_hand": ["10_of_clubs", "7_of_hearts"],
+        "dealer_up_card": "ace_of_spades",
+        "dealer_hidden_card": "7_of_diamonds"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Warning! This is a trap. You have 17. Dealer has an Ace. Your gut says 'Hit', but Math says 'Stand'. Hitting 17 is suicide. Never do it.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 17
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 18,
+        "avatar_pose": "C",
+        "text": "You lost (17 vs 18), but... you played correctly! If you had hit, you would likely have busted. In Blackjack, a good decision doesn't always mean a win.",
+        "result_status": "LOSE_CORRECTLY"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Obvious Stand (Total 20)",
+      "goal": "Confirm standing on high totals.",
+      "setup": {
+        "player_hand": ["jack_of_spades", "king_of_diamonds"],
+        "dealer_up_card": "9_of_hearts",
+        "dealer_hidden_card": "10_of_clubs"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "B",
+          "text": "Two face cards! You have 20. Second best hand in the game. Nothing to think about here. Wait for the payout.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 19,
+        "avatar_pose": "B",
+        "text": "Easy money. I have 19, you have 20. You win.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Scary Stand (18 vs 9)",
+      "goal": "Teach discipline on 18.",
+      "setup": {
+        "player_hand": ["10_of_hearts", "8_of_spades"],
+        "dealer_up_card": "9_of_diamonds",
+        "dealer_hidden_card": "6_of_clubs"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "You have 18. Dealer has 9 (looks strong). Tempted to hit? Don't. With 18, the risk of busting is huge. Trust the math.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 18
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["10_of_spades"],
+        "dealer_final_score": 25,
+        "avatar_pose": "B",
+        "text": "Dealer Bust! See? I had 15 (9+6), so I had to hit and caught a 10. If you had panicked, you might have lost against yourself.",
+        "result_status": "WIN"
+      }
+    }
+  ],
+  "conclusion": {
+    "avatar_pose": "A",
+    "text": "You've mastered the edges of the table. Rule: 5-8 always HIT, 17-21 always STAND. The problems start in the middle... In the next lesson, I will teach you how to be aggressive and when to Double Down!"
+  }
+}

@@ -43,7 +43,7 @@ public static class BalanceEndPoints
                     return Results.NotFound();
                 }
 
-                if (user.Balance < amount)
+                if (user.Balance <= amount)
                 {
                     return Results.BadRequest("Insufficient balance");
                 }

@@ -1,0 +1,209 @@
+{
+  "lesson_id": 9,
+  "lesson_title": "Pary Część 2: Trudne Rozdzielenia",
+  "introduction": {
+    "avatar_pose": "A",
+    "text": "Znasz Złote Zasady. Teraz spójrzmy na trudne pary: 2-ki, 3-ki, 4-ki, 6-ki, 7-ki i 9-ki. Zasadą tutaj jest kontekst. Patrz na MOJĄ kartę. Jeśli jestem słaby, robisz Split, by atakować. Jeśli jestem silny, nie rób Splitu – graj jak normalną ręką."
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "title": "Pułapka 9,9 (9,9 na 7)",
+      "goal": "Nauczyć pasowania na 9,9 przeciwko 7 (Kluczowy wyjątek).",
+      "setup": {
+        "player_hand": ["9_of_spades", "9_of_hearts"],
+        "dealer_up_card": "7_of_diamonds",
+        "dealer_hidden_card": "10_of_clubs"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Masz dwie 9-ki. Razem 18. Krupier ma 7. Pomyśl! Jeśli krupier ma pod spodem 10, ma 17. Twoje 18 bije 17. Po co ryzykować rozdzielanie? Po prostu weź pieniądze. STAND.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 18
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 17,
+        "avatar_pose": "B",
+        "text": "Mądrze. Miałem 17. Ty miałeś 18. Łatwa wygrana bez stresu związanego z rozdzielaniem.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Atak 9,9 (9,9 na 6)",
+      "goal": "Nauczyć rozdzielania 9,9 przeciwko słabym krupierom.",
+      "setup": {
+        "player_hand": ["9_of_diamonds", "9_of_clubs"],
+        "dealer_up_card": "6_of_hearts",
+        "dealer_hidden_card": "5_of_spades"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Teraz mam 6 (Słaba). Ty masz 18. Wygranie DWÓCH zakładów jest lepsze. Rozdziel 9-ki, aby ukarać moją słabą kartę.",
+          "required_action": "SPLIT",
+          "cards_added_hand_1": ["king_of_spades"],
+          "cards_added_hand_2": ["2_of_hearts"],
+          "player_score_hand_1": 19,
+          "player_score_hand_2": 11
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "A",
+          "text": "Okej, spójrz na Rękę 1 (Lewa). Masz 19. To wynik na wygraną. Nie ryzykuj. Zakończ tę rękę najpierw.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 19
+        },
+        {
+          "step_order": 3,
+          "avatar_pose": "B",
+          "text": "Teraz skup się na Ręce 2 (Prawa). Masz 11 na 6. To moment na atak. Double Down na drugiej ręce!",
+          "required_action": "DOUBLE",
+          "cards_added_to_split": ["king_of_clubs"], 
+          "player_score_after": 21
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["queen_of_diamonds"],
+        "dealer_final_score": 21,
+        "avatar_pose": "B",
+        "text": "Jackpot! Ręka 1 wygrała (19 na 21 fura). Ręka 2 podwojona i trafiła 21. Idealne rozegranie.",
+        "result_status": "WIN_BOTH"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Małe Pary na Słabego Krupiera (2,2 na 5)",
+      "goal": "Nauczyć rozdzielania 2-jek i 3-jek przeciwko 4-7.",
+      "setup": {
+        "player_hand": ["2_of_clubs", "2_of_diamonds"],
+        "dealer_up_card": "5_of_hearts",
+        "dealer_hidden_card": "9_of_spades"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Para 2-jek. Razem 4. To fatalny numer startowy. Ale ja mam 5. Rozdziel je! Zamień jedną złą rękę (4) na dwa przyzwoite starty.",
+          "required_action": "SPLIT",
+          "cards_added_hand_1": ["9_of_hearts"],
+          "cards_added_hand_2": ["8_of_diamonds"],
+          "player_score_hand_1": 11,
+          "player_score_hand_2": 10
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "B",
+          "text": "Ręka 1 ma 11 na 5. Double Down!",
+          "required_action": "DOUBLE",
+          "cards_added": ["king_of_spades"],
+          "player_score_after": 21
+        },
+        {
+          "step_order": 3,
+          "avatar_pose": "B",
+          "text": "Ręka 2 ma 10 na 5. Double Down znowu!",
+          "required_action": "DOUBLE",
+          "cards_added_to_split": ["queen_of_hearts"],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["king_of_clubs"],
+        "dealer_final_score": 24,
+        "avatar_pose": "B",
+        "text": "Przekroczyłem 21. Ponieważ rozdzieliłeś i podwoiłeś obie, wygrywasz 4x stawkę. Ogromny zysk.",
+        "result_status": "WIN_BOTH"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Małe Pary na Silnego Krupiera (6,6 na 8)",
+      "goal": "Nauczyć DOBIERANIA (nie rozdzielania) par, gdy krupier jest silny.",
+      "setup": {
+        "player_hand": ["6_of_diamonds", "6_of_hearts"],
+        "dealer_up_card": "8_of_spades",
+        "dealer_hidden_card": "10_of_clubs"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Dwie 6-stki. Razem 12. Krupier ma 8. NIEBEZPIECZEŃSTWO. Jeśli rozdzielisz, zaczniesz dwie ręce z 6 przeciwko 8. Prawdopodobnie przegrasz obie. Po prostu dobierz do 12 jak przy normalnej Twardej Ręce.",
+          "required_action": "HIT",
+          "cards_added": ["7_of_diamonds"],
+          "player_score_after": 19
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "B",
+          "text": "Uratowałeś się! Dobrałeś 7 i masz teraz 19. Zabezpiecz wygraną. STAND.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 19
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 18,
+        "avatar_pose": "B",
+        "text": "Dobra decyzja. Masz 19 i bijesz moje 18. Gdybyś rozdzielił, zacząłbyś z 6-stkami i pewnie przegrał obie ręce.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Wyjątek 4,4 (4,4 na 3)",
+      "goal": "Nauczyć, że 4,4 to zazwyczaj Hit (chyba że tabela mówi inaczej).",
+      "setup": {
+        "player_hand": ["4_of_clubs", "4_of_spades"],
+        "dealer_up_card": "3_of_diamonds",
+        "dealer_hidden_card": "9_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Dwie 4-ki. Razem 8. Rozdzielamy? Nie. 4 to fatalna karta startowa. 8 to przyzwoity numer startowy. Nie rozdzielaj tu 4-rek. Po prostu Hit.",
+          "required_action": "HIT",
+          "cards_added": ["3_of_hearts"],
+          "player_score_after": 11
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "A",
+          "text": "Masz 11! Normalnie byś podwoił. Ale już raz dobrałeś! Zasady mówią: Brak Double po Hit. Musisz dobrać znowu.",
+          "required_action": "HIT",
+          "cards_added": ["10_of_diamonds"],
+          "player_score_after": 21
+        },
+        {
+          "step_order": 3,
+          "avatar_pose": "B",
+          "text": "21! Idealnie. Teraz Stand.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 21
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["king_of_hearts"],
+        "dealer_final_score": 22,
+        "avatar_pose": "B",
+        "text": "Masz 21, a ja przekroczyłem. Dobranie do 4-rek było dobrą decyzją.",
+        "result_status": "WIN"
+      }
+    }
+  ],
+  "conclusion": {
+    "avatar_pose": "B",
+    "text": "Gratulacje! Ukończyłeś Kurs Strategii Podstawowej. Znasz każdy przycisk i każdą decyzję. Ale... czy możliwe jest wiedzieć, jaka karta będzie następna?"
+  }
+}

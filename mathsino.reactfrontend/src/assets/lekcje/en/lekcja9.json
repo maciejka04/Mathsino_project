@@ -1,0 +1,209 @@
+{
+  "lesson_id": 9,
+  "lesson_title": "Pairs Part 2: The Tricky Splits",
+  "introduction": {
+    "avatar_pose": "A",
+    "text": "You know the Golden Rules. Now, let's look at the tricky pairs: 2s, 3s, 4s, 6s, 7s, and 9s. The rule here is context. Look at MY card. If I am weak, you Split to attack. If I am strong, do not Split – just play it like a normal hand."
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "title": "The 9,9 Trap (9,9 vs 7)",
+      "goal": "Teach Standing on 9,9 against 7 (Key Exception).",
+      "setup": {
+        "player_hand": ["9_of_spades", "9_of_hearts"],
+        "dealer_up_card": "7_of_diamonds",
+        "dealer_hidden_card": "10_of_clubs"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "You have two 9s. Total 18. Dealer has a 7. Think! If dealer has 10 underneath, he has 17. Your 18 beats 17. Why risk splitting? Just Take the money. STAND.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 18
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 17,
+        "avatar_pose": "B",
+        "text": "Smart. I had 17. You had 18. Easy win without the stress of splitting.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 2,
+      "title": "The 9,9 Attack (9,9 vs 6)",
+      "goal": "Teach Splitting 9,9 against weak dealers.",
+      "setup": {
+        "player_hand": ["9_of_diamonds", "9_of_clubs"],
+        "dealer_up_card": "6_of_hearts",
+        "dealer_hidden_card": "5_of_spades"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Now I have a 6 (Weak). You have 18. Winning TWO bets is better. Split the 9s to punish my weak card.",
+          "required_action": "SPLIT",
+          "cards_added_hand_1": ["king_of_spades"],
+          "cards_added_hand_2": ["2_of_hearts"],
+          "player_score_hand_1": 19,
+          "player_score_hand_2": 11
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "A",
+          "text": "Okay, look at Hand 1 (Left). You have 19. That is a winning score. Don't risk it. Finish this hand first.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 19
+        },
+        {
+          "step_order": 3,
+          "avatar_pose": "B",
+          "text": "Now focus on Hand 2 (Right). You have 11 vs 6. This is the moment to attack. Double Down on the second hand!",
+          "required_action": "DOUBLE",
+          "cards_added_to_split": ["king_of_clubs"], 
+          "player_score_after": 21
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["queen_of_diamonds"],
+        "dealer_final_score": 21,
+        "avatar_pose": "B",
+        "text": "Jackpot! Hand 1 won (19 vs 21 bust). Hand 2 doubled and hit 21. Perfect play.",
+        "result_status": "WIN_BOTH"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Small Pairs vs Weak Dealer (2,2 vs 5)",
+      "goal": "Teach Splitting 2s and 3s against 4-7.",
+      "setup": {
+        "player_hand": ["2_of_clubs", "2_of_diamonds"],
+        "dealer_up_card": "5_of_hearts",
+        "dealer_hidden_card": "9_of_spades"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Pair of 2s. Total 4. That's a terrible starting number. But I have a 5. Split them! Turn one bad hand (4) into two decent starts.",
+          "required_action": "SPLIT",
+          "cards_added_hand_1": ["9_of_hearts"],
+          "cards_added_hand_2": ["8_of_diamonds"],
+          "player_score_hand_1": 11,
+          "player_score_hand_2": 10
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "B",
+          "text": "Hand 1 is 11 vs 5. Double Down!",
+          "required_action": "DOUBLE",
+          "cards_added": ["king_of_spades"],
+          "player_score_after": 21
+        },
+        {
+          "step_order": 3,
+          "avatar_pose": "B",
+          "text": "Hand 2 is 10 vs 5. Double Down again!",
+          "required_action": "DOUBLE",
+          "cards_added_to_split": ["queen_of_hearts"],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["king_of_clubs"],
+        "dealer_final_score": 24,
+        "avatar_pose": "B",
+        "text": "I busted. Since you split and doubled both, you win 4x your bet. Massive profit.",
+        "result_status": "WIN_BOTH"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Small Pairs vs Strong Dealer (6,6 vs 8)",
+      "goal": "Teach HITTING (not splitting) pairs when dealer is strong.",
+      "setup": {
+        "player_hand": ["6_of_diamonds", "6_of_hearts"],
+        "dealer_up_card": "8_of_spades",
+        "dealer_hidden_card": "10_of_clubs"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Two 6s. Total 12. Dealer has 8. DANGER. If you split, you start two hands with 6 against an 8. You will likely lose both. Just Hit the 12 like a normal Hard Hand.",
+          "required_action": "HIT",
+          "cards_added": ["7_of_diamonds"],
+          "player_score_after": 19
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "B",
+          "text": "You saved yourself! You drew a 7 and now have 19. Secure the win. STAND.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 19
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 18,
+        "avatar_pose": "B",
+        "text": "Good decision. You got 19 and beat my 18. If you had split, you would have started with 6s and likely lost both hands.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 5,
+      "title": "The 4,4 Exception (4,4 vs 3)",
+      "goal": "Teach that 4,4 is usually a Hit (unless table says otherwise).",
+      "setup": {
+        "player_hand": ["4_of_clubs", "4_of_spades"],
+        "dealer_up_card": "3_of_diamonds",
+        "dealer_hidden_card": "9_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Two 4s. Total 8. Should we split? No. 4 is a terrible starting card. 8 is a decent starting number. Don't split 4s here. Just Hit.",
+          "required_action": "HIT",
+          "cards_added": ["3_of_hearts"],
+          "player_score_after": 11
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "A",
+          "text": "You got 11! Normally you would Double. But you already hit once! The rules say: No Double after Hit. You must Hit again.",
+          "required_action": "HIT",
+          "cards_added": ["10_of_diamonds"],
+          "player_score_after": 21
+        },
+        {
+          "step_order": 3,
+          "avatar_pose": "B",
+          "text": "21! Perfect. Now Stand.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 21
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["king_of_hearts"],
+        "dealer_final_score": 22,
+        "avatar_pose": "B",
+        "text": "You got 21 and I busted. Hitting the 4s was the right call.",
+        "result_status": "WIN"
+      }
+    }
+  ],
+  "conclusion": {
+    "avatar_pose": "B",
+    "text": "Congratulations! You have finished the Basic Strategy Course. You know every button and every decision. But... is it possible to know what card comes next?"
+  }
+}

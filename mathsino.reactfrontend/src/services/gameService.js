@@ -1,7 +1,6 @@
 // src/services/gameService.js
 
-// WAŻNE: Sprawdź w backendzie (plik launchSettings.json), na jakim porcie działa Twoja aplikacja.
-// Zazwyczaj jest to 5000, 5001, 7000 lub podobny. Wpisz go tutaj:
+
 const API_URL = "http://localhost:5000"; 
 
 export const gameService = {

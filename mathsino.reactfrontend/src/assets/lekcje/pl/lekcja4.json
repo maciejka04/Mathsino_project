@@ -1,0 +1,157 @@
+{
+  "lesson_id": 4,
+  "lesson_title": "Gra Defensywna: Sztywne Ręce kontra Słaby Krupier",
+  "introduction": {
+    "avatar_pose": "A",
+    "text": "Witaj w najtrudniejszej części Blackjacka. Masz 'Sztywną Rękę' (od 12 do 16). Jeśli dobierzesz, możesz przekroczyć 21. Jeśli spasujesz, twój wynik jest niski. Sekret? Patrz na MNIE. Jeśli mam słabą kartę (2, 3, 4, 5, 6), nie musisz mnie pokonać. Musisz tylko pozwolić mi pokonać samego siebie."
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "title": "Klasyczny Pat (16 na 6)",
+      "goal": "Nauczyć pasowania na 16 przeciwko słabej 6.",
+      "setup": {
+        "player_hand": ["10_of_clubs", "6_of_diamonds"],
+        "dealer_up_card": "6_of_spades",
+        "dealer_hidden_card": "9_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Masz 16. To okropna ręka. Ale spójrz na moją 6. To 'Karta Fury'. Prawdopodobnie będę musiał dobrać karty i przekroczyć 21. Nie ryzykuj własnej przegranej. Po prostu STAND (Pasuj).",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 16
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["10_of_diamonds"],
+        "dealer_final_score": 25,
+        "avatar_pose": "B",
+        "text": "Dokładnie! Miałem 15, musiałem dobrać i trafiłem 10. Przekroczyłem 21. Wygrałeś ze słabym 16 po prostu nic nie robiąc.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Nerwowe 13 (13 na 3)",
+      "goal": "Wzmocnienie pasowania na 13+ przeciwko słabym kartom.",
+      "setup": {
+        "player_hand": ["10_of_spades", "3_of_hearts"],
+        "dealer_up_card": "3_of_diamonds",
+        "dealer_hidden_card": "10_of_clubs"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Masz 13. Moja 3 jest słaba, ale zdradliwa. Mimo to matematyka mówi: jeśli dobierzesz do 13, prawdopodobnie przekroczysz 21. Pozwól mi podjąć ryzyko. Kliknij STAND.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 13
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["king_of_hearts"],
+        "dealer_final_score": 23,
+        "avatar_pose": "B",
+        "text": "Uff! Miałem 13, dobrałem Króla i przekroczyłem. Gra defensywna się opłaca.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Wyjątek (12 na 2)",
+      "goal": "Nauczyć, że 12 na 2 wymaga dobrania (HIT).",
+      "setup": {
+        "player_hand": ["10_of_hearts", "2_of_clubs"],
+        "dealer_up_card": "2_of_spades",
+        "dealer_hidden_card": "8_of_diamonds"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Masz 12. Krupier ma 2. OSTROŻNIE! 12 to przypadek specjalny. Dwójka krupiera nie jest wystarczająco słaba, by zagwarantować porażkę. Musimy wziąć jedną kartę. Hit!",
+          "required_action": "HIT",
+          "cards_added": ["8_of_clubs"],
+          "player_score_after": 20
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "B",
+          "text": "Dostałeś 8! Razem 20. Teraz jesteś bezpieczny. Stand.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["7_of_spades"],
+        "dealer_final_score": 17,
+        "avatar_pose": "B",
+        "text": "Dobra decyzja. Skończyłem z 17. Twoje 12 by przegrało, ale twoje 20 wygrywa.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Pułapka (12 na 4)",
+      "goal": "Kontrast z poprzednim scenariuszem: 12 na 4 to Pas.",
+      "setup": {
+        "player_hand": ["queen_of_diamonds", "2_of_hearts"],
+        "dealer_up_card": "4_of_clubs",
+        "dealer_hidden_card": "10_of_spades"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Znowu 12. Ale teraz mam 4. Czwórka jest znacznie słabsza niż dwójka u krupiera. Teraz strategia wraca do defensywy. Nie dobieraj. STAND.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 12
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["8_of_hearts"],
+        "dealer_final_score": 22,
+        "avatar_pose": "B",
+        "text": "Poprawnie. Miałem 14, dobrałem 8 i przekroczyłem. Przetrwałeś z zaledwie 12 punktami.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Magnes na Furę (15 na 5)",
+      "goal": "Obsługa najgorszej ręki przeciwko słabemu krupierowi.",
+      "setup": {
+        "player_hand": ["9_of_spades", "6_of_clubs"],
+        "dealer_up_card": "5_of_diamonds",
+        "dealer_hidden_card": "9_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Masz 15. Statystycznie to jedna z najgorszych rąk. Dobieranie to samobójstwo. Ja mam 5. Też mam kłopoty. Nie interweniuj. Pozwól mi zniszczyć moją własną rękę. STAND.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 15
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["king_of_spades"],
+        "dealer_final_score": 24,
+        "avatar_pose": "B",
+        "text": "Krupier Przekroczył! Miałem 14 i dobrałem Króla. Pamiętaj: Gdy krupier jest słaby, cierpliwość jest twoją bronią.",
+        "result_status": "WIN"
+      }
+    }
+  ],
+  "conclusion": {
+    "avatar_pose": "A",
+    "text": "Nauczyłeś się, jak bronić się przed słabym krupierem. Ale co, jeśli mam SILNĄ kartę (7, 8, 9, 10, As), a ty masz słabą rękę? To scenariusz z koszmaru. Zmierzymy się z nim w następnej lekcji!"
+  }
+}

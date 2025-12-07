@@ -1,0 +1,157 @@
+{
+  "lesson_id": 3,
+  "lesson_title": "Agresywna Gra: Kiedy Podwajać",
+  "introduction": {
+    "avatar_pose": "A",
+    "text": "Witaj w 'Strefie Pieniędzy'. W tej lekcji nauczysz się, jak podwoić swoje potencjalne wygrane. Zasada jest prosta: Kiedy masz silną rękę startową, a ja mam słabą kartę, musisz atakować! Używamy przycisku 'DOUBLE DOWN' (Podwój). Podwajasz zakład, ale dostajesz TYLKO jedną kartę. Zaróbmy trochę pieniędzy!"
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "title": "Święty Graal (11 na 6)",
+      "goal": "Nauczyć, że 11 to najlepsza ręka do podwojenia.",
+      "setup": {
+        "player_hand": ["6_of_clubs", "5_of_hearts"],
+        "dealer_up_card": "6_of_spades",
+        "dealer_hidden_card": "10_of_diamonds"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "B",
+          "text": "Masz 11 (6+5). To najlepsza ręka startowa w Blackjacku! Ja mam słabą 6. Masz ogromną przewagę statystyczną. Nie dobieraj zwyczajnie. ZMIAŻDŻ mnie. Kliknij DOUBLE.",
+          "required_action": "DOUBLE",
+          "cards_added": ["king_of_hearts"],
+          "player_score_after": 21
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["queen_of_clubs"],
+        "dealer_final_score": 26,
+        "avatar_pose": "B",
+        "text": "BUM! Dostałeś Króla, co daje łącznie 21. Ja miałem 16 i przekroczyłem 21. Wygrywasz podwójną kasę!",
+        "result_status": "WIN_DOUBLE"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Silne 10 (10 na 9)",
+      "goal": "Nauczyć podwajania na 10 przeciwko wszystkiemu słabszemu niż 10.",
+      "setup": {
+        "player_hand": ["2_of_spades", "8_of_diamonds"],
+        "dealer_up_card": "9_of_clubs",
+        "dealer_hidden_card": "6_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Masz 10. Ja mam 9. Wygląda na wyrównane, ale matematyka jest po twojej stronie. Z 10 masz dużą szansę na trafienie 20. Atakuj! Kliknij DOUBLE.",
+          "required_action": "DOUBLE",
+          "cards_added": ["jack_of_diamonds"],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["10_of_spades"],
+        "dealer_final_score": 25,
+        "avatar_pose": "B",
+        "text": "Nieźle! Trafiłeś 20. Ja miałem 15 i musiałem dobrać, co skończyło się przekroczeniem. Agresja się opłaca.",
+        "result_status": "WIN_DOUBLE"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Podstępne 9 (9 na 4)",
+      "goal": "Nauczyć, że 9 podwaja się tylko przeciwko bardzo słabym krupierom (3-6).",
+      "setup": {
+        "player_hand": ["4_of_clubs", "5_of_diamonds"],
+        "dealer_up_card": "4_of_spades",
+        "dealer_hidden_card": "8_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Masz 9. Zazwyczaj po prostu dobieramy. Ale spójrz na moją kartę: to 4 (bardzo słaba). To okno możliwości. Podwajaj na 9 TYLKO przeciwko 3, 4, 5 lub 6.",
+          "required_action": "DOUBLE",
+          "cards_added": ["10_of_clubs"],
+          "player_score_after": 19
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["queen_of_hearts"],
+        "dealer_final_score": 22,
+        "avatar_pose": "B",
+        "text": "Perfekcyjne wykonanie. Dostałeś 19. Ja miałem 12, wziąłem Damę i przekroczyłem.",
+        "result_status": "WIN_DOUBLE"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Nie bądź chciwy (10 na 10)",
+      "goal": "Nauczyć NIE podwajać, gdy krupier jest silny.",
+      "setup": {
+        "player_hand": ["5_of_spades", "5_of_hearts"],
+        "dealer_up_card": "king_of_clubs",
+        "dealer_hidden_card": "8_of_diamonds"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Masz 10 (5+5). Krupier ma Króla (10). OSTROŻNIE! Jestem zbyt silny. Jeśli podwoisz i dostaniesz niską kartę, przegrasz podwójnie. Zagraj bezpiecznie. Kliknij HIT.",
+          "required_action": "HIT",
+          "cards_added": ["9_of_diamonds"],
+          "player_score_after": 19
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "A",
+          "text": "Masz 19. To bezpieczny wynik. Teraz STAND.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 19
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 18,
+        "avatar_pose": "A",
+        "text": "Mądry ruch. Wygrałeś 19 do 18. Gdybyś podwoił, zaryzykowałbyś zbyt wiele przeciwko mojej silnej karcie.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Nieustraszone 11 (11 na Asa)",
+      "goal": "Nauczyć, że przy 11 podwajamy nawet przeciwko Asowi.",
+      "setup": {
+        "player_hand": ["7_of_diamonds", "4_of_spades"],
+        "dealer_up_card": "ace_of_clubs",
+        "dealer_hidden_card": "6_of_diamonds"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Masz 11 przeciwko mojemu Asowi. Wielu graczy się tu boi. Ale twoja tabela mówi: DOUBLE! 11 jest zbyt potężne, by grać pasywnie. Podejmij ryzyko.",
+          "required_action": "DOUBLE",
+          "cards_added": ["10_of_hearts"],
+          "player_score_after": 21
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 17,
+        "avatar_pose": "B",
+        "text": "Fortuna sprzyja odważnym! Trafiłeś 21. Ja mam 17 (As+6). Zmiażdżyłeś Asa!",
+        "result_status": "WIN_DOUBLE"
+      }
+    }
+  ],
+  "conclusion": {
+    "avatar_pose": "B",
+    "text": "Stajesz się rekinem! Wiesz, kiedy atakować. Ale co, jeśli masz słabą rękę, a ja mam silną kartę? To najtrudniejsza część gry. Zajmiemy się 'Sztywnymi Rękami' w następnej lekcji."
+  }
+}

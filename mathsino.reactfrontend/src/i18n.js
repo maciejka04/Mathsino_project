@@ -4,9 +4,15 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   en: {
     translation: {
+      /* ---  (SIDEBAR) --- */
+      "nav_play": "Play",
+      "nav_learn": "Learn",
+      "nav_statistics": "Statistics",
+      "nav_friends": "Friends",
+      "nav_resources": "Resources",
+
+      /* --- Online.js --- */
       "exit": "Exit",
-      "bet_must_place": "You must place a bet to play!",
-      "not_enough_funds": "Insufficient funds!",
       "hand": "Hand",
       "dealer": "Dealer",
       "winner": "WINNER!",
@@ -15,6 +21,15 @@ const resources = {
       "blackjack": "BLACKJACK!",
       "lang_en": "EN",
       "lang_pl": "PL",
+
+      /* --- LOGIN.JS --- */
+      "login_title": "Log in to continue",
+      "login_subtitle": "Track progress and save your results.",
+      "login_google": "Log in with Google",
+      "login_facebook": "Log in with Facebook",
+      "login_info": "By continuing, you agree to our Privacy Policy.",
+
+      /* --- HOME.JS --- */
       "welcome_back": "Welcome back, {{name}} 👋",
       "welcome": "Welcome!",
       "login_prompt": "Log in to save progress and unlock full statistics.",
@@ -26,12 +41,58 @@ const resources = {
       "days_streak": "Days streak",
       "start_game": "Start Game",
       "choose_mode": "Choose game mode",
-      "login_title": "Log in to continue",
-      "login_subtitle": "Track progress and save your results.",
-      "login_google": "Log in with Google",
-      "login_facebook": "Log in with Facebook",
-      "login_info": "By continuing, you agree to our Privacy Policy.",
+      "home_learn_strategy": "Learn Strategy",
+      "home_learn_strategy_desc": "Master the basics and advanced moves.",
+      "home_focus_title": "Focus Mode",
+      "home_focus_desc": "Play without distractions.",
+
+      /* --- PLAY.JS --- */
       "play_online_alt": "Play Online",
+
+      /* --- ONLINE.JS --- */
+      "bet_must_place": "You must place a bet to play!",
+      "not_enough_funds": "Insufficient funds!",
+      "online_avatar_alt": "User Avatar",
+      "online_guest": "Guest",
+      "online_balance": "Balance",
+      "online_on_table": "On table",
+      "online_clear": "CLEAR",
+      "online_deal_cards": "DEAL",
+      "online_stand": "STAND",
+      "online_split": "SPLIT",
+      "online_hit": "HIT",
+      "online_double": "DOUBLE",
+
+      /* --- STATISTICS.JS --- */
+      "stats_title": "Statistics",
+      "stats_loading": "Loading statistics...",
+      "stats_subtitle": "Check your game history and performance.",
+      "stats_watch_ad": "Watch Ad (+50 PLN)",
+      "stats_no_data": "No data available",
+      "stats_balance_label": "Balance History",
+      "stats_win_rate": "Win Rate",
+      "stats_peak_balance": "Peak Balance",
+      "stats_total_games": "Total Games",
+      "stats_total_wins": "Wins",
+      "stats_total_losses": "Losses",
+      "stats_total_pushes": "Pushes",
+      "stats_blackjacks": "Blackjacks",
+      "stats_current_balance": "Current Balance",
+      "stats_games_today": "Games Today",
+      "stats_balance_history": "Balance History Chart",
+      "ad_warning_title": "🚨 WARNING!",
+      "ad_warning_desc": "If you close now, you will lose the reward {{amount}} PLN.",
+      "ad_warning_question": "Do you want to continue watching?",
+      "ad_exit_button": "Exit (No reward)",
+      "ad_continue_button": "Continue watching",
+      "ad_reward_info": "Be ready for the reward {{amount}} PLN!",
+      "ad_timer": "This ad will disappear in {{seconds}}s seconds...",
+      "ad_promo_title": "Mathsino Premium!",
+      "ad_promo_desc": "Buy now and get access to special avatars!",
+      "ad_error_reward": "Error granting reward.",
+      "ad_error_network": "Server connection error.",
+
+      /* --- FRIENDS.JS --- */
       "friends_title": "Friends",
       "friends_add_friend": "Add Friend",
       "friends_placeholder": "Type username...",
@@ -45,14 +106,91 @@ const resources = {
       "friends_online": "Online",
       "friends_offline": "Offline",
       "friends_check": "Check Profile",
-      "friends_delete": "Delete"
+      "friends_delete": "Delete",
+
+      /* --- PROFILE.JS --- */
+      "profile_title": "Profile",
+      "profile_subtitle": "Manage your account and avatar.",
+      "profile_account_info": "Account Information",
+      "profile_choose_avatar": "Choose Avatar",
+      "profile_choose_prompt": "Select an avatar from the list below.",
+      "profile_save": "Save Changes",
+      "profile_account_manage": "Account Management",
+      "profile_logout": "Log Out",
+      "profile_danger_zone": "Danger Zone",
+      "profile_reset_progress": "Reset Progress",
+
+      /* --- RESOURCES.JS --- */
+      "resources_title": "Settings & Resources",
+      "resources_subtitle": "Configure game settings and learn more.",
+      "resources_sound_effects": "Sound Effects",
+      "resources_sound_effects_desc": "Enable or disable game sounds.",
+      "resources_music": "Music",
+      "resources_music_desc": "Play background music throughout the app.",
+      "resources_music_selection": "Music Selection",
+      "resources_music_selection_desc": "Choose your preferred background music track.",
+      "resources_language": "Language",
+      "resources_language_desc": "Choose your preferred language.",
+      "resources_resources": "Resources",
+      "resources_resources_desc": "Helpful links and guides.",
+      "resources_how_to_play_blackjack": "How to play Blackjack",
+      "resources_basic_strategy_chart": "Basic Strategy Chart",
+      "resources_glossary_of_terms": "Glossary of Terms",
+      "resources_about": "About",
+      "resources_responsible_gaming": "Responsible Gaming",
+      "resources_privacy_policy": "Privacy Policy",
+      "resources_terms_of_service": "Terms of Service",
+      /* --- LEARN.JS --- */
+      "learn_read_more": "Read more",
+      
+      "learn_l1_title": "Lesson 1",
+      "learn_l1_subtitle": "Basic Rules & Mechanics",
+      "learn_l1_desc": "Introduction to the game basics.",
+
+      "learn_l2_title": "Lesson 2",
+      "learn_l2_subtitle": "Card Values",
+      "learn_l2_desc": "Understanding card points.",
+
+      "learn_l3_title": "Lesson 3",
+      "learn_l3_subtitle": "Hitting & Standing",
+      "learn_l3_desc": "When to take a card and when to stop.",
+
+      "learn_l4_title": "Lesson 4",
+      "learn_l4_subtitle": "Doubling Down",
+      "learn_l4_desc": "Maximizing your wins.",
+
+      "learn_l5_title": "Lesson 5",
+      "learn_l5_subtitle": "Splitting Pairs",
+      "learn_l5_desc": "How to handle pairs.",
+
+      "learn_l6_title": "Lesson 6",
+      "learn_l6_subtitle": "Insurance",
+      "learn_l6_desc": "Is it worth it?",
+
+      "learn_l7_title": "Lesson 7",
+      "learn_l7_subtitle": "Soft vs Hard Hands",
+      "learn_l7_desc": "The power of the Ace.",
+
+      "learn_l8_title": "Lesson 8",
+      "learn_l8_subtitle": "Basic Strategy",
+      "learn_l8_desc": "The mathematical approach.",
+
+      "learn_l9_title": "Lesson 9",
+      "learn_l9_subtitle": "Card Counting Intro",
+      "learn_l9_desc": "Advanced techniques overview."
     }
   },
   pl: {
     translation: {
+      /* --- (SIDEBAR) --- */
+      "nav_play": "Graj",
+      "nav_learn": "Nauka",
+      "nav_statistics": "Statystyki",
+      "nav_friends": "Znajomi",
+      "nav_resources": "Zasoby",
+
+      /* --- Online.js --- */
       "exit": "Wyjdź",
-      "bet_must_place": "Musisz postawić zakład, aby zagrać!",
-      "not_enough_funds": "Nie masz wystarczająco środków!",
       "hand": "Ręka",
       "dealer": "Krupier",
       "winner": "WYGRANA!",
@@ -61,6 +199,15 @@ const resources = {
       "blackjack": "BLACKJACK!",
       "lang_en": "EN",
       "lang_pl": "PL",
+
+      /* --- LOGIN.JS --- */
+      "login_title": "Zaloguj się, aby kontynuować",
+      "login_subtitle": "Osiągaj postępy i zapisuj swoje wyniki.",
+      "login_google": "Zaloguj się z Google",
+      "login_facebook": "Zaloguj się z Facebook",
+      "login_info": "Kontynuując, zgadzasz się na naszą Politykę Prywatności.",
+
+      /* --- HOME.JS --- */
       "welcome_back": "Witaj ponownie, {{name}} 👋",
       "welcome": "Witaj!",
       "login_prompt": "Zaloguj się, aby zapisywać progres i odblokować pełne statystyki.",
@@ -72,12 +219,58 @@ const resources = {
       "days_streak": "Dni z rzędu",
       "start_game": "Zacznij Grę",
       "choose_mode": "Wybierz tryb gry",
-      "login_title": "Zaloguj się, aby kontynuować",
-      "login_subtitle": "Osiągaj postępy i zapisuj swoje wyniki.",
-      "login_google": "Zaloguj się z Google",
-      "login_facebook": "Zaloguj się z Facebook",
-      "login_info": "Kontynuując, zgadzasz się na naszą Politykę Prywatności.",
+      "home_learn_strategy": "Nauka Strategii",
+      "home_learn_strategy_desc": "Opanuj podstawy i zaawansowane ruchy.",
+      "home_focus_title": "Tryb Skupienia",
+      "home_focus_desc": "Graj bez rozpraszaczy.",
+
+      /* --- PLAY.JS --- */
       "play_online_alt": "Graj Online",
+
+      /* --- ONLINE.JS --- */
+      "bet_must_place": "Musisz postawić zakład, aby zagrać!",
+      "not_enough_funds": "Nie masz wystarczająco środków!",
+      "online_avatar_alt": "Awatar użytkownika",
+      "online_guest": "Gość",
+      "online_balance": "Saldo",
+      "online_on_table": "Na stole",
+      "online_clear": "CZYŚĆ",
+      "online_deal_cards": "ROZDAJ",
+      "online_stand": "CZEKAJ",
+      "online_split": "ROZDZIEL",
+      "online_hit": "DOBIERZ",
+      "online_double": "PODWÓJ",
+
+      /* --- STATISTICS.JS --- */
+      "stats_title": "Statystyki",
+      "stats_loading": "Ładowanie statystyk...",
+      "stats_subtitle": "Sprawdź historię gier i wyniki.",
+      "stats_watch_ad": "Obejrzyj reklamę (+50 PLN)",
+      "stats_no_data": "Brak danych",
+      "stats_balance_label": "Historia salda",
+      "stats_win_rate": "Współczynnik wygranych",
+      "stats_peak_balance": "Najwyższe saldo",
+      "stats_total_games": "Wszystkie gry",
+      "stats_total_wins": "Wygrane",
+      "stats_total_losses": "Przegrane",
+      "stats_total_pushes": "Remisy",
+      "stats_blackjacks": "Blackjacki",
+      "stats_current_balance": "Obecne saldo",
+      "stats_games_today": "Gry dzisiaj",
+      "stats_balance_history": "Wykres historii salda",
+      "ad_warning_title": "🚨 UWAGA!",
+      "ad_warning_desc": "Jeśli zamkniesz teraz, stracisz nagrodę {{amount}} PLN.",
+      "ad_warning_question": "Czy chcesz kontynuować oglądanie?",
+      "ad_exit_button": "Wyjdź (Brak nagrody)",
+      "ad_continue_button": "Kontynuuj oglądanie",
+      "ad_reward_info": "Przygotuj się na nagrodę {{amount}} PLN!",
+      "ad_timer": "Ta reklama zniknie za {{seconds}}s...",
+      "ad_promo_title": "Mathsino Premium!",
+      "ad_promo_desc": "Kup teraz i zyskaj dostęp do specjalnych awatarów!",
+      "ad_error_reward": "Błąd podczas przyznawania nagrody.",
+      "ad_error_network": "Błąd połączenia z serwerem.",
+
+      /* --- FRIENDS.JS --- */
       "friends_title": "Znajomi",
       "friends_add_friend": "Dodaj znajomego",
       "friends_placeholder": "Wpisz nazwę użytkownika...",
@@ -91,7 +284,78 @@ const resources = {
       "friends_online": "Online",
       "friends_offline": "Offline",
       "friends_check": "Profil",
-      "friends_delete": "Usuń"
+      "friends_delete": "Usuń",
+
+      /* --- PROFILE.JS --- */
+      "profile_title": "Profil",
+      "profile_subtitle": "Zarządzaj kontem i awatarem.",
+      "profile_account_info": "Informacje o koncie",
+      "profile_choose_avatar": "Wybierz awatar",
+      "profile_choose_prompt": "Wybierz awatar z listy poniżej.",
+      "profile_save": "Zapisz zmiany",
+      "profile_account_manage": "Zarządzanie kontem",
+      "profile_logout": "Wyloguj się",
+      "profile_danger_zone": "Strefa niebezpieczna",
+      "profile_reset_progress": "Zresetuj postępy",
+
+      /* --- RESOURCES.JS --- */
+      "resources_title": "Ustawienia i Zasoby",
+      "resources_subtitle": "Konfiguruj grę i dowiedz się więcej.",
+      "resources_sound_effects": "Efekty dźwiękowe",
+      "resources_sound_effects_desc": "Włącz lub wyłącz dźwięki w grze.",
+      "resources_music": "Muzyka",
+      "resources_music_desc": "Odtwarzaj muzykę w tle w całej aplikacji.",
+      "resources_music_selection": "Wybór Muzyki",
+      "resources_music_selection_desc": "Wybierz swój ulubiony utwór muzyczny.",
+      "resources_language": "Język",
+      "resources_language_desc": "Wybierz preferowany język.",
+      "resources_resources": "Zasoby",
+      "resources_resources_desc": "Przydatne linki i poradniki.",
+      "resources_how_to_play_blackjack": "Jak grać w Blackjacka",
+      "resources_basic_strategy_chart": "Tabela strategii podstawowej",
+      "resources_glossary_of_terms": "Słownik pojęć",
+      "resources_about": "O aplikacji",
+      "resources_responsible_gaming": "Odpowiedzialna gra",
+      "resources_privacy_policy": "Polityka prywatności",
+      "resources_terms_of_service": "Regulamin serwisu",
+      /* --- LEARN.JS --- */
+      "learn_read_more": "Czytaj więcej",
+
+      "learn_l1_title": "Lekcja 1",
+      "learn_l1_subtitle": "Zasady i Mechanika",
+      "learn_l1_desc": "Wprowadzenie do podstaw gry.",
+
+      "learn_l2_title": "Lekcja 2",
+      "learn_l2_subtitle": "Wartości Kart",
+      "learn_l2_desc": "Zrozumienie punktacji kart.",
+
+      "learn_l3_title": "Lekcja 3",
+      "learn_l3_subtitle": "Dobieranie i Pasowanie",
+      "learn_l3_desc": "Kiedy dobrać kartę, a kiedy spasować.",
+
+      "learn_l4_title": "Lekcja 4",
+      "learn_l4_subtitle": "Podwajanie stawki",
+      "learn_l4_desc": "Maksymalizacja wygranych (Double Down).",
+
+      "learn_l5_title": "Lekcja 5",
+      "learn_l5_subtitle": "Rozdzielanie par",
+      "learn_l5_desc": "Jak obsługiwać pary (Split).",
+
+      "learn_l6_title": "Lekcja 6",
+      "learn_l6_subtitle": "Ubezpieczenie",
+      "learn_l6_desc": "Czy warto brać Insurance?",
+
+      "learn_l7_title": "Lekcja 7",
+      "learn_l7_subtitle": "Ręce Miękkie i Twarde",
+      "learn_l7_desc": "Potęga Asa w talii.",
+
+      "learn_l8_title": "Lekcja 8",
+      "learn_l8_subtitle": "Strategia Podstawowa",
+      "learn_l8_desc": "Podejście matematyczne.",
+
+      "learn_l9_title": "Lekcja 9",
+      "learn_l9_subtitle": "Liczenie Kart - Wstęp",
+      "learn_l9_desc": "Przegląd technik zaawansowanych."
     }
   }
 };

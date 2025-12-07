@@ -4,6 +4,8 @@ using Mathsino.Backend.Services;
 using Microsoft.EntityFrameworkCore;
 
 public record UserLanguageDto(string Language);
+public record UserMusicDto(int MusicId);
+public record UserAudioSettingsDto(bool MusicEnabled, bool SoundEffectsEnabled);
 
 public static class UserEndPoints
 {
@@ -31,9 +33,11 @@ public static class UserEndPoints
                             ))
                             .ToList(),
                         u.Balance,
-                        u.AvatarPath
-                        u.Balance,
-                        u.Language
+                        u.Language,
+                        u.MusicId,
+                        u.MusicEnabled,
+                        u.SoundEffectsEnabled
+
                     ))
                     .ToListAsync();
 
@@ -64,9 +68,11 @@ public static class UserEndPoints
                             ))
                             .ToList(),
                         u.Balance,
-                        u.AvatarPath
-                        u.Balance,
-                        u.Language
+                        u.Language,
+                        u.MusicId,
+                        u.MusicEnabled,
+                        u.SoundEffectsEnabled
+                        
                     ))
                     .FirstOrDefaultAsync();
 
@@ -97,6 +103,33 @@ public static class UserEndPoints
                 var user = await db.Users.FindAsync(id);
                 if (user is null) return Results.NotFound();
                 user.Language = dto.Language;
+                await db.SaveChangesAsync();
+                return Results.NoContent();
+            }
+        );
+
+        // Update user music preference
+        app.MapPut(
+            "/users/{id}/music",
+            async (int id, UserMusicDto dto, MathsinoContext db) =>
+            {
+                var user = await db.Users.FindAsync(id);
+                if (user is null) return Results.NotFound();
+                user.MusicId = dto.MusicId;
+                await db.SaveChangesAsync();
+                return Results.NoContent();
+            }
+        );
+
+        // Update user audio settings
+        app.MapPut(
+            "/users/{id}/audio-settings",
+            async (int id, UserAudioSettingsDto dto, MathsinoContext db) =>
+            {
+                var user = await db.Users.FindAsync(id);
+                if (user is null) return Results.NotFound();
+                user.MusicEnabled = dto.MusicEnabled;
+                user.SoundEffectsEnabled = dto.SoundEffectsEnabled;
                 await db.SaveChangesAsync();
                 return Results.NoContent();
             }

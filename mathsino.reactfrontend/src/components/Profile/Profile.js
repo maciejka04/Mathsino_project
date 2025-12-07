@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import './Profile.css';
+import { useTranslation } from 'react-i18next';
 // Zaimportuj swój domyślny awatar
 import smok from '../../assets/profilowe_smok.png'; 
 import panda from '../../assets/profilowe_panda.png'; 
@@ -37,6 +38,7 @@ const getAvatarFilename = (avatarImport) => {
 
 
 function Profile() {
+  const { t } = useTranslation();
 
   const { refreshUser } = useOutletContext();
    const [selectedAvatar, setSelectedAvatar] = useState(snake);
@@ -115,15 +117,15 @@ useEffect(() => {
   return (
     <div className="profile-page-container">
       <header>
-        <h1>Twój Profil</h1>
-        <p>Zarządzaj swoim kontem i preferencjami.</p>
+        <h1>{t('profile_title')}</h1>
+        <p>{t('profile_subtitle')}</p>
       </header>
       
       <div className="profile-grid">
         
         {/* Karta 1: Informacje o koncie */}
         <div className="dashboard-card profile-info-card">
-          <h4>Informacje o koncie</h4>
+          <h4>{t('profile_account_info')}</h4>
           <img 
             src={selectedAvatar} 
             alt="Obecny awatar" 
@@ -135,8 +137,8 @@ useEffect(() => {
 
         {/* Karta 2: Wybór awatara */}
         <div className="dashboard-card profile-avatar-card">
-          <h4>Wybierz awatar</h4>
-          <p>Wybierz nowy awatar i kliknij **Zapisz**.</p>
+          <h4>{t('profile_choose_avatar')}</h4>
+          <p>{t('profile_choose_prompt')}</p>
           <div className="avatar-grid">
             {avatars.map((avatarSrc, index) => (
               <img 
@@ -150,26 +152,26 @@ useEffect(() => {
           </div>
           <button 
             className="save-avatar-button" 
-            onClick={handleAvatarSave} // NOWY PRZYCISK ZAPISU
+            onClick={handleAvatarSave} 
             disabled={saveStatus !== 'Oczekuje na zapis...'}
           >
-            Zapisz nowy awatar
+            {t('profile_save')}
           </button>
-          {saveStatus && <p className="save-status">{saveStatus}</p>} {/* Wyświetlanie statusu */}
+          {saveStatus && <p className="save-status">{saveStatus}</p>} 
         </div>
 
         {/* Karta 3: Zarządzanie kontem */}
         <div className="dashboard-card profile-actions-card">
-          <h4>Zarządzanie kontem</h4>
+          <h4>{t('profile_account_manage')}</h4>
           <button className="logout-button" onClick={handleLogout}>
             <i className="fa-solid fa-right-from-bracket"></i>
-            Wyloguj się
+            {t('profile_logout')}
           </button>
           
           <div className="danger-zone">
-            <h4>Strefa zagrożenia</h4>
+            <h4>{t('profile_danger_zone')}</h4>
             <button className="danger-button">
-              Zresetuj postępy
+              {t('profile_reset_progress')}
             </button>
           </div>
         </div>

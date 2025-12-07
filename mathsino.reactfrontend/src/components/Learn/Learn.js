@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom'; // <--- 1. NOWY IMPORT
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; 
 import lekcja1 from '../../assets/lekcja1.jpg';
 import styles from './Learn.module.css'; 
 
@@ -9,86 +10,87 @@ const cardData = [
     topic: 'wave', 
     alt: 'wave', 
     image: lekcja1, 
-    title: 'Lesson 1',
-    subtitle: 'Basic Rules & Mechanics',
-    description: 'Opis lekcji 1'
+    title: 'learn_l1_title',
+    subtitle: 'learn_l1_subtitle',
+    description: 'learn_l1_desc'
   },
  { 
     id: 2,
     topic: 'beach', 
     alt: 'beach', 
     image: lekcja1, 
-    title: 'Lekcja 2',
-    subtitle: 'Podtytuł lekcji 2',
-    description: 'Opis lekcji 2'
+    title: 'learn_l2_title',
+    subtitle: 'learn_l2_subtitle',
+    description: 'learn_l2_desc'
   },
  { 
     id: 3,
     topic: 'mountain', 
     alt: 'mountain', 
     image: lekcja1, 
-    title: 'Lekcja 3',
-    subtitle: 'Podtytuł lekcji 3',
-    description: 'Opis lekcji 3'
+    title: 'learn_l3_title',
+    subtitle: 'learn_l3_subtitle',
+    description: 'learn_l3_desc'
   },
  { 
     id: 4,
     topic: 'field', 
     alt: 'field', 
     image: lekcja1, 
-    title: 'Lekcja 4',
-    subtitle: 'Podtytuł lekcji 4',
-    description: 'Opis lekcji 4'
+    title: 'learn_l4_title',
+    subtitle: 'learn_l4_subtitle',
+    description: 'learn_l4_desc'
   },
  { 
     id: 5,
     topic: 'water', 
     alt: 'water', 
     image: lekcja1, 
-    title: 'Lekcja 5',
-    subtitle: 'Podtytuł lekcji 5',
-    description: 'Opis lekcji 5'
+    title: 'learn_l5_title',
+    subtitle: 'learn_l5_subtitle',
+    description: 'learn_l5_desc'
   },
  { 
     id: 6,
     topic: 'river', 
     alt: 'river', 
     image: lekcja1, 
-    title: 'Lekcja 6',
-    subtitle: 'Podtytuł lekcji 6',
-    description: 'Opis lekcji 6'
+    title: 'learn_l6_title',
+    subtitle: 'learn_l6_subtitle',
+    description: 'learn_l6_desc'
   },
  { 
     id: 7,
     topic: 'kite', 
     alt: 'kite', 
     image: lekcja1, 
-    title: 'Lekcja 7',
-    subtitle: 'Podtytuł lekcji 7',
-    description: 'Opis lekcji 7'
+    title: 'learn_l7_title',
+    subtitle: 'learn_l7_subtitle',
+    description: 'learn_l7_desc'
   },
  { 
     id: 8,
     topic: 'underwater', 
     alt: 'underwater', 
     image: lekcja1, 
-    title: 'Lekcja 8',
-    subtitle: 'Podtytuł lekcji 8',
-    description: 'Opis lekcji 8'
+    title: 'learn_l8_title',
+    subtitle: 'learn_l8_subtitle',
+    description: 'learn_l8_desc'
   },
  { 
     id: 9,
     topic: 'desert', 
     alt: 'desert', 
     image: lekcja1, 
-    title: 'Lekcja 9',
-    subtitle: 'Podtytuł lekcji 9',
-    description: 'Opis lekcji 9'
+    title: 'learn_l9_title',
+    subtitle: 'learn_l9_subtitle',
+    description: 'learn_l9_desc'
   },
 ];
 
-// Odbieramy nową funkcję "onReadMore" w propsach
 function Learn({ image, alt, isShowing, zIndex, onClick, title, subtitle, description, onReadMore }) {
+  const { t } = useTranslation(); 
+
   return (
     <div
       className={`${styles.card} ${isShowing ? styles.show : ''}`}
@@ -106,28 +108,30 @@ function Learn({ image, alt, isShowing, zIndex, onClick, title, subtitle, descri
         </a>
 
         <h2>
-          {title}
-          <small>{subtitle}</small>
+          {}
+          {t(title)}
+          <small>{t(subtitle)}</small>
         </h2>
       </div>
       <div className={`${styles['card-flap']} ${styles.flap1}`}>
         <div className={styles['card-description']}>
-          {description}
+           {}
+          {t(description)}
         </div>
         <div className={`${styles['card-flap']} ${styles.flap2}`}>
           <div className={styles['card-actions']}>
             
-            {/* ZMIANA: Obsługa kliknięcia Read More */}
             <a 
                 href="#" 
                 className={styles.btn} 
                 onClick={(e) => {
-                    e.preventDefault(); // Nie przeładowuj strony
-                    e.stopPropagation(); // Nie zamykaj karty (bo karta ma onClick)
-                    onReadMore(); // Uruchom nawigację
+                    e.preventDefault(); 
+                    e.stopPropagation(); 
+                    onReadMore(); 
                 }}
             >
-              Read more
+              {}
+              {t('learn_read_more')}
             </a>
 
           </div>
@@ -143,7 +147,7 @@ function CardGrid() {
   const [activeIndex, setActiveIndex] = useState(null);
   const [cardZIndexes, setCardZIndexes] = useState({});
   
-  const navigate = useNavigate(); // <--- Inicjalizacja nawigacji
+  const navigate = useNavigate(); 
 
   const handleCardClick = (e, clickedIndex) => {
     e.preventDefault();
@@ -157,7 +161,6 @@ function CardGrid() {
     );
   };
 
-  // Nowa funkcja do przenoszenia do lekcji
   const handleReadMoreClick = (lessonId) => {
       navigate(`/lesson/${lessonId}`);
   };
@@ -171,6 +174,7 @@ function CardGrid() {
           key={card.topic} 
           image={card.image}
           alt={card.alt}
+          
           title={card.title}
           subtitle={card.subtitle}
           description={card.description}
@@ -178,8 +182,6 @@ function CardGrid() {
           isShowing={activeIndex === index}
           zIndex={cardZIndexes[index] || 1}
           onClick={(e) => handleCardClick(e, index)}
-          
-          // Przekazujemy funkcję do dziecka
           onReadMore={() => handleReadMoreClick(card.id)} 
         />
       ))}

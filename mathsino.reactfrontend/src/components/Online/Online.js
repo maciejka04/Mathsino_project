@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useOutletContext } from "react-router-dom";
 import "./Online.css";
+import audioService from "../../services/audioService";
 import tableImage from "../../assets/table4.png";
 import dziesiecImage from "../../assets/zetony/dziesiec.png";
 import piecdziesiatImage from "../../assets/zetony/piecdziesiat.png";
@@ -9,7 +10,6 @@ import stoImage from "../../assets/zetony/sto.png";
 import piecsetImage from "../../assets/zetony/piecset.png";
 import { motion } from "framer-motion";
 import Fireworks from 'fireworks-js';
-import casinoMusic from "../../assets/casino.mp3";
 import shuffleSound from "../../assets/shuffling-cards.mp3";
 import winSound from "../../assets/win.mp3";
 import loseSound from "../../assets/lose.mp3";
@@ -20,7 +20,6 @@ import fireworksSound from "../../assets/fireworks.mp3";
 
 import reverseCardImage from "../../assets/karty/reverse2.png";
 import defaultAvatar from "../../assets/profilepic/snake.png";
-import LanguageToggle from '../LanguageToggle';
 const DECK_POSITION = { left: 15, top: 30 };
 
 const allCardFileNames = [
@@ -136,8 +135,8 @@ const calculateHandValue = (hand) => {
 };
 
 function Online() {
+    const navigate = useNavigate();
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { user, refreshUser } = useOutletContext();
   //const [currentBalance, setCurrentBalance] = useState(5000);
   const [currentBet, setCurrentBet] = useState(0);
@@ -197,6 +196,9 @@ function Online() {
             return true;
         } else if (response.status === 400) {
              const error = await response.text();
+             if (error.includes('Insufficient balance')) {
+                 return false;
+             }
              alert(`Błąd: ${error}`);
              return false;
         } else {
@@ -262,19 +264,6 @@ function Online() {
 }, []);
 
 
-  React.useEffect(() => {
-  const audio = new Audio(casinoMusic);
-  audio.loop = true;
-  audio.volume = 0.4;
-  audio.play().catch(() => {});
-
-  return () => {
-    audio.pause();
-    audio.currentTime = 0;
-  };
-}, []);
-
-
   const resetGameFlags = () => {
     setMainDoubled(false);
     setSplitDoubled(false);
@@ -304,15 +293,13 @@ function Online() {
 
     setIsShuffling(true);
 
-    if (shuffleAudio.current) {
-      shuffleAudio.current.currentTime = 0;
-      shuffleAudio.current.play().catch(() => {});
-    }
+    audioService.playSoundEffect(shuffleSound);
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const success = await updateBalance('deduct', currentBet);
     if (!success) {
+        alert(t('not_enough_funds'));
         setCurrentBet(0); 
         setIsShuffling(false);
         return; 
@@ -337,7 +324,6 @@ function Online() {
       console.error("Nie udało się rozpocząć gry:", error);
       alert("Błąd połączenia. Środki zostały zwrócone.");
       updateBalance('add', currentBet);
-      //setCurrentBalance((prev) => prev + currentBet);
       setCurrentBet(0);
       setIsShuffling(false);
     }
@@ -442,49 +428,35 @@ function Online() {
   ) => {
     setResultProcessed(true);
 
-if (mainResult === "Win" && winAudio.current) {
-    winAudio.current.currentTime = 0;
-    winAudio.current.play().catch(() => {});
-}
-if (mainResult === "Lose" && loseAudio.current) {
-    loseAudio.current.currentTime = 0;
-    loseAudio.current.play().catch(() => {});
-}
-if (mainResult === "Push" && pushAudio.current) {
-    pushAudio.current.currentTime = 0;
-    pushAudio.current.play().catch(() => {});
-}
-if (mainResult === "Blackjack" && blackjackAudio.current) {
-    blackjackAudio.current.currentTime = 0;
-    blackjackAudio.current.play().catch(() => {});
-    if (fireworksAudio.current) {
-        fireworksAudio.current.currentTime = 0;
-        fireworksAudio.current.play().catch(() => {});
+    if (mainResult === "Win") {
+      audioService.playSoundEffect(winSound);
     }
-}
+    if (mainResult === "Lose") {
+      audioService.playSoundEffect(loseSound);
+    }
+    if (mainResult === "Push") {
+      audioService.playSoundEffect(pushSound);
+    }
+    if (mainResult === "Blackjack") {
+      audioService.playSoundEffect(blackjackSound);
+      audioService.playSoundEffect(fireworksSound);
+    }
 
-if (hasSplit && splitRes) {
-    if (splitRes === "Win" && winAudio.current) {
-        winAudio.current.currentTime = 0;
-        winAudio.current.play().catch(() => {});
-    }
-    if (splitRes === "Lose" && loseAudio.current) {
-        loseAudio.current.currentTime = 0;
-        loseAudio.current.play().catch(() => {});
-    }
-    if (splitRes === "Push" && pushAudio.current) {
-        pushAudio.current.currentTime = 0;
-        pushAudio.current.play().catch(() => {});
-    }
-    if (splitRes === "Blackjack" && blackjackAudio.current) {
-        blackjackAudio.current.currentTime = 0;
-        blackjackAudio.current.play().catch(() => {});
-        if (fireworksAudio.current) {
-            fireworksAudio.current.currentTime = 0;
-            fireworksAudio.current.play().catch(() => {});
+    if (hasSplit && splitRes) {
+        if (splitRes === "Win") {
+            audioService.playSoundEffect(winSound);
+        }
+        if (splitRes === "Lose") {
+            audioService.playSoundEffect(loseSound);
+        }
+        if (splitRes === "Push") {
+            audioService.playSoundEffect(pushSound);
+        }
+        if (splitRes === "Blackjack") {
+            audioService.playSoundEffect(blackjackSound);
+            audioService.playSoundEffect(fireworksSound);
         }
     }
-}
 
     resultProcessedRef.current = true;
 
@@ -656,8 +628,11 @@ if (hasSplit && splitRes) {
       return;
     }
     try {
-      //setCurrentBalance((prev) => prev - currentBet);
-      await updateBalance('deduct', currentBet);
+      const success = await updateBalance('deduct', currentBet);
+      if (!success) {
+        setCurrentBet(0);
+        return;
+      }
       await fetch(`${API_URL}/games/${gameId}/player-split/${playerId}`, {
         method: "POST",
       });
@@ -675,8 +650,11 @@ if (hasSplit && splitRes) {
       return;
     }
     try {
-      //setCurrentBalance((prev) => prev - currentBet);
-      await updateBalance('deduct', currentBet);
+      const success = await updateBalance('deduct', currentBet);
+      if (!success) {
+        setCurrentBet(0);
+        return;
+      }
       if (isSplitActive) {
         await fetch(
           `${API_URL}/games/${gameId}/player-double-split/${playerId}`,
@@ -703,12 +681,10 @@ if (hasSplit && splitRes) {
   const handleChipSelect = (value) => {
     if (gameStatus === "InProgress" || isShuffling) return;
     
-    if (currentBalance < value) {
+    if (currentBet + value > user.balance) {
       alert(t('not_enough_funds'));
       return;
     }
-    //setCurrentBalance((prev) => prev - value);
-    //setCurrentBet((prev) => prev + value);
     setCurrentBet((prev) => prev + value);
   };
 
@@ -795,12 +771,11 @@ if (hasSplit && splitRes) {
       <div className="user-info-panel">
        <img 
           src={user.avatarUrl || defaultAvatar}
-          alt="Awatar" 
+          alt={t('online_avatar_alt')} 
           className="user-avatar" 
        />
-       <span className="user-name">{user?.name || "Gość"}</span>
-        <LanguageToggle userId={USER_ID} />
-      </div>
+       <span className="user-name">{user?.name || t('online_guest')}</span>
+              </div>
       {/* FEEDBACK TRENERA */}
       {strategyFeedback && (
         <div
@@ -1108,13 +1083,13 @@ if (hasSplit && splitRes) {
       {/* PANEL LEWY DOLNY */}
       <div className="left-bottom-panel">
         <span className="balance-label">
-          Saldo:{" "}
+          {t('online_balance')}:{" "}
           <span className="balance-amount">
             {user.balance?.toLocaleString("pl-PL") || 0} PLN
           </span>
         </span>
         <span className="balance-sublabel">
-          Na stole: {displayedBetOnTable()} PLN
+          {t('online_on_table')}: {displayedBetOnTable()} PLN
         </span>
 
         <div className="controls-wrapper">
@@ -1125,7 +1100,7 @@ if (hasSplit && splitRes) {
               gameStatus === "InProgress" || isShuffling || currentBet === 0
             }
           >
-            Wyczyść
+            {t('online_clear')}
           </button>
           <button
             onClick={startNewGame}
@@ -1134,7 +1109,7 @@ if (hasSplit && splitRes) {
               gameStatus === "InProgress" || isShuffling || currentBet === 0
             }
           >
-            ROZDAJ KARTY
+            {t('online_deal_cards')}
           </button>
         </div>
       </div>
@@ -1149,7 +1124,7 @@ if (hasSplit && splitRes) {
           onClick={handleStand}
           disabled={gameStatus !== "InProgress" || isShuffling}
         >
-          Stand
+          {t('online_stand')}
         </button>
 
         <button
@@ -1158,7 +1133,7 @@ if (hasSplit && splitRes) {
           onClick={handleSplitAction}
           disabled={!canSplit || gameStatus !== "InProgress"}
         >
-          Split
+          {t('online_split')}
         </button>
 
         <button
@@ -1166,7 +1141,7 @@ if (hasSplit && splitRes) {
           onClick={handleHit}
           disabled={gameStatus !== "InProgress" || isShuffling}
         >
-          Hit
+          {t('online_hit')}
         </button>
 
         <button
@@ -1175,7 +1150,7 @@ if (hasSplit && splitRes) {
           onClick={handleDouble}
           disabled={!canDouble || gameStatus !== "InProgress"}
         >
-          Double
+          {t('online_double')}
         </button>
       </div>
     </div>

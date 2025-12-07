@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next'; // IMPORT I18N
+import audioService from '../../services/audioService';
 
 // --- STYLES & ASSETS ---
 import '../Offline/Offline.css'; 
@@ -9,21 +11,11 @@ import tableImage from '../../assets/table4.png';
 import reverseCardImage from '../../assets/karty/reverse.png';
 
 // --- AVATARS ---
-import avatarImgA from '../../assets/parrot-teacher.png'; // Neutral
-import avatarImgB from '../../assets/parrot-teacher-happy.png'; // Happy
-import avatarImgC from '../../assets/parrot-teacher-thinking.png'; // Worried
+import avatarImgA from '../../assets/parrot-teacher.png'; 
+import avatarImgB from '../../assets/parrot-teacher-happy.png'; 
+import avatarImgC from '../../assets/parrot-teacher-thinking.png';
 
-// --- LESSON DATA IMPORTS ---
-import lesson1 from '../../assets/lekcje/lekcja1.json';
-import lesson2 from '../../assets/lekcje/lekcja2.json';
-import lesson3 from '../../assets/lekcje/lekcja3.json';
-import lesson4 from '../../assets/lekcje/lekcja4.json';
-import lesson5 from '../../assets/lekcje/lekcja5.json';
-import lesson6 from '../../assets/lekcje/lekcja6.json';
-import lesson7 from '../../assets/lekcje/lekcja7.json';
-import lesson8 from '../../assets/lekcje/lekcja8.json';
-import lesson9 from '../../assets/lekcje/lekcja9.json';
-
+// --- SOUNDS ---
 import lesson1snd from '../../assets/lesson1.mp3';
 import lesson2snd from '../../assets/lesson2.mp3';
 import lesson3snd from '../../assets/lesson3.mp3';
@@ -34,32 +26,15 @@ import lesson7snd from '../../assets/lesson7.mp3';
 import lesson8snd from '../../assets/lesson8.mp3';
 import lesson9snd from '../../assets/lesson9.mp3';
 
-
-// Lessons Map
-const lessonsMap = {
-  1: lesson1, 2: lesson2, 3: lesson3, 4: lesson4, 5: lesson5,
-  6: lesson6, 7: lesson7, 8: lesson8, 9: lesson9
-};
+// UWAGA: Usunęliśmy statyczne importy lesson1.json, lesson2.json itd.
+// Będą one ładowane dynamicznie.
 
 const lessonSoundMap = {
-  1: lesson1snd,
-  2: lesson2snd,
-  3: lesson3snd,
-  4: lesson4snd,
-  5: lesson5snd,
-  6: lesson6snd,
-  7: lesson7snd,
-  8: lesson8snd,
-  9: lesson9snd
+  1: lesson1snd, 2: lesson2snd, 3: lesson3snd, 4: lesson4snd, 
+  5: lesson5snd, 6: lesson6snd, 7: lesson7snd, 8: lesson8snd, 9: lesson9snd
 };
 
-
-// Avatar Map
-const avatarMap = {
-    "A": avatarImgA,
-    "B": avatarImgB,
-    "C": avatarImgC
-};
+const avatarMap = { "A": avatarImgA, "B": avatarImgB, "C": avatarImgC };
 
 // --- CARD HELPERS ---
 const allCardFileNames = [
@@ -90,7 +65,11 @@ const mapJsonCardToFilename = (jsonValue) => {
 const LessonPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const currentLessonData = lessonsMap[id];
+  const { i18n } = useTranslation(); // HOOK DO JĘZYKA
+
+  // Stan na dane lekcji (ładowane dynamicznie)
+  const [currentLessonData, setCurrentLessonData] = useState(null);
+  const [loadingLesson, setLoadingLesson] = useState(true);
 
   const [lessonPhase, setLessonPhase] = useState('INTRO'); 
   const [currentScenarioIndex, setCurrentScenarioIndex] = useState(0);
@@ -108,13 +87,41 @@ const LessonPage = () => {
 
   const scenario = currentLessonData ? currentLessonData.scenarios[currentScenarioIndex] : null;
 
-  // --- 1. SETUP ON LESSON CHANGE ---
+  // --- 0. DYNAMICZNE ŁADOWANIE LEKCJI ---
+  useEffect(() => {
+    const loadLessonFile = async () => {
+        setLoadingLesson(true);
+        try {
+            // Pobieramy język ('pl' lub 'en'). Domyślnie 'en'.
+            const lang = (i18n.language || 'en').substring(0, 2); 
+            
+            // Dynamiczny import: assets/lekcje/{lang}/lekcja{id}.json
+            const module = await import(`../../assets/lekcje/${lang}/lekcja${id}.json`);
+            
+            setCurrentLessonData(module.default || module);
+        } catch (error) {
+            console.error("Błąd ładowania lekcji:", error);
+            // Fallback do EN, jeśli PL nie działa
+            try {
+                const fallback = await import(`../../assets/lekcje/en/lekcja${id}.json`);
+                setCurrentLessonData(fallback.default || fallback);
+            } catch(e) {
+                // Lekcja nie istnieje w ogóle
+                setCurrentLessonData(null);
+            }
+        } finally {
+            setLoadingLesson(false);
+        }
+    };
+
+    loadLessonFile();
+  }, [id, i18n.language]); // Przeładuj, gdy zmieni się ID lub Język
+
+  // --- 1. SETUP ON LESSON LOADED ---
   useEffect(() => {
     if (currentLessonData) {
-
-        const audio = new Audio(lessonSoundMap[id]);
-        audio.volume = 1.0;
-        audio.play();
+        // Dźwięk przy pierwszym załadowaniu lekcji
+        audioService.playSoundEffect(lessonSoundMap[id]);
 
         setLessonPhase('INTRO');
         setCurrentScenarioIndex(0);
@@ -128,7 +135,7 @@ const LessonPage = () => {
             setAvatarPose(currentLessonData.introduction.avatar_pose);
         }
     }
-  }, [currentLessonData]);
+  }, [currentLessonData, id]);
 
   // --- 2. SETUP SCENARIO (GAME PHASE ONLY) ---
   useEffect(() => {
@@ -168,7 +175,6 @@ const LessonPage = () => {
     if (actionType === currentStep.required_action) {
       setIsWrongAction(false);
 
-      // 1. Add cards to MAIN Hand
       if (currentStep.cards_added && currentStep.cards_added.length > 0) {
          const newCards = currentStep.cards_added.map(code => ({
             name: code,
@@ -177,7 +183,6 @@ const LessonPage = () => {
          setPlayerCards(prev => [...prev, ...newCards]);
       }
 
-      // 2. Add cards to SPLIT Hand
       if (currentStep.cards_added_to_split && currentStep.cards_added_to_split.length > 0) {
          const newSplitCards = currentStep.cards_added_to_split.map(code => ({
             name: code,
@@ -186,7 +191,6 @@ const LessonPage = () => {
          setSplitCards(prev => [...prev, ...newSplitCards]);
       }
 
-      // 3. Handle SPLIT logic
       if (actionType === 'SPLIT') {
           setHasSplit(true);
           const card1 = playerCards[0];
@@ -197,7 +201,6 @@ const LessonPage = () => {
           setSplitCards([playerCards[1], newCard2]);
       }
 
-      // Proceed to next step
       const nextStepIndex = currentStepIndex + 1;
       
       if (nextStepIndex < scenario.sequence.length) {
@@ -211,6 +214,7 @@ const LessonPage = () => {
     } else {
       setIsWrongAction(true);
       setFeedbackText("Nope! That's not the best move here. Try something else!");
+      // Możesz też dodać tłumaczenie tutaj: t('lesson_wrong_move')
       setAvatarPose("C");
     }
   };
@@ -253,6 +257,11 @@ const LessonPage = () => {
     }
   };
 
+  // --- RENDEROWANIE ---
+  if (loadingLesson) {
+      return <div className="offline-container"><h1 style={{color:'white'}}>Loading Lesson...</h1></div>;
+  }
+
   if (!currentLessonData) {
       return (
         <div className="offline-container">
@@ -266,11 +275,9 @@ const LessonPage = () => {
     <div className="offline-container">
         <button className="back-button" onClick={() => navigate('/learn')}>&#8592; Exit Lesson</button>
 
-        {/* --- GAME TABLE --- */}
         <div className="game-table-area">
             <img src={tableImage} alt="Game Table" className="game-table-image" />
 
-            {/* Render cards ONLY in GAME phase */}
             {lessonPhase === 'GAME' && (
                 <>
                     {dealerCards.map((card, index) => {
@@ -320,9 +327,7 @@ const LessonPage = () => {
             )}
         </div>
 
-        {/* --- INSTRUCTOR UI --- */}
         <div className="instructor-wrapper">
-            
             <div className="speech-bubble">
                 <h3 className="bubble-title">
                     {lessonPhase === 'INTRO' && "Introduction"}
@@ -332,7 +337,6 @@ const LessonPage = () => {
                 
                 <p className="bubble-text">{feedbackText}</p>
 
-                {/* Buttons inside Bubble */}
                 {lessonPhase === 'INTRO' && (
                     <button onClick={startLesson} className="bubble-btn">
                         START LESSON
@@ -352,7 +356,6 @@ const LessonPage = () => {
                 )}
             </div>
 
-            {/* Avatar Image */}
             <motion.img 
                 key={avatarPose}
                 src={avatarMap[avatarPose] || avatarMap['A']} 
@@ -364,7 +367,6 @@ const LessonPage = () => {
             />
         </div>
 
-        {/* --- ACTION BUTTONS --- */}
         {lessonPhase === 'GAME' && (
             <div className="game-actions">
                 <button className="action-button stand" onClick={() => handleAction('STAND')}>Stand</button>

@@ -23,7 +23,7 @@ function Home() {
             <p>{t('login_prompt')}</p>
 
             <Link to="/login" className="login-button">
-              Zaloguj się
+              {t('login_button')}
             </Link>
           </>
         )}
@@ -67,8 +67,8 @@ function Home() {
         <Link to="/learn" className="dashboard-card secondary-card">
           <i className="fa-solid fa-graduation-cap"></i>
           <div className="dashboard-card-text">
-            <h3>Ucz się Strategii</h3>
-            <p>Zobacz tabele i poradniki</p>
+            <h3>{t('home_learn_strategy')}</h3>
+            <p>{t('home_learn_strategy_desc')}</p>
           </div>
         </Link>
 
@@ -76,8 +76,8 @@ function Home() {
         <div className="dashboard-card focus-card">
           <i className="fa-solid fa-crosshairs"></i>
           <div className="dashboard-card-text">
-            <h4>Skup się na tym</h4>
-            <p>Twój najczęstszy błąd to **stanie na "Soft 17"**. Poćwicz ten scenariusz.</p>
+            <h4>{t('home_focus_title')}</h4>
+            <p>{t('home_focus_desc')}</p>
           </div>
         </div>
       </>

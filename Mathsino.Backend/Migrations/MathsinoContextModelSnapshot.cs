@@ -97,6 +97,12 @@ namespace Mathsino.Backend.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
+                    b.Property<bool>("MusicEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("MusicId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Provider")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -106,6 +112,9 @@ namespace Mathsino.Backend.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<bool>("SoundEffectsEnabled")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -121,8 +130,11 @@ namespace Mathsino.Backend.Migrations
                             FirstName = "Alice",
                             Language = "en",
                             LastName = "Smith",
+                            MusicEnabled = true,
+                            MusicId = 1,
                             Provider = "",
-                            ProviderId = ""
+                            ProviderId = "",
+                            SoundEffectsEnabled = true
                         },
                         new
                         {
@@ -133,8 +145,11 @@ namespace Mathsino.Backend.Migrations
                             FirstName = "Bob",
                             Language = "en",
                             LastName = "Johnson",
+                            MusicEnabled = true,
+                            MusicId = 1,
                             Provider = "",
-                            ProviderId = ""
+                            ProviderId = "",
+                            SoundEffectsEnabled = true
                         });
                 });
 

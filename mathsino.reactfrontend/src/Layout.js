@@ -2,15 +2,19 @@
 
 import './App.css';
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // === ZMIANA 1: Dodajemy 'Link' do importów ===
 // Będziemy go używać do podlinkowania logo
 import { Outlet, NavLink, Link, useLocation } from 'react-router-dom';
 
+// Importy usług audio
+import audioService from './services/audioService';
+import musicService from './services/musicService';
+
 // Importy zasobów
 import awatar from './assets/profilowe_smok.png';
 import logo from './assets/logo.png';
-
 import snake from './assets/profilepic/snake.png';
 import mouse from './assets/profilepic/mouse.png';
 import racoon from './assets/profilepic/racoon.png';
@@ -30,6 +34,7 @@ const AVATAR_MAP = {
 const BACKEND_URL = 'http://localhost:5126';
 
 function Layout() {
+  const { t } = useTranslation();
 
   const [user, setUser] = useState({
   name: "",
@@ -60,15 +65,38 @@ fetch(`${BACKEND_URL}/api/auth/profile`, {
             ? parseInt(data.balance, 10) 
             : 0;
 
-setUser({
-  id: parseInt(data.userId),
-  name: data.userName || "Brak imienia",
-  email: data.email,
-  isAuthenticated: true,
+        const userId = parseInt(data.userId);
+        setUser({
+          id: userId,
+          name: data.userName || "Brak imienia",
+          email: data.email,
+          isAuthenticated: true,
             avatarUrl: finalAvatarUrl, 
             avatarPath: avatarPathFromDb,
             balance: fetchedBalance,
-  });
+        });
+
+        // Załaduj ustawienia audio po zalogowaniu
+        if (userId) {
+          fetch(`${BACKEND_URL}/users/${userId}`)
+            .then(response => response.json())
+            .then(userData => {
+              const musicEnabled = userData.musicEnabled !== undefined ? userData.musicEnabled : true;
+              const soundEffectsEnabled = userData.soundEffectsEnabled !== undefined ? userData.soundEffectsEnabled : true;
+              
+              // Zatrzymaj wszelką istniejącą muzykę
+              audioService.stopAllMusic();
+              
+              // Ustaw utwór w musicService jeśli potrzebne
+              if (userData.musicId) {
+                musicService.setMusic(userData.musicId);
+              }
+              
+              // Na końcu zainicjalizuj ustawienia audio
+              audioService.initializeAudioSettings(musicEnabled, soundEffectsEnabled);
+            })
+            .catch(err => console.error('Failed to load audio preferences', err));
+        }
 })
 .catch(err => {
   if (err.message === "Unauthorized") {
@@ -83,6 +111,7 @@ setUser({
 useEffect(() => {
   fetchUserProfile(); // Uruchom pobieranie przy montowaniu
 }, []);
+
   // 2. Poprawiony useEffect dla animacji menu (bez zmian)
   useEffect(() => {
     if (!menuRef.current) {
@@ -144,7 +173,7 @@ useEffect(() => {
                     className={({ isActive }) => (isActive ? 'active-link' : '')}
                   >
                     <i className="fa-solid fa-play" />
-                    <span>Play</span>
+                    <span>{t('nav_play')}</span>
                   </NavLink>
                 </li>
                 <li>
@@ -153,7 +182,7 @@ useEffect(() => {
                     className={({ isActive }) => (isActive ? 'active-link' : '')}
                   >
                     <i className="fa-solid fa-graduation-cap" />
-                    <span>Learn</span>
+                    <span>{t('nav_learn')}</span>
                   </NavLink>
                 </li>
                 <li>
@@ -162,7 +191,7 @@ useEffect(() => {
                     className={({ isActive }) => (isActive ? 'active-link' : '')}
                   >
                     <i className="fas fa-chart-simple" />
-                    <span>Statistics</span>
+                    <span>{t('nav_statistics')}</span>
                   </NavLink>
                 </li>
                 <li>
@@ -171,7 +200,7 @@ useEffect(() => {
                     className={({ isActive }) => (isActive ? 'active-link' : '')}
                   >
                     <i className="fa-solid fa-user-group" />
-                    <span>Friends</span>
+                    <span>{t('nav_friends')}</span>
                   </NavLink>
                 </li>
                 <li>
@@ -180,7 +209,7 @@ useEffect(() => {
                     className={({ isActive }) => (isActive ? 'active-link' : '')}
                   >
                     <i className="fa-solid fa-gear" />
-                    <span>Resources</span>
+                    <span>{t('nav_resources')}</span>
                   </NavLink>
                 </li>
               </ul>

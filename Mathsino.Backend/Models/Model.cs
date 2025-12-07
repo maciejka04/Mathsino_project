@@ -32,6 +32,12 @@ public class User
 
     [StringLength(5)]
     public string Language { get; set; } = "en";
+
+    public int MusicId { get; set; } = 1;
+
+    public bool MusicEnabled { get; set; } = true;
+
+    public bool SoundEffectsEnabled { get; set; } = true;
 }
 
 public class UserFriend
@@ -52,7 +58,10 @@ public record UserDto(
     string Email,
     List<FriendDto> Friends,
     int Balance,
-    string Language
+    string Language,
+    int MusicId,
+    bool MusicEnabled,
+    bool SoundEffectsEnabled
 );
 
 public record UpdateAvatarRequest(string AvatarPath);
