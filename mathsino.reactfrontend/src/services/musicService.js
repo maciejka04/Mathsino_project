@@ -2,7 +2,7 @@
 
 class MusicService {
   constructor() {
-    this.currentMusic = 1;
+    this.currentMusic = null;
     this.tracks = {
       1: 'casino.mp3',
       2: 'gejowski_blues.mp3', 

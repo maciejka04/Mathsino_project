@@ -236,10 +236,10 @@ const resources = {
       "online_on_table": "Na stole",
       "online_clear": "CZYŚĆ",
       "online_deal_cards": "ROZDAJ",
-      "online_stand": "CZEKAJ",
-      "online_split": "ROZDZIEL",
-      "online_hit": "DOBIERZ",
-      "online_double": "PODWÓJ",
+      "online_stand": "CKECK",
+      "online_split": "SPLIT",
+      "online_hit": "HIT",
+      "online_double": "DOUBLE",
 
       /* --- STATISTICS.JS --- */
       "stats_title": "Statystyki",

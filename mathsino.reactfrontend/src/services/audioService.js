@@ -13,18 +13,9 @@ class AudioService {
   initBackgroundMusic() {
     if (this.isInitialized) return; // Zapobiegaj wielokrotnej inicjalizacji
     
-    // Import muzyki tła z musicService
-    const musicFile = musicService.getMusicFile();
-    import(`../assets/${musicFile}`).then(module => {
-      this.backgroundMusic = new Audio(module.default);
-      this.backgroundMusic.loop = true;
-      this.backgroundMusic.volume = 0.3;
-      this.isInitialized = true;
-      
-      
-    }).catch(err => {
-      console.log("Background music file not found:", err);
-    });
+    // NIE twórz instancji tutaj - poczekaj na ustawienia z backendu
+    // Instancja zostanie utworzona w changeBackgroundMusic po załadowaniu ustawień
+    this.isInitialized = true;
   }
 
   playBackgroundMusic() {
