@@ -19,8 +19,6 @@ import fireworksSound from "../../assets/fireworks.mp3";
 
 import reverseCardImage from "../../assets/karty/reverse2.png";
 import defaultAvatar from "../../assets/profilepic/snake.png";
-
-
 const DECK_POSITION = { left: 15, top: 30 };
 
 const allCardFileNames = [
@@ -153,6 +151,7 @@ function Online() {
   const [splitResult, setSplitResult] = useState(null);
 
   const [resultProcessed, setResultProcessed] = useState(false);
+  const resultProcessedRef = React.useRef(false);
   const [showModal, setShowModal] = useState(false);
   const [isShuffling, setIsShuffling] = useState(false);
 
@@ -291,6 +290,7 @@ function Online() {
     }
 
     setResultProcessed(false);
+    resultProcessedRef.current = false;
     setGameResult(null);
     setSplitResult(null);
     setShowModal(false);
@@ -363,9 +363,6 @@ function Online() {
         }))
       );
 
-      setMainDoubled(player.hasDoubledMain);
-      setSplitDoubled(player.hasDoubledSplit);
-
       let currentIsSplitActive = false;
       if (player.hasSplit) {
         setHasSplit(true);
@@ -391,12 +388,12 @@ function Online() {
           player.splitHand &&
           player.splitHand.length === 2 &&
           player.splitStatus === "Active" &&
-          !player.hasDoubledSplit;
+          !splitDoubled;
       } else {
         doubleCondition =
           player.hand.length === 2 &&
           player.status === "Active" &&
-          !player.hasDoubledMain;
+          !mainDoubled;
       }
       setCanDouble(doubleCondition);
 
@@ -413,11 +410,13 @@ function Online() {
         }
       }
       setCanSplit(splitCondition);
+      setMainDoubled(player.hasDoubledMain || mainDoubled);
+      setSplitDoubled(player.hasDoubledSplit || splitDoubled);
 
       setGameResult(player.result);
       setSplitResult(player.splitResult);
 
-      if (gameData.status === "Completed" && !resultProcessed) {
+      if (gameData.status === "Completed" && !resultProcessedRef.current) {
         if (player.result && (!player.hasSplit || player.splitResult)) {
           handleGameResult(
             player.result,
@@ -484,6 +483,7 @@ if (hasSplit && splitRes) {
     }
 }
 
+    resultProcessedRef.current = true;
 
     if (mainResult === "Blackjack" || splitRes === "Blackjack") {
     setShowFireworks(true);
@@ -679,10 +679,12 @@ if (hasSplit && splitRes) {
           `${API_URL}/games/${gameId}/player-double-split/${playerId}`,
           { method: "POST" }
         );
+        setSplitDoubled(true);
       } else {
         await fetch(`${API_URL}/games/${gameId}/player-double/${playerId}`, {
           method: "POST",
         });
+        setMainDoubled(true);
       }
 
       const data = await fetchGameStatus(gameId);
