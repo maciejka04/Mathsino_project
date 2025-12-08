@@ -18,6 +18,8 @@ import racoon from './assets/profilepic/racoon.png';
 import boar from './assets/profilepic/boar.png';
 import owl from './assets/profilepic/owl.png';
 import fox from './assets/profilepic/fox.png';
+import clickSound from './assets/mouse-click.mp3';
+
 
 const AVATAR_MAP = {
   'snake.png': snake,
@@ -29,6 +31,10 @@ const AVATAR_MAP = {
 };
 
 const BACKEND_URL = 'http://localhost:5126';
+
+const playClickSound = () => {
+  audioService.playSoundEffect(clickSound);
+};
 
 function Layout() {
   const { t } = useTranslation();
@@ -161,47 +167,77 @@ function Layout() {
         {!hideMenu && (
           <aside className="sidebar">
             <div className="logo">
-              <Link to="/">
+              <Link to="/" onClick={playClickSound}>
                 <img src={logo} alt="Logo" />
               </Link>
+
             </div>
 
             <nav className="menu" ref={menuRef}>
               <ul>
                 <li>
-                  <NavLink to="/play" className={({ isActive }) => (isActive ? 'active-link' : '')}>
+                  <NavLink 
+                    to="/play" 
+                    onClick={playClickSound}
+                    className={({ isActive }) => (isActive ? 'active-link' : '')}
+                  >
                     <i className="fa-solid fa-play" />
                     <span>{t('nav_play')}</span>
                   </NavLink>
                 </li>
+
                 <li>
-                  <NavLink to="/learn" className={({ isActive }) => (isActive ? 'active-link' : '')}>
+                  <NavLink 
+                    to="/learn" 
+                    onClick={playClickSound}
+                    className={({ isActive }) => (isActive ? 'active-link' : '')}
+                  >
                     <i className="fa-solid fa-graduation-cap" />
                     <span>{t('nav_learn')}</span>
                   </NavLink>
                 </li>
+
                 <li>
-                  <NavLink to="/statistics" className={({ isActive }) => (isActive ? 'active-link' : '')}>
+                  <NavLink 
+                    to="/statistics" 
+                    onClick={playClickSound}
+                    className={({ isActive }) => (isActive ? 'active-link' : '')}
+                  >
                     <i className="fas fa-chart-simple" />
                     <span>{t('nav_statistics')}</span>
                   </NavLink>
                 </li>
+
                 <li>
-                  <NavLink to="/friends" className={({ isActive }) => (isActive ? 'active-link' : '')}>
+                  <NavLink 
+                    to="/friends" 
+                    onClick={playClickSound}
+                    className={({ isActive }) => (isActive ? 'active-link' : '')}
+                  >
                     <i className="fa-solid fa-user-group" />
                     <span>{t('nav_friends')}</span>
                   </NavLink>
                 </li>
+
                 <li>
-                  <NavLink to="/resources" className={({ isActive }) => (isActive ? 'active-link' : '')}>
+                  <NavLink 
+                    to="/resources" 
+                    onClick={playClickSound}
+                    className={({ isActive }) => (isActive ? 'active-link' : '')}
+                  >
                     <i className="fa-solid fa-gear" />
                     <span>{t('nav_resources')}</span>
                   </NavLink>
                 </li>
+
               </ul>
             </nav>
 
-            <Link to={user.isAuthenticated ? "/profile" : "/login"} className="profile">
+            <Link 
+              to={user.isAuthenticated ? "/profile" : "/login"} 
+              className="profile"
+              onClick={playClickSound}
+            >
               <div className="avatar">
                 <img src={user.avatarUrl} alt="Profile" />
               </div>
@@ -209,6 +245,7 @@ function Layout() {
                 <h3>{user.name}</h3>
               </div>
             </Link>
+
           </aside>
         )}
 

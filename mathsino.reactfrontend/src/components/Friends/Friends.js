@@ -3,6 +3,13 @@ import { useTranslation } from 'react-i18next';
 import './Friends.css';
 
 import awatar from '../../assets/profilowe_smok.png';
+import clickSound from '../../assets/mouse-click.mp3';
+
+const playClickSound = () => {
+  const audio = new Audio(clickSound);
+  audio.play();
+}
+
 
 const initialFriendsData = [
   { id: 1, name: 'Jan Kowalski', online: true, avatarUrl: awatar },
@@ -84,7 +91,8 @@ const check_profile = (id) => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="add-friend-input"
           />
-          <button type="submit" className="add-friend-button">
+          <button type="submit" className="add-friend-button" onClick={playClickSound}>
+            
             {t('friends_add')}
           </button>
         </form>
@@ -105,13 +113,19 @@ const check_profile = (id) => {
                 </div>
                 <div className="request-actions">
                   <button
-                    onClick={() => handleAcceptRequest(request.id)}
+                    onClick={() => {
+                      playClickSound();
+                      handleAcceptRequest(request.id);
+                    }}
                     className="check-btn"
                   >
                     {t('friends_accept')}
                   </button>
                   <button
-                    onClick={() => handleDeclineRequest(request.id)}
+                    onClick={() => {
+                      playClickSound();
+                      handleDeclineRequest(request.id);
+                    }}
                     className="remove-btn"
                   >
                     {t('friends_decline')}
@@ -141,14 +155,22 @@ const check_profile = (id) => {
                   </span>
                 </div>
                 <button
-                  onClick={() => check_profile(friend.id)}
+                  onClick={() => {
+                    playClickSound();
+                    check_profile(friend.id);
+                  }}
                   className="check-btn"
                 >
                   {t('friends_check')}
                 </button>
+
                 <button
-                  onClick={() => handleRemoveFriend(friend.id)}
+                  onClick={() => {
+                    playClickSound();
+                    handleRemoveFriend(friend.id);
+                  }}
                   className="remove-btn"
+                  
                 >
                   {t('friends_delete')}
                 </button>

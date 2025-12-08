@@ -5,6 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import './Home.css';
 import { useOutletContext } from "react-router-dom";
+import clickSound from '../../assets/mouse-click.mp3';
+
+const playClickSound = () => {
+  const audio = new Audio(clickSound);
+  audio.play();
+};
+
 
 function Home() {
   const { user } = useOutletContext();
@@ -22,9 +29,14 @@ function Home() {
             <h1>{t('welcome')}</h1>
             <p>{t('login_prompt')}</p>
 
-            <Link to="/login" className="login-button">
+            <Link
+              to="/login"
+              className="login-button"
+              onClick={playClickSound}
+            >
               {t('login_button')}
             </Link>
+
           </>
         )}
       </header>
@@ -55,7 +67,11 @@ function Home() {
         </div>
 
         {/* === 2. GŁÓWNA AKCJA: Graj (Średnia) === */}
-        <Link to="/play" className="dashboard-card primary-card">
+        <Link
+          to="/play"
+          className="dashboard-card primary-card"
+          onClick={playClickSound}
+        >
           <i className="fa-solid fa-spade"></i>
           <div className="dashboard-card-text">
             <h3>{t('start_game')}</h3>
@@ -64,7 +80,11 @@ function Home() {
         </Link>
 
         {/* === 3. GŁÓWNA AKCJA: Ucz się (Średnia) === */}
-        <Link to="/learn" className="dashboard-card secondary-card">
+        <Link
+          to="/learn"
+          className="dashboard-card secondary-card"
+          onClick={playClickSound}
+        >
           <i className="fa-solid fa-graduation-cap"></i>
           <div className="dashboard-card-text">
             <h3>{t('home_learn_strategy')}</h3>

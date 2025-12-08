@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next'; // IMPORT I18N
 import audioService from '../../services/audioService';
+import clickSound from '../../assets/mouse-click.mp3';
+
 
 // --- STYLES & ASSETS ---
 import '../Offline/Offline.css'; 
@@ -273,7 +275,19 @@ const LessonPage = () => {
 
   return (
     <div className="offline-container">
-        <button className="back-button" onClick={() => navigate('/learn')}>&#8592; Exit Lesson</button>
+        <button
+            className="back-button"
+            onClick={() => {
+                audioService.playSoundEffect(clickSound);
+                setTimeout(() => {
+                navigate('/learn');
+                }, 400); 
+            }}
+            >
+            &#8592; Exit Lesson
+        </button>
+
+
 
         <div className="game-table-area">
             <img src={tableImage} alt="Game Table" className="game-table-image" />

@@ -3,6 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next'; 
 import lekcja1 from '../../assets/lekcja1.jpg';
 import styles from './Learn.module.css'; 
+import audioService from '../../services/audioService';
+import clickSound from '../../assets/mouse-click.mp3';
+
+const playClickSound = () => {
+  audioService.playSoundEffect(clickSound);
+}
 
 const cardData = [
  { 
@@ -95,7 +101,7 @@ function Learn({ image, alt, isShowing, zIndex, onClick, title, subtitle, descri
     <div
       className={`${styles.card} ${isShowing ? styles.show : ''}`}
       style={{ zIndex: zIndex }}
-      onClick={onClick}
+      onClick={(e) => { playClickSound(); onClick(e); }}
     >
       <div className={styles['card__image-holder']}>
         <img className={styles['card__image']} src={image} alt={alt} />
@@ -125,10 +131,11 @@ function Learn({ image, alt, isShowing, zIndex, onClick, title, subtitle, descri
                 href="#" 
                 className={styles.btn} 
                 onClick={(e) => {
-                    e.preventDefault(); 
-                    e.stopPropagation(); 
-                    onReadMore(); 
-                }}
+                  e.preventDefault(); 
+                  e.stopPropagation(); 
+                  playClickSound();
+                  onReadMore(); 
+              }}
             >
               {}
               {t('learn_read_more')}

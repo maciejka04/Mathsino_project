@@ -13,6 +13,13 @@ import racoon from '../../assets/profilepic/racoon.png';
 import boar from '../../assets/profilepic/boar.png';
 import owl from '../../assets/profilepic/owl.png';
 import fox from '../../assets/profilepic/fox.png';
+import clickSound from '../../assets/mouse-click.mp3';
+import audioService from '../../services/audioService';
+
+const playClickSound = () => {
+  audioService.playSoundEffect(clickSound);
+};
+
 
 const AVATAR_MAP = {
   'snake.png': snake,
@@ -114,6 +121,14 @@ useEffect(() => {
     }
   };
 
+  const handleLogoutWithSound = () => {
+  playClickSound();
+  setTimeout(() => {
+    handleLogout();
+  }, 400);
+};
+
+
   return (
     <div className="profile-page-container">
       <header>
@@ -146,13 +161,13 @@ useEffect(() => {
                 src={avatarSrc}
                 alt={`Awatar ${index + 1}`}
                 className={selectedAvatar === avatarSrc ? 'avatar-option active' : 'avatar-option'}
-                onClick={() => handleAvatarSelect(avatarSrc)} 
+                onClick={() => { playClickSound(); handleAvatarSelect(avatarSrc); }}
               />
             ))}
           </div>
           <button 
             className="save-avatar-button" 
-            onClick={handleAvatarSave} 
+            onClick={() => { playClickSound(); handleAvatarSave(); }}
             disabled={saveStatus !== 'Oczekuje na zapis...'}
           >
             {t('profile_save')}
@@ -163,14 +178,17 @@ useEffect(() => {
         {/* Karta 3: Zarządzanie kontem */}
         <div className="dashboard-card profile-actions-card">
           <h4>{t('profile_account_manage')}</h4>
-          <button className="logout-button" onClick={handleLogout}>
+          <button className="logout-button" onClick={handleLogoutWithSound}>
             <i className="fa-solid fa-right-from-bracket"></i>
             {t('profile_logout')}
           </button>
-          
+
           <div className="danger-zone">
             <h4>{t('profile_danger_zone')}</h4>
-            <button className="danger-button">
+            <button 
+              className="danger-button" 
+              onClick={() => { playClickSound();  }}
+            >
               {t('profile_reset_progress')}
             </button>
           </div>

@@ -8,6 +8,11 @@ import audioService from '../../services/audioService';
 import musicService from '../../services/musicService';
 import './Resources.css';
 import './ResourcesMusic.css';
+import clickSound from '../../assets/mouse-click.mp3';
+
+const playClickSound = () => {
+  audioService.playSoundEffect(clickSound);
+};
 
 function Resources() {
   const { user } = useOutletContext();
@@ -135,7 +140,7 @@ function Resources() {
               <input 
                 type="checkbox" 
                 checked={soundEffects}
-                onChange={handleSoundEffectsChange} 
+                onChange={handleSoundEffectsChange}
               />
               <span className="slider"></span>
             </label>
@@ -150,7 +155,7 @@ function Resources() {
               <input 
                 type="checkbox" 
                 checked={music}
-                onChange={handleMusicChange} 
+                onChange={handleMusicChange}
               />
               <span className="slider"></span>
             </label>
@@ -170,19 +175,19 @@ function Resources() {
           <div className="music-selection-buttons">
             <button 
               className={`music-btn ${selectedMusic === 1 ? 'active' : ''}`}
-              onClick={() => handleMusicTrackChange(1)}
+              onClick={() => { playClickSound(); handleMusicTrackChange(1); }}
             >
               1
             </button>
             <button 
               className={`music-btn ${selectedMusic === 2 ? 'active' : ''}`}
-              onClick={() => handleMusicTrackChange(2)}
+              onClick={() => { playClickSound(); handleMusicTrackChange(2); }}
             >
               2
             </button>
             <button 
               className={`music-btn ${selectedMusic === 3 ? 'active' : ''}`}
-              onClick={() => handleMusicTrackChange(3)}
+              onClick={() => { playClickSound(); handleMusicTrackChange(3); }}
             >
               3
             </button>
@@ -198,13 +203,14 @@ function Resources() {
           <div className="language-options">
             <button 
               className={`language-btn ${i18n.language === 'en' ? 'active' : ''}`}
-              onClick={() => changeLanguage('en')}
+              onClick={() => { playClickSound(); changeLanguage('en'); }}
             >
               EN
             </button>
+
             <button 
               className={`language-btn ${i18n.language === 'pl' ? 'active' : ''}`}
-              onClick={() => changeLanguage('pl')}
+              onClick={() => { playClickSound(); changeLanguage('pl'); }}
             >
               PL
             </button>
@@ -231,15 +237,15 @@ function Resources() {
           <h4>{t('resources_resources')}</h4>
           <p>{t('resources_resources_desc')}</p>
           </div>
-          <a href="#" className="resource-link">
+          <a href="#" className="resource-link" onClick={playClickSound}>
             <span>{t('resources_how_to_play_blackjack')}</span>
             <i className="fa-solid fa-arrow-up-right-from-square"></i>
           </a>
-          <a href="#" className="resource-link">
+          <a href="#" className="resource-link" onClick={playClickSound}>
             <span>{t('resources_basic_strategy_chart')}</span>
             <i className="fa-solid fa-arrow-up-right-from-square"></i>
           </a>
-          <a href="#" className="resource-link">
+          <a href="#" className="resource-link" onClick={playClickSound}>
             <span>{t('resources_glossary_of_terms')}</span>
             <i className="fa-solid fa-arrow-up-right-from-square"></i>
           </a>

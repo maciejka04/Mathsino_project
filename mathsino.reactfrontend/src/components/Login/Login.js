@@ -1,6 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import './Login.css';
+import audioService from '../../services/audioService';
+import clickSound from '../../assets/mouse-click.mp3';
+
+const playClickSound = () => {
+  audioService.playSoundEffect(clickSound);
+}
 
 // Komponent Login przeznaczony do logowania przez OAuth (Google/Facebook)
 function Login() {
@@ -27,7 +33,7 @@ function Login() {
         {/* Przycisk Logowania przez Google */}
         <button 
           className="social-button google-button" 
-          onClick={() => handleLogin('google')}
+          onClick={() => { playClickSound(); handleLogin('google'); }}
         >
           <i className="fa-brands fa-google"></i>
           {t('login_google')}
@@ -36,7 +42,7 @@ function Login() {
         {/* Przycisk Logowania przez Facebook */}
         <button 
           className="social-button facebook-button" 
-          onClick={() => handleLogin('facebook')}
+          onClick={() => { playClickSound(); handleLogin('facebook'); }}
         >
           <i className="fa-brands fa-facebook-f"></i>
           {t('login_facebook')}

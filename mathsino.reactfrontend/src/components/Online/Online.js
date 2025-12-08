@@ -16,6 +16,8 @@ import loseSound from "../../assets/lose.mp3";
 import pushSound from "../../assets/push.mp3";
 import blackjackSound from "../../assets/blackjack.mp3";
 import fireworksSound from "../../assets/fireworks.mp3";
+import clickSound from '../../assets/mouse-click.mp3';
+
 
 
 import reverseCardImage from "../../assets/karty/reverse2.png";
@@ -765,9 +767,19 @@ function Online() {
             ref={fireworksContainerRef} 
         />
        )}
-      <button className="back-button" onClick={handleGoBack}>
+      <button
+        className="back-button"
+        onClick={() => {
+          audioService.playSoundEffect(clickSound);
+          setTimeout(() => {
+            handleGoBack();
+          }, 400);
+        }}
+      >
         &#8592; {t('exit')}
       </button>
+
+
       <div className="user-info-panel">
        <img 
           src={user.avatarUrl || defaultAvatar}

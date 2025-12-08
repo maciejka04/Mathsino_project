@@ -18,6 +18,14 @@ import {
   Legend,
 } from 'chart.js';
 
+import clickSound from '../../assets/mouse-click.mp3';
+
+const playClickSound = () => {
+  const audio = new Audio(clickSound);
+  audio.play();
+};
+
+
 const API_URL = "http://localhost:5126";
 
 // 2. Register chart components
@@ -287,12 +295,16 @@ function Statistics() {
         </header>
 
         <button 
-            className={`ad-reward-button ${isDisabled ? 'disabled' : ''}`}
-            disabled={isDisabled} 
-            onClick={handleWatchAd}
-        >
-            {t('stats_watch_ad')} <i className="fa-solid fa-clapperboard" />
-        </button>
+          className={`ad-reward-button ${isDisabled ? 'disabled' : ''}`}
+          disabled={isDisabled} 
+          onClick={() => {
+              playClickSound();
+              handleWatchAd();
+          }}
+      >
+          {t('stats_watch_ad')} <i className="fa-solid fa-clapperboard" />
+      </button>
+
 
         {/* Grid statystyk */}
         <div className="stats-overview-grid">

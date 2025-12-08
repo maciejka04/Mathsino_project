@@ -3,6 +3,12 @@ import { useTranslation } from 'react-i18next';
 import './Play.css';
 import online from '../../assets/singleplayer.png';
 import { Link } from 'react-router-dom';
+import audioService from '../../services/audioService';
+import clickSound from '../../assets/mouse-click.mp3';
+
+const playClickSound = () => {
+  audioService.playSoundEffect(clickSound);
+}
 
 function Play() {
   const { t } = useTranslation();
@@ -45,7 +51,11 @@ function Play() {
 
   return (
     <div className="card-container" ref={cardContainerRef}>
-      <Link to="/online" className="card-link">
+      <Link 
+        to="/online" 
+        className="card-link"
+        onClick={playClickSound}
+      >
         <div className="card">
           <div className="card-info">
             <img src={online} alt={t('play_online_alt')} />
