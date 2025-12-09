@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
 import './Friends.css';
@@ -25,96 +25,87 @@ function Friends() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const USER_ID = user?.id || 1;
-
-  console.log("FRIENDS USER ID:", USER_ID);
+  const hasFetched = useRef(false);
 
   useEffect(() => {
-    if (USER_ID) {
-      fetchFriends();
-      fetchRequests();
-      fetchSentRequests();
+    if (!user?.id || hasFetched.current) {
+      return;
     }
-  }, [USER_ID]);
+
+    hasFetched.current = true;
+
+    const loadAllData = async () => {
+      setLoading(true);
+      try {
+        await Promise.all([
+          fetchFriends(),
+          fetchRequests(),
+          fetchSentRequests()
+        ]);
+        setError(null);
+      } catch (err) {
+        console.error('Error loading friends data:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadAllData();
+  }, [user?.id]);
 
   const fetchFriends = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`${API_URL}/friends/${USER_ID}`);
+    if (!user?.id) return;
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch friends');
-      }
+    const response = await fetch(`${API_URL}/friends/${user.id}`);
+    if (!response.ok) throw new Error('Failed to fetch friends');
 
-      const data = await response.json();
+    const data = await response.json();
+    const mappedFriends = data.map(friend => ({
+      id: friend.id,
+      name: `${friend.firstName} ${friend.lastName}`,
+      online: false,
+      avatarUrl: getAvatarUrl(friend.avatarPath)
+    }));
 
-      const mappedFriends = data.map(friend => ({
-        id: friend.id,
-        name: `${friend.firstName} ${friend.lastName}`,
-        email: friend.email,
-        online: false,
-        avatarUrl: getAvatarUrl(friend.avatarPath)
-      }));
-
-      setFriends(mappedFriends);
-      setError(null);
-    } catch (err) {
-      console.error('Error fetching friends:', err);
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+    setFriends(mappedFriends);
   };
 
   const fetchRequests = async () => {
-    try {
-      const response = await fetch(`${API_URL}/friends/${USER_ID}/requests`);
+    if (!user?.id) return;
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch requests');
-      }
+    const response = await fetch(`${API_URL}/friends/${user.id}/requests`);
+    if (!response.ok) throw new Error('Failed to fetch requests');
 
-      const data = await response.json();
+    const data = await response.json();
+    const mappedRequests = data.map(sender => ({
+      id: sender.id,
+      name: `${sender.firstName} ${sender.lastName}`,
+      avatarUrl: getAvatarUrl(sender.avatarPath)
+    }));
 
-      const mappedRequests = data.map(sender => ({
-        id: sender.id,
-        name: `${sender.firstName} ${sender.lastName}`,
-        email: sender.email,
-        avatarUrl: getAvatarUrl(sender.avatarPath)
-      }));
-
-      setRequests(mappedRequests);
-    } catch (err) {
-      console.error('Error fetching requests:', err);
-    }
+    setRequests(mappedRequests);
   };
 
   const fetchSentRequests = async () => {
-    try {
-      const response = await fetch(`${API_URL}/friends/${USER_ID}/sent`);
+    if (!user?.id) return;
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch sent requests');
-      }
+    const response = await fetch(`${API_URL}/friends/${user.id}/sent`);
+    if (!response.ok) throw new Error('Failed to fetch sent requests');
 
-      const data = await response.json();
+    const data = await response.json();
+    const mappedSent = data.map(receiver => ({
+      id: receiver.id,
+      name: `${receiver.firstName} ${receiver.lastName}`,
+      avatarUrl: getAvatarUrl(receiver.avatarPath)
+    }));
 
-      const mappedSent = data.map(receiver => ({
-        id: receiver.id,
-        name: `${receiver.firstName} ${receiver.lastName}`,
-        email: receiver.email,
-        avatarUrl: getAvatarUrl(receiver.avatarPath)
-      }));
-
-      setSentRequests(mappedSent);
-    } catch (err) {
-      console.error('Error fetching sent requests:', err);
-    }
+    setSentRequests(mappedSent);
   };
 
   const handleAddFriend = async (e) => {
     e.preventDefault();
-    if (!searchTerm) return;
+    if (!searchTerm || !user?.id) return;
 
     const friendId = parseInt(searchTerm);
 
@@ -123,14 +114,14 @@ function Friends() {
       return;
     }
 
-    if (friendId === USER_ID) {
+    if (friendId === user.id) {
       alert(t('friends_cant_add_yourself') || 'You cannot add yourself as a friend!');
       return;
     }
 
     try {
       const response = await fetch(
-        `${API_URL}/friends/${USER_ID}/add/${friendId}`,
+        `${API_URL}/friends/${user.id}/add/${friendId}`,
         { method: 'POST' }
       );
 
@@ -150,6 +141,8 @@ function Friends() {
   };
 
   const handleRemoveFriend = async (id) => {
+    if (!user?.id) return;
+
     const friendToRemove = friends.find(friend => friend.id === id);
     if (!friendToRemove) return;
 
@@ -162,7 +155,7 @@ function Friends() {
 
     try {
       const response = await fetch(
-        `${API_URL}/friends/${USER_ID}/remove/${id}`,
+        `${API_URL}/friends/${user.id}/remove/${id}`,
         { method: 'DELETE' }
       );
 
@@ -187,9 +180,11 @@ function Friends() {
   };
 
   const handleAcceptRequest = async (senderId) => {
+    if (!user?.id) return;
+
     try {
       const response = await fetch(
-        `${API_URL}/friends/${USER_ID}/accept/${senderId}`,
+        `${API_URL}/friends/${user.id}/accept/${senderId}`,
         { method: 'POST' }
       );
 
@@ -207,9 +202,11 @@ function Friends() {
   };
 
   const handleDeclineRequest = async (senderId) => {
+    if (!user?.id) return;
+
     try {
       const response = await fetch(
-        `${API_URL}/friends/${USER_ID}/decline/${senderId}`,
+        `${API_URL}/friends/${user.id}/decline/${senderId}`,
         { method: 'DELETE' }
       );
 
@@ -227,8 +224,9 @@ function Friends() {
     }
   };
 
-
   const handleCancelSentRequest = async (receiverId) => {
+    if (!user?.id) return;
+
     const requestToCancel = sentRequests.find(req => req.id === receiverId);
     if (!requestToCancel) return;
 
@@ -241,7 +239,7 @@ function Friends() {
 
     try {
       const response = await fetch(
-        `${API_URL}/friends/${USER_ID}/cancel/${receiverId}`,
+        `${API_URL}/friends/${user.id}/cancel/${receiverId}`,
         { method: 'DELETE' }
       );
 
@@ -305,7 +303,7 @@ function Friends() {
         </form>
       </div>
 
-      {/* ⬇️ NOWA SEKCJA - Wysłane zaproszenia */}
+      {/* Sekcja wysłanych zaproszeń */}
       <div className="friend-requests-section card-style">
         <h2>{t('friends_sent_requests', { count: sentRequests.length })}</h2>
         <div className="friends-list">
@@ -339,7 +337,7 @@ function Friends() {
         </div>
       </div>
 
-      {/* Sekcja zaproszeń otrzymanych */}
+      {/* Sekcja otrzymanych zaproszeń */}
       <div className="friend-requests-section card-style">
         <h2>{t('friends_requests', { count: requests.length })}</h2>
         <div className="friends-list">
