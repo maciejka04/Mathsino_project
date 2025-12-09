@@ -18,15 +18,18 @@ public class User
     public string Email { get; set; } = string.Empty;
 
     [StringLength(50)]
-    public string Provider { get; set; } = string.Empty; 
+    public string Provider { get; set; } = string.Empty;
 
     [StringLength(100)]
-    public string ProviderId { get; set; } = string.Empty; 
+    public string ProviderId { get; set; } = string.Empty;
+
     // ---------------------------
-    [StringLength(255)] 
+    [StringLength(255)]
     public string AvatarPath { get; set; } = "snake.png";
 
-    public List<UserFriend> Friends { get; set; } = [];
+    public List<UserFriend> SentFriendRequests { get; set; } = [];
+
+    public List<UserFriend> ReceivedFriendRequests { get; set; } = [];
 
     public int Balance { get; set; } = 0;
 
@@ -47,9 +50,18 @@ public class UserFriend
 
     public int FriendId { get; set; }
     public User Friend { get; set; } = null!;
+
+    public FriendStatus Status { get; set; }
 }
 
-public record FriendDto(int Id, string FirstName, string LastName, string Email, int Balance, string AvatarPath);
+public record FriendDto(
+    int Id,
+    string FirstName,
+    string LastName,
+    string Email,
+    int Balance,
+    string AvatarPath
+);
 
 public record UserDto(
     int Id,

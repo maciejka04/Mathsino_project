@@ -4,7 +4,9 @@ using Mathsino.Backend.Services;
 using Microsoft.EntityFrameworkCore;
 
 public record UserLanguageDto(string Language);
+
 public record UserMusicDto(int MusicId);
+
 public record UserAudioSettingsDto(bool MusicEnabled, bool SoundEffectsEnabled);
 
 public static class UserEndPoints
@@ -13,70 +15,19 @@ public static class UserEndPoints
     {
         app.MapGet(
             "/users",
-            async (MathsinoContext db) =>
+            async (UsersService usersService) =>
             {
-                var users = await db
-                    .Users.Include(u => u.Friends)
-                        .ThenInclude(uf => uf.Friend)
-                    .Select(u => new UserDto(
-                        u.Id,
-                        u.FirstName,
-                        u.LastName,
-                        u.Email,
-                        u.Friends.Select(f => new FriendDto(
-                                f.Friend.Id,
-                                f.Friend.FirstName,
-                                f.Friend.LastName,
-                                f.Friend.Email,
-                                f.Friend.Balance,
-                                f.Friend.AvatarPath
-                            ))
-                            .ToList(),
-                        u.Balance,
-                        u.Language,
-                        u.MusicId,
-                        u.MusicEnabled,
-                        u.SoundEffectsEnabled
-
-                    ))
-                    .ToListAsync();
-
+                var users = await usersService.GetUsersAsync();
                 return Results.Ok(users);
             }
         );
 
         app.MapGet(
             "/users/{id}",
-            async (int id, MathsinoContext db) =>
+            async (int id, UsersService usersService) =>
             {
-                var user = await db
-                    .Users.Include(u => u.Friends)
-                        .ThenInclude(uf => uf.Friend)
-                    .Where(u => u.Id == id)
-                    .Select(u => new UserDto(
-                        u.Id,
-                        u.FirstName,
-                        u.LastName,
-                        u.Email,
-                        u.Friends.Select(f => new FriendDto(
-                                f.Friend.Id,
-                                f.Friend.FirstName,
-                                f.Friend.LastName,
-                                f.Friend.Email,
-                                f.Friend.Balance,
-                                f.Friend.AvatarPath
-                            ))
-                            .ToList(),
-                        u.Balance,
-                        u.Language,
-                        u.MusicId,
-                        u.MusicEnabled,
-                        u.SoundEffectsEnabled
-                        
-                    ))
-                    .FirstOrDefaultAsync();
-
-                return user is not null ? Results.Ok(user) : Results.NotFound();
+                var users = await usersService.GetUserByIdAsync(id);
+                return Results.Ok(users);
             }
         );
         app.MapGet(
@@ -101,7 +52,8 @@ public static class UserEndPoints
             async (int id, UserLanguageDto dto, MathsinoContext db) =>
             {
                 var user = await db.Users.FindAsync(id);
-                if (user is null) return Results.NotFound();
+                if (user is null)
+                    return Results.NotFound();
                 user.Language = dto.Language;
                 await db.SaveChangesAsync();
                 return Results.NoContent();
@@ -114,7 +66,8 @@ public static class UserEndPoints
             async (int id, UserMusicDto dto, MathsinoContext db) =>
             {
                 var user = await db.Users.FindAsync(id);
-                if (user is null) return Results.NotFound();
+                if (user is null)
+                    return Results.NotFound();
                 user.MusicId = dto.MusicId;
                 await db.SaveChangesAsync();
                 return Results.NoContent();
@@ -127,7 +80,8 @@ public static class UserEndPoints
             async (int id, UserAudioSettingsDto dto, MathsinoContext db) =>
             {
                 var user = await db.Users.FindAsync(id);
-                if (user is null) return Results.NotFound();
+                if (user is null)
+                    return Results.NotFound();
                 user.MusicEnabled = dto.MusicEnabled;
                 user.SoundEffectsEnabled = dto.SoundEffectsEnabled;
                 await db.SaveChangesAsync();
