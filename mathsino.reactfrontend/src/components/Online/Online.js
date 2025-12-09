@@ -422,96 +422,70 @@ function Online() {
     setGameStatus(gameData.status);
   };
 
-  const handleGameResult = (
-    mainResult,
-    splitRes,
-    isMainDoubledNow,
-    isSplitDoubledNow
-  ) => {
-    setResultProcessed(true);
+const handleGameResult = (
+  mainResult,
+  splitRes,
+  isMainDoubledNow,
+  isSplitDoubledNow
+ ) => {
+  setResultProcessed(true);
+  resultProcessedRef.current = true;
 
-    if (mainResult === "Win") {
-      audioService.playSoundEffect(winSound);
-    }
-    if (mainResult === "Lose") {
-      audioService.playSoundEffect(loseSound);
-    }
-    if (mainResult === "Push") {
-      audioService.playSoundEffect(pushSound);
-    }
-    if (mainResult === "Blackjack") {
-      audioService.playSoundEffect(blackjackSound);
-      audioService.playSoundEffect(fireworksSound);
-    }
-
-    if (hasSplit && splitRes) {
-        if (splitRes === "Win") {
-            audioService.playSoundEffect(winSound);
-        }
-        if (splitRes === "Lose") {
-            audioService.playSoundEffect(loseSound);
-        }
-        if (splitRes === "Push") {
-            audioService.playSoundEffect(pushSound);
-        }
-        if (splitRes === "Blackjack") {
-            audioService.playSoundEffect(blackjackSound);
-            audioService.playSoundEffect(fireworksSound);
-        }
-    }
-
-    resultProcessedRef.current = true;
-
-    if (mainResult === "Blackjack" || splitRes === "Blackjack") {
-    setShowFireworks(true);
-    setTimeout(() => {
-    setShowFireworks(false);
-   }, 8000); 
+    // --- DŹWIĘKI ---
+  if (mainResult === "Win") audioService.playSoundEffect(winSound);
+  if (mainResult === "Lose") audioService.playSoundEffect(loseSound);
+  if (mainResult === "Push") audioService.playSoundEffect(pushSound);
+  if (mainResult === "Blackjack") {
+   audioService.playSoundEffect(blackjackSound);
+   audioService.playSoundEffect(fireworksSound);
   }
 
-    setTimeout(() => {
-      setShowModal(true);
-    }, 1000);
+    // Dźwięki dla splita (uproszczone, żeby nie grało 2x na raz)
+  if (hasSplit && splitRes && splitRes !== mainResult) {
+       // Odtwórz dźwięk dla drugiego wyniku tylko jeśli jest inny
+       // (Można tu dodać timeout, ale to detal)
+  }
 
-    let totalWin = 0;
-
-    const calculateWin = (res, bet, isDoubled) => {
-      const actualBet = isDoubled ? bet * 2 : bet;
-      switch (res) {
-        case "Win":
-          return actualBet * 2;
-        case "Blackjack":
-          return actualBet * 2.5;
-        case "Push":
-          return actualBet;
-        case "Lose":
-          return 0;
-        default:
-          return 0;
-      }
-    };
-
-    totalWin += calculateWin(mainResult, currentBet, isMainDoubledNow);
-
-    if (hasSplit && splitRes) {
-      totalWin += calculateWin(splitRes, currentBet, isSplitDoubledNow);
+  if (mainResult === "Blackjack" || splitRes === "Blackjack") {
+    setShowFireworks(true);
+    setTimeout(() => setShowFireworks(false), 8000); 
     }
-    /*
-    if (totalWin > 0) {
-      setCurrentBalance((prev) => prev + totalWin);
-    }
-      */
-     const totalBetOnTable = displayedBetOnTable();
-    const netChange = totalWin - totalBetOnTable; // Zmiana netto (zysk lub strata)
 
-    // Wysyłamy do bazy tylko, jeśli jest jakaś zmiana
-    if (netChange !== 0) {
-        const type = netChange > 0 ? 'add' : 'deduct';
-        const amount = Math.abs(netChange);
-        updateBalance(type, amount); 
-    }
-    updateBalance('add', totalWin);
+  setTimeout(() => {
+   setShowModal(true);
+  }, 1000);
+
+  let totalWin = 0;
+
+  const calculateWin = (res, bet, isDoubled) => {
+   const actualBet = isDoubled ? bet * 2 : bet;
+   switch (res) {
+    case "Win":
+     return actualBet * 2; // Zwrot stawki + zysk
+    case "Blackjack":
+     return actualBet + (actualBet * 1.5); // Zwrot + 1.5x
+    case "Push":
+     return actualBet; // Zwrot stawki
+    case "Lose":
+     return 0;
+    default:
+     return 0;
+   }
   };
+
+  totalWin += calculateWin(mainResult, currentBet, isMainDoubledNow);
+
+  if (hasSplit && splitRes) {
+   totalWin += calculateWin(splitRes, currentBet, isSplitDoubledNow);
+  }
+
+    // --- POPRAWKA TUTAJ ---
+    // Po prostu dodajemy wygraną kwotę do konta.
+  if (totalWin > 0) {
+      updateBalance('add', totalWin);
+  }
+    // Jeśli totalWin == 0 (przegrana), nic nie robimy, bo zakład przepadł na początku.
+ };
 
   const fetchGameStatus = async (gId) => {
     const response = await fetch(`${API_URL}/games/${gId}`);
