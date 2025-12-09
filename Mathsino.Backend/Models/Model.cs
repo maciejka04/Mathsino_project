@@ -14,6 +14,9 @@ public class User
     [StringLength(20)]
     public string LastName { get; set; } = string.Empty;
 
+    [StringLength(20)]
+    public string UserName { get; set; } = string.Empty;
+
     [StringLength(50), EmailAddress]
     public string Email { get; set; } = string.Empty;
 
