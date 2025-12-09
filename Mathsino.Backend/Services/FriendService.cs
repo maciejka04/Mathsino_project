@@ -151,6 +151,42 @@ namespace Mathsino.Backend.Services
             return true;
         }
 
+        public async Task<bool> CancelSentFriendRequestAsync(int userId, int receiverId)
+        {
+            _logger?.LogInformation(
+                "User {UserId} canceling friend request to {ReceiverId}",
+                userId,
+                receiverId
+            );
+
+            var request = await _dbContext.UserFriends.FirstOrDefaultAsync(uf =>
+                uf.UserId == userId // ⬅️ TY jesteś nadawcą
+                && uf.FriendId == receiverId // ⬅️ Drugi user jest odbiorcą
+                && uf.Status == FriendStatus.Requested
+            );
+
+            if (request == null)
+            {
+                _logger?.LogWarning(
+                    "Friend request from {UserId} to {ReceiverId} not found",
+                    userId,
+                    receiverId
+                );
+                return false;
+            }
+
+            _dbContext.UserFriends.Remove(request);
+            await _dbContext.SaveChangesAsync();
+
+            _logger?.LogInformation(
+                "Friend request canceled from {UserId} to {ReceiverId}",
+                userId,
+                receiverId
+            );
+
+            return true;
+        }
+
         public async Task<bool> RemoveFriendAsync(int userId, int friendId)
         {
             _logger?.LogInformation("User {UserId} removing friend {FriendId}", userId, friendId);
@@ -193,6 +229,22 @@ namespace Mathsino.Backend.Services
                     uf.FriendId == userId && uf.Status == FriendStatus.Requested
                 )
                 .Select(uf => uf.User)
+                .ToListAsync();
+
+            _logger?.LogInformation(
+                "Found {Count} pending requests for user {UserId}",
+                requests.Count,
+                userId
+            );
+
+            return requests;
+        }
+
+        public async Task<List<User>> GetFriendsSentedRequestsByUserIdAsync(int userId)
+        {
+            var requests = await _dbContext
+                .UserFriends.Where(uf => uf.UserId == userId && uf.Status == FriendStatus.Requested)
+                .Select(uf => uf.Friend)
                 .ToListAsync();
 
             _logger?.LogInformation(

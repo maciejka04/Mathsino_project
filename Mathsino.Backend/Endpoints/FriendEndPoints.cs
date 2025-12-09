@@ -14,13 +14,22 @@ public static class FriendEndPoints
             }
         );
         app.MapGet(
-            "friends/{userId}/requests",
+            "/friends/{userId}/requests",
             async (FriendService friendService, int userId) =>
             {
                 var friends = await friendService.GetFriendsRequestsByUserIdAsync(userId);
                 return Results.Ok(friends);
             }
         );
+        app.MapGet(
+            "/friends/{userId}/sent",
+            async (FriendService friendService, int userId) =>
+            {
+                var friends = await friendService.GetFriendsSentedRequestsByUserIdAsync(userId);
+                return Results.Ok(friends);
+            }
+        );
+
         app.MapPost(
             "/friends/{userId}/add/{friendId}",
             async (FriendService friendService, int userId, int friendId) =>
@@ -30,7 +39,7 @@ public static class FriendEndPoints
             }
         );
         app.MapPost(
-            "/friends/{userId}/accept/{friendId}",
+            "/friends/{userId}/accept/{senderId}",
             async (FriendService friendService, int userId, int senderId) =>
             {
                 var friends = await friendService.AcceptFriendRequestAsync(userId, senderId);
@@ -38,7 +47,7 @@ public static class FriendEndPoints
             }
         );
         app.MapDelete(
-            "/friends/{userId}/decline/{friendId}",
+            "/friends/{userId}/decline/{senderId}",
             async (FriendService friendService, int userId, int senderId) =>
             {
                 var friends = await friendService.DeclineFriendRequestAsync(userId, senderId);
@@ -51,6 +60,16 @@ public static class FriendEndPoints
             {
                 var friends = await friendService.RemoveFriendAsync(userId, friendId);
                 return Results.Ok(friends);
+            }
+        );
+        app.MapDelete(
+            "/friends/{userId}/cancel/{receiverId}",
+            async (FriendService friendService, int userId, int receiverId) =>
+            {
+                var success = await friendService.CancelSentFriendRequestAsync(userId, receiverId);
+                return success
+                    ? Results.Ok()
+                    : Results.BadRequest("Failed to cancel friend request");
             }
         );
     }
