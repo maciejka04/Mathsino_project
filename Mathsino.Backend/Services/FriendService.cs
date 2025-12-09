@@ -22,7 +22,6 @@ namespace Mathsino.Backend.Services
             return friends;
         }
 
-        //wysylanie zaproszenia
         public async Task<bool> SendFriendRequestAsync(int userId, int friendId)
         {
             _logger?.LogInformation(
