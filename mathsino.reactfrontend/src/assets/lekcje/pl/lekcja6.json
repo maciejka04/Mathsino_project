@@ -1,0 +1,181 @@
+{
+  "lesson_id": 6,
+  "lesson_title": "Miękkie Ręce: 'Darmowe' Dobranie",
+  "introduction": {
+    "avatar_pose": "A",
+    "text": "Czas trochę odpocząć. Porozmawiamy o 'Miękkich Rękach' – rękach z Asem liczonym jako 11. Dlaczego są fajne? Bo NIE MOŻESZ przekroczyć 21 jedną kartą! Jeśli wyjdziesz ponad 21, As po prostu zmienia się na 1. To jak posiadanie dodatkowego życia. Nauczmy się, jak tego używać."
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "title": "Mit Miękkiej 17 (A,6 na 7)",
+      "goal": "Nauczyć, że Miękkie 17 to słaba ręka, którą trzeba dobrać.",
+      "setup": {
+        "player_hand": ["ace_of_hearts", "6_of_clubs"],
+        "dealer_up_card": "7_of_diamonds",
+        "dealer_hidden_card": "10_of_spades"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Masz Miękkie 17 (As+6). Wielu graczy tu pasuje. Błąd! 17 to za mało, by komfortowo pokonać Krupiera. Skoro nie możesz przekroczyć, MUSISZ spróbować poprawić wynik. Hit!",
+          "required_action": "HIT",
+          "cards_added": ["3_of_hearts"],
+          "player_score_after": 20
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "B",
+          "text": "Teraz masz 20. Dużo lepiej niż 17. Stand.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 17,
+        "avatar_pose": "B",
+        "text": "Spójrz! Dobrałeś 3 i masz 20. Pokonałeś moje 17. Gdybyś spasował na Miękkim 17, byłby remis (Push). Zawsze dobieraj na Miękkim 17.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Bezpieczeństwo Miękkiej 13 (A,2 na 8)",
+      "goal": "Zdemonstrowanie bezpieczeństwa dobierania na niskich miękkich rękach.",
+      "setup": {
+        "player_hand": ["ace_of_diamonds", "2_of_spades"],
+        "dealer_up_card": "8_of_hearts",
+        "dealer_hidden_card": "9_of_clubs"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Masz Miękkie 13 (As+2). To albo 3, albo 13. Nie masz absolutnie nic do stracenia. Dobierz, by poprawić.",
+          "required_action": "HIT",
+          "cards_added": ["queen_of_clubs"],
+          "player_score_after": 13
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "C",
+          "text": "Dostałeś Damę (10). 13 + 10 = 23? Nie! As staje się 1. Więc 1 + 2 + 10 = 13. Wróciłeś do punktu wyjścia (Twarde 13). Teraz graj jak przy Twardej Ręce na 8. Hit jeszcze raz!",
+          "required_action": "HIT",
+          "cards_added": ["6_of_diamonds"],
+          "player_score_after": 19
+        },
+        {
+          "step_order": 3,
+          "avatar_pose": "B",
+          "text": "Dostałeś 6. Razem 19. Teraz jesteś bezpieczny. Stand.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 19
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 17,
+        "avatar_pose": "B",
+        "text": "Świetna regeneracja. Skończyłeś z 19.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Podstępne Miękkie 18 (A,7 na 9)",
+      "goal": "Nauczyć dobierania na Miękkim 18 przeciwko silnym kartom krupiera.",
+      "setup": {
+        "player_hand": ["ace_of_clubs", "7_of_hearts"],
+        "dealer_up_card": "9_of_diamonds",
+        "dealer_hidden_card": "10_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Masz Miękkie 18. 18 wydaje się dobre, ale ja mam 9 (prawdopodobnie 19). Przegrywasz. Skoro nie możesz przekroczyć, musisz dobrać na Miękkim 18 przeciwko 9, 10 lub Asowi.",
+          "required_action": "HIT",
+          "cards_added": ["2_of_clubs"],
+          "player_score_after": 20
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "B",
+          "text": "Miękkie 18 zmieniło się w 20. Idealnie. Stand.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 19,
+        "avatar_pose": "B",
+        "text": "Idealnie. Poprawiłeś na 20 i wygrałeś. Pasowanie na 18 by przegrało.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Moc Miękkiej 19 (A,8 na 10)",
+      "goal": "Nauczyć pasowania na Miękkim 19.",
+      "setup": {
+        "player_hand": ["ace_of_spades", "8_of_diamonds"],
+        "dealer_up_card": "10_of_clubs",
+        "dealer_hidden_card": "9_of_spades"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "B",
+          "text": "Miękkie 19 (As+8). To potężna ręka. Nigdy tu nie dobieraj. Po prostu weź prawdopodobną wygraną lub remis.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 19
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 19,
+        "avatar_pose": "A",
+        "text": "Remis (Push). 19 na 19. Dobra gra.",
+        "result_status": "PUSH"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Pewniak Miękkie 20 (A,9 na 5)",
+      "goal": "Nauczyć pasowania na Miękkim 20.",
+      "setup": {
+        "player_hand": ["ace_of_hearts", "9_of_spades"],
+        "dealer_up_card": "5_of_diamonds",
+        "dealer_hidden_card": "10_of_clubs"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "B",
+          "text": "Miękkie 20. Nie kombinuj. Nie podwajaj. Po prostu spasuj (Stand) i uśmiechnij się.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["8_of_hearts"],
+        "dealer_final_score": 23,
+        "avatar_pose": "B",
+        "text": "Przekroczyłem. Łatwa wygrana.",
+        "result_status": "WIN"
+      }
+    }
+  ],
+  "conclusion": {
+    "avatar_pose": "A",
+    "text": "Teraz rozumiesz bezpieczeństwo Miękkich Rąk. Ale pamiętaj, czasami 'bezpieczeństwo' jest nudne. W następnej lekcji nauczymy się, kiedy ATAKOWAĆ Miękkimi Rękami używając Podwojenia!"
+  }
+}

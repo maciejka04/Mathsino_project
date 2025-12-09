@@ -1,28 +1,42 @@
 // src/components/Home/Home.js (Wersja 'PRO')
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import './Home.css';
 import { useOutletContext } from "react-router-dom";
+import clickSound from '../../assets/mouse-click.mp3';
+
+const playClickSound = () => {
+  const audio = new Audio(clickSound);
+  audio.play();
+};
+
 
 function Home() {
   const { user } = useOutletContext();
+  const { t } = useTranslation();
    const isLogged = user?.isAuthenticated;
   return (
     <>
       <header>
         {isLogged ? (
           <>
-            <h1>Welcome back, {user.name} 👋</h1>
+            <h1>{t('welcome_back', { name: user.name })}</h1>
           </>
         ) : (
           <>
-            <h1>Witaj!</h1>
-            <p>Zaloguj się, aby zapisywać progres i odblokować pełne statystyki.</p>
+            <h1>{t('welcome')}</h1>
+            <p>{t('login_prompt')}</p>
 
-            <Link to="/login" className="login-button">
-              Zaloguj się
+            <Link
+              to="/login"
+              className="login-button"
+              onClick={playClickSound}
+            >
+              {t('login_button')}
             </Link>
+
           </>
         )}
       </header>
@@ -33,40 +47,48 @@ function Home() {
         {/* === 1. KARTA POWITALNA ZE STATYSTYKAMI (Szeroka) === */}
         <div className="dashboard-card welcome-stats-card">
           <div className="dashboard-card-text">
-            <h4>Twoje postępy</h4>
-            <p>Oto jak Ci idzie w tym tygodniu.</p>
+            <h4>{t('your_progress')}</h4>
+            <p>{t('weeks_performance')}</p>
           </div>
           <div className="stats-grid">
             <div className="stat-item">
               <span className="stat-value">1,204</span>
-              <span className="stat-label">Rozdania</span>
+              <span className="stat-label">{t('hands_played')}</span>
             </div>
             <div className="stat-item">
               <span className="stat-value">87%</span>
-              <span className="stat-label">Trafność</span>
+              <span className="stat-label">{t('accuracy')}</span>
             </div>
             <div className="stat-item">
               <span className="stat-value">3</span>
-              <span className="stat-label">Dni z rzędu</span>
+              <span className="stat-label">{t('days_streak')}</span>
             </div>
           </div>
         </div>
 
         {/* === 2. GŁÓWNA AKCJA: Graj (Średnia) === */}
-        <Link to="/play" className="dashboard-card primary-card">
+        <Link
+          to="/play"
+          className="dashboard-card primary-card"
+          onClick={playClickSound}
+        >
           <i className="fa-solid fa-spade"></i>
           <div className="dashboard-card-text">
-            <h3>Zacznij Grę</h3>
-            <p>Wybierz tryb gry</p>
+            <h3>{t('start_game')}</h3>
+            <p>{t('choose_mode')}</p>
           </div>
         </Link>
 
         {/* === 3. GŁÓWNA AKCJA: Ucz się (Średnia) === */}
-        <Link to="/learn" className="dashboard-card secondary-card">
+        <Link
+          to="/learn"
+          className="dashboard-card secondary-card"
+          onClick={playClickSound}
+        >
           <i className="fa-solid fa-graduation-cap"></i>
           <div className="dashboard-card-text">
-            <h3>Ucz się Strategii</h3>
-            <p>Zobacz tabele i poradniki</p>
+            <h3>{t('home_learn_strategy')}</h3>
+            <p>{t('home_learn_strategy_desc')}</p>
           </div>
         </Link>
 
@@ -74,8 +96,8 @@ function Home() {
         <div className="dashboard-card focus-card">
           <i className="fa-solid fa-crosshairs"></i>
           <div className="dashboard-card-text">
-            <h4>Skup się na tym</h4>
-            <p>Twój najczęstszy błąd to **stanie na "Soft 17"**. Poćwicz ten scenariusz.</p>
+            <h4>{t('home_focus_title')}</h4>
+            <p>{t('home_focus_desc')}</p>
           </div>
         </div>
       </>

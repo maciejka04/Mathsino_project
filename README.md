@@ -9,31 +9,37 @@ Projekt .NET Aspire składający się z backendu (WebAPI), frontendu (Blazor Web
 Przed uruchomieniem projektu musisz zainstalować następujące narzędzia:
 
 ### 1. .NET SDK 9.0 (lub nowszy)
+
 - **Windows & macOS**: Pobierz z [https://dotnet.microsoft.com/download](https://dotnet.microsoft.com/download)
 - Pobierz najnowszą wersję .NET SDK
 - Uruchom instalator i postępuj zgodnie z instrukcjami
 
 ### 2. Docker Desktop
+
 Docker jest **wymagany** do uruchomienia .NET Aspire.
 
 #### Windows:
+
 1. Pobierz Docker Desktop z [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
 2. Uruchom instalator
 3. Po instalacji uruchom Docker Desktop
 4. Poczekaj aż Docker całkowicie wystartuje (ikona w zasobniku systemowym powinna być zielona)
 
 #### macOS:
+
 1. Pobierz Docker Desktop z [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
 2. Przeciągnij aplikację do folderu Applications
 3. Uruchom Docker Desktop
 4. Poczekaj aż Docker całkowicie wystartuje (ikona w menu bar powinna być zielona)
 
 #### 2.5. Nodejs
+
 1. Pobierz [https://nodejs.org/en/download]
 
 **Alternatywa (macOS)**: Możesz użyć Podman Desktop zamiast Docker Desktop
 
 ### 3. IDE/Edytor (opcjonalnie, ale zalecane)
+
 - Visual Studio 2022 (Windows/macOS)
 - Visual Studio Code z rozszerzeniem C#
 - JetBrains Rider
@@ -47,11 +53,13 @@ Otwórz terminal (Command Prompt/PowerShell na Windows, Terminal na macOS) i wyk
 ```bash
 dotnet --version
 ```
+
 Powinieneś zobaczyć wersję .NET (np. `9.0.100`)
 
 ```bash
 docker --version
 ```
+
 Powinieneś zobaczyć wersję Docker (np. `Docker version 24.0.7`)
 
 ### Krok 2: Sklonuj repozytorium
@@ -95,6 +103,7 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 npm install react-router-dom
 npm install chart.js react-chartjs-2
 npm install framer-motion@12.23.24
+npm install fireworks-js
 ```
 
 ```bash
@@ -109,6 +118,7 @@ dotnet run
 ### Krok 7: Otwórz aplikację
 
 Po uruchomieniu w terminalu zobaczysz URL do Aspire Dashboard, np.:
+
 ```
 Login to the dashboard at http://localhost:15888/login?t=xxxxx
 ```
@@ -123,31 +133,40 @@ Login to the dashboard at http://localhost:15888/login?t=xxxxx
 ## 🛑 Zatrzymanie projektu
 
 W terminalu gdzie uruchomiłeś projekt naciśnij:
+
 - **Windows/macOS**: `Ctrl + C`
 
 ## ❓ Problemy i rozwiązania
 
 ### "Docker daemon is not running"
+
 **Rozwiązanie**: Uruchom Docker Desktop i poczekaj aż całkowicie wystartuje.
 
 ### "Workload 'aspire' not found"
+
 **Rozwiązanie**: Wykonaj ponownie:
+
 ```bash
 dotnet workload install aspire
 ```
 
 ### "The process cannot access the file because it is being used by another process" (Windows)
-**Rozwiązanie**: 
+
+**Rozwiązanie**:
+
 1. Zamknij wszystkie instancje Visual Studio / VS Code
 2. Otwórz Task Manager (Ctrl+Shift+Esc)
 3. Zakończ wszystkie procesy `dotnet.exe`
 4. Spróbuj ponownie
 
 ### Port jest już zajęty
+
 **Rozwiązanie**: Zamknij inne aplikacje które mogą używać portów lub zrestartuj komputer.
 
 ### Blazor WebAssembly nie buduje się
+
 **Rozwiązanie**: Upewnij się że zainstalowałeś wasm-tools:
+
 ```bash
 dotnet workload install wasm-tools
 ```
@@ -166,16 +185,19 @@ Mathsino/
 ## 🔧 Komendy developerskie
 
 ### Zbudowanie całego solution
+
 ```bash
 dotnet build
 ```
 
 ### Czyszczenie buildu
+
 ```bash
 dotnet clean
 ```
 
 ### Przywrócenie pakietów NuGet
+
 ```bash
 dotnet restore
 ```
@@ -189,6 +211,7 @@ dotnet restore
 ## 🆘 Potrzebujesz pomocy?
 
 Jeśli masz problemy:
+
 1. Sprawdź czy Docker jest uruchomiony
 2. Sprawdź czy zainstalowałeś wszystkie workloads (aspire, wasm-tools)
 3. Spróbuj zrestartować Docker Desktop

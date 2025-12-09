@@ -1,0 +1,165 @@
+{
+  "lesson_id": 5,
+  "lesson_title": "Tryb Przetrwania: Sztywne Ręce kontra Silny Krupier",
+  "introduction": {
+    "avatar_pose": "C",
+    "text": "To jest 'Tryb Przetrwania'. Masz słabą rękę (12-16), a ja mam SILNĄ kartę (7, 8, 9, 10, As). Nie możesz się ukryć. Jeśli spasujesz, prawdopodobnie przegrasz. Musisz walczyć. Strategia jest straszna, ale prosta: Musisz DOBIERAĆ (Hit), aż będziesz mieć co najmniej 17."
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "title": "Koszmar (16 na 7)",
+      "goal": "Nauczyć dobierania na 16 przeciwko 7.",
+      "setup": {
+        "player_hand": ["10_of_spades", "6_of_clubs"],
+        "dealer_up_card": "7_of_diamonds",
+        "dealer_hidden_card": "10_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Masz 16. Ja mam 7. Jeśli spasujesz, prawdopodobnie mam 17 (co daje mi wygraną). I tak przegrywasz. Musisz zaryzykować. Kliknij HIT.",
+          "required_action": "HIT",
+          "cards_added": ["5_of_diamonds"],
+          "player_score_after": 21
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 17,
+        "avatar_pose": "B",
+        "text": "Niesamowite! Trafiłeś idealną kartę. 21 na moje 17. Gdybyś spasował, przegrałbyś.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Akceptacja Ryzyka (15 na 10)",
+      "goal": "Pokazanie, że dobranie jest poprawne, nawet jeśli przekroczysz 21.",
+      "setup": {
+        "player_hand": ["9_of_diamonds", "6_of_spades"],
+        "dealer_up_card": "10_of_clubs",
+        "dealer_hidden_card": "8_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Masz 15. Ja mam 10. To desperacka sytuacja. Pasowanie to poddanie się. Musisz dobrać i mieć nadzieję na małą kartę.",
+          "required_action": "HIT",
+          "cards_added": ["queen_of_hearts"],
+          "player_score_after": 25
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 18,
+        "avatar_pose": "A",
+        "text": "Przekroczyłeś 21. Boli, wiem. Ale spójrz na moją rękę: miałem 18. I tak byś przegrał. Dobranie było twoją JEDYNĄ szansą na wygraną, nawet jeśli tym razem się nie udało.",
+        "result_status": "LOSE_CORRECTLY"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Nie daj się oszukać (12 na 8)",
+      "goal": "Kontrast: 12 na 2/3 (zależy) vs 12 na 8 (Zawsze Hit).",
+      "setup": {
+        "player_hand": ["10_of_hearts", "2_of_clubs"],
+        "dealer_up_card": "8_of_spades",
+        "dealer_hidden_card": "9_of_diamonds"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Masz 12. W poprzedniej lekcji (na słabego krupiera) pasowaliśmy. Ale teraz mam 8. Ósemka jest silna. Musisz założyć, że mam 18. Musisz poprawić wynik. Hit!",
+          "required_action": "HIT",
+          "cards_added": ["7_of_clubs"],
+          "player_score_after": 19
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "B",
+          "text": "Masz 19. To doskonały wynik. Teraz Stand.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 19
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 17,
+        "avatar_pose": "B",
+        "text": "Dobra robota. Poprawiłeś na 19 i pokonałeś moje 17.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Przeciwko Asowi (13 na A)",
+      "goal": "Granie słabymi rękami przeciwko najsilniejszej karcie.",
+      "setup": {
+        "player_hand": ["10_of_diamonds", "3_of_spades"],
+        "dealer_up_card": "ace_of_hearts",
+        "dealer_hidden_card": "8_of_clubs"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "13 przeciwko Asowi. Najgorsze uczucie na świecie. Ale matematyka nie ma uczuć. Dobieraj.",
+          "required_action": "HIT",
+          "cards_added": ["5_of_hearts"],
+          "player_score_after": 18
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "A",
+          "text": "Masz 18. To przyzwoity wynik. Teraz możesz spasować (Stand).",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 18
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 19,
+        "avatar_pose": "A",
+        "text": "Mam 19, więc wygrywam. Ale walczyłeś dzielnie. 18 to znacznie lepiej niż 13.",
+        "result_status": "LOSE_CORRECTLY"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Nagroda (14 na 9)",
+      "goal": "Pokazanie udanego wyjścia ze słabej ręki.",
+      "setup": {
+        "player_hand": ["10_of_clubs", "4_of_hearts"],
+        "dealer_up_card": "9_of_spades",
+        "dealer_hidden_card": "8_of_diamonds"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "14 na 9. Strefa zagrożenia. Jeśli spasujesz, czekasz na egzekucję. Hit!",
+          "required_action": "HIT",
+          "cards_added": ["6_of_diamonds"],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 17,
+        "avatar_pose": "B",
+        "text": "Bum! Ze słabego 14 na zwycięskie 20. Dlatego nigdy nie poddajemy słabych rąk przeciwko silnym krupierom.",
+        "result_status": "WIN"
+      }
+    }
+  ],
+  "conclusion": {
+    "avatar_pose": "B",
+    "text": "Przetrwałeś najtrudniejszą lekcję! Dobieranie na 16 wymaga odwagi. Teraz wiesz, jak obsługiwać 'Twarde Ręce'. W następnej lekcji odpoczniemy. Porozmawiamy o 'Miękkich Rękach' – rękach z Asem, gdzie nie możesz przekroczyć 21!"
+  }
+}

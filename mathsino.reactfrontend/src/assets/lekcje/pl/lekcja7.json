@@ -1,0 +1,165 @@
+{
+  "lesson_id": 7,
+  "lesson_title": "Miękkie Ręce: Atak przez Podwojenie",
+  "introduction": {
+    "avatar_pose": "A",
+    "text": "Witaj na 'Poziomie Pro'. Wiesz już, jak dobierać na Miękkich Rękach. Teraz nauczmy się, jak na nich zarabiać. Kiedy masz niską Miękką Rękę (A,2 do A,7), a Krupier jest słaby (3-6), nie tylko dobieramy. PODWAJAMY (Double). Dlaczego? Bo nie możemy przekroczyć 21, a krupier prawdopodobnie przekroczy."
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "title": "Agresywne Miękkie 18 (A,7 na 3)",
+      "goal": "Nauczyć podwajania na Miękkim 18 przeciwko słabym kartom.",
+      "setup": {
+        "player_hand": ["ace_of_hearts", "7_of_spades"],
+        "dealer_up_card": "3_of_diamonds",
+        "dealer_hidden_card": "9_of_clubs"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "B",
+          "text": "Masz Miękkie 18. Większość graczy tu pasuje. Ale spójrz na moją 3. Jest słaba. Twoja tabela mówi: DOUBLE! Masz dużą szansę na trafienie 10, J, Q, K lub małej karty, by się poprawić.",
+          "required_action": "DOUBLE",
+          "cards_added": ["10_of_hearts"],
+          "player_score_after": 18
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["king_of_clubs"],
+        "dealer_final_score": 22,
+        "avatar_pose": "B",
+        "text": "Dobrałeś 10. Twój wynik pozostał 18 (A+7+10 = 18). Ale ponieważ miałem słabą 3, przekroczyłem 21. Wygrałeś podwójnie!",
+        "result_status": "WIN_DOUBLE"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Ukryty Klejnot (A,5 na 6)",
+      "goal": "Nauczyć podwajania na Miękkim 16 (A,5).",
+      "setup": {
+        "player_hand": ["ace_of_diamonds", "5_of_clubs"],
+        "dealer_up_card": "6_of_hearts",
+        "dealer_hidden_card": "8_of_spades"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Masz Miękkie 16 (As+5). Wydaje się, że to nic specjalnego. Ale ja mam 6 – najgorszą kartę dla mnie. Zaatakuj moją słabość! Double Down.",
+          "required_action": "DOUBLE",
+          "cards_added": ["5_of_diamonds"],
+          "player_score_after": 21
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["10_of_spades"],
+        "dealer_final_score": 24,
+        "avatar_pose": "B",
+        "text": "Bum! Trafiłeś 5, co daje idealne 21. Ja przekroczyłem. Tak się gra mądrze.",
+        "result_status": "WIN_DOUBLE"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Głębokie Zanurzenie (A,2 na 5)",
+      "goal": "Nauczyć podwajania na najniższej Miękkiej Ręce (A,2).",
+      "setup": {
+        "player_hand": ["ace_of_spades", "2_of_hearts"],
+        "dealer_up_card": "5_of_clubs",
+        "dealer_hidden_card": "7_of_diamonds"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Miękkie 13 (As+2). Przeciwko mojej 5 to jest Double. Nawet jeśli dostaniesz złą kartę, ja prawdopodobnie i tak przekroczę 21.",
+          "required_action": "DOUBLE",
+          "cards_added": ["king_of_hearts"],
+          "player_score_after": 13
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["10_of_diamonds"],
+        "dealer_final_score": 22,
+        "avatar_pose": "B",
+        "text": "Dostałeś Króla. Utknąłeś z 13. Ale zgadnij co? Ja dobrałem 10 i przekroczyłem. Matematyka zadziałała!",
+        "result_status": "WIN_DOUBLE"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Znaj Granicę (A,6 na 2)",
+      "goal": "Nauczyć granicy: A,6 na 2 to HIT, nie Double.",
+      "setup": {
+        "player_hand": ["ace_of_clubs", "6_of_hearts"],
+        "dealer_up_card": "2_of_spades",
+        "dealer_hidden_card": "9_of_diamonds"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Miękkie 17 (A,6). Mam 2. Dwójka jest słaba, ale NIE wystarczająco słaba, by podwajać na Miękkim 17. Sprawdź tabelę. Mówi HIT.",
+          "required_action": "HIT",
+          "cards_added": ["4_of_spades"],
+          "player_score_after": 21
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "B",
+          "text": "Masz 21! Idealny wynik. Stand.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 21
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["8_of_hearts"],
+        "dealer_final_score": 19,
+        "avatar_pose": "B",
+        "text": "Dobra dyscyplina. Dobrałeś i masz 21. Gdybyś podwoił, też miałbyś 21, ale było to bardziej ryzykowne.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Obrona Miękkiej 18 (A,7 na 9)",
+      "goal": "Powtórzenie: Miękkie 18 na silną kartę to HIT.",
+      "setup": {
+        "player_hand": ["ace_of_diamonds", "7_of_clubs"],
+        "dealer_up_card": "9_of_hearts",
+        "dealer_hidden_card": "10_of_spades"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Znowu Miękkie 18. Ale teraz mam 9. Ofensywa się skończyła. Teraz musimy się bronić. Nie pasuj (9 zbyt często bije 18). Nie podwajaj. Hit!",
+          "required_action": "HIT",
+          "cards_added": ["3_of_clubs"],
+          "player_score_after": 21
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "B",
+          "text": "21! Uratowałeś rękę. Stand.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 21
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 19,
+        "avatar_pose": "B",
+        "text": "Uratowane! 21 bije 19. Pasowanie na Miękkim 18 przeciwko 9 to częsty błąd.",
+        "result_status": "WIN"
+      }
+    }
+  ],
+  "conclusion": {
+    "avatar_pose": "A",
+    "text": "Grasz teraz agresywnie! Dobieranie, Pasowanie, Podwajanie... została tylko jedna mechanika: SPLIT. W następnej lekcji poznamy Złote Zasady rozdzielania par."
+  }
+}

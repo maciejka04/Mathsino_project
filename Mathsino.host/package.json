@@ -1,6 +1,8 @@
 {
   "dependencies": {
-    "framer-motion": "^12.23.25",
+    "chart.js": "^4.5.1",
+    "framer-motion": "^12.23.24",
+    "react-chartjs-2": "^5.3.1",
     "react-router-dom": "^7.9.5"
   }
 }

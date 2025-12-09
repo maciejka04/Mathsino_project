@@ -7,7 +7,6 @@ body {
     overflow: hidden;
 }
 
-
 .online-container {
     display: flex;
     justify-content: center;
@@ -20,7 +19,33 @@ body {
     overflow: hidden;
     position: relative;
 }
+.user-info-panel {
+    position: absolute;
+    bottom: 20px;
+    right: 0px; /* Przesunięte, by nie kolidować z przyciskiem Exit */
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
 
+.user-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid gold;
+    object-fit: cover;
+}
+
+.user-name {
+    font-size: 1.1em;
+    font-weight: bold;
+}
 .game-table-area {
     width: 100%;
     max-width: 100vw;
@@ -68,53 +93,146 @@ body {
     transform: translateY(1px);
 }
 
-
+/* --- UI Żetonów --- */
 .betting-ui {
     position: absolute;
-    top: 440px;
-    left: 255px;
+    top: 60%; 
+    left: 15%; 
     z-index: 10;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
-    padding: 15px;
-    background-color: transparent; 
-    box-shadow: none;
+    gap: 10px;
+    padding: 0; 
 }
+
 
 .chip-selection {
-    display: flex;
-    gap: 10px;
-
+    position: relative;
+    flex-direction: row; 
+    align-items: flex-end;
+    margin-left: 10px;
 }
 
-.chip-selection .chip-image:nth-child(2) {
-    margin-top: 17px; 
+
+.chip-selection .chip-image {
+    margin-left: -15px; 
+    transition: transform 0.2s, box-shadow 0.2s, z-index 0s;
+    margin-top: -20px;
 }
 
-.chip-selection .chip-image:nth-child(3) {
-    margin-top: 34px; 
+.chip-selection .chip-image:first-child {
+    margin-left: 0; 
 }
 
-.chip-selection .chip-image:nth-child(4) {
-    margin-top: 51px; 
+.chip-selection .chip-image:nth-child(2) { 
+    margin-top: -30px; /* Nieco wyżej */
 }
+/* Trzeci żeton (stoImage) */
+.chip-selection .chip-image:nth-child(3) { 
+    margin-top: -50px; /* Jeszcze wyżej */
+}
+/* Czwarty żeton (piecsetImage) */
+.chip-selection .chip-image:nth-child(4) { 
+    margin-top: -70px; /* Najwyżej */
+}
+
+.chip-z4 { z-index: 4; }
+.chip-z3 { z-index: 3; }
+.chip-z2 { z-index: 2; }
+.chip-z1 { z-index: 1; }
 
 .chip-image {
-    width: 60px;
-    height: 60px;
+    width: 4.5vw; 
+    height: 4.5vw; /* Zachowanie proporcji */
     cursor: pointer;
     border-radius: 50%;
-    transition: transform 0.2s, box-shadow 0.2s;
     position: relative; 
-    z-index: 1;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .chip-image:hover {
     transform: scale(1.1);
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }
+
+/* --- PANEL SALDA I KONTROLI (LEWY DOLNY RÓG) --- */
+.left-bottom-panel {
+    position: absolute;
+    bottom: 30px;
+    left: 30px; 
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: gold;
+    text-shadow: 2px 2px 4px black;
+    width: auto;
+}
+
+.balance-label {
+    font-size: 1.5rem;
+    font-weight: normal;
+    margin-bottom: 5px;
+}
+
+.balance-sublabel {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.balance-amount {
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.result-text {
+    font-size: 1.5rem;
+    margin-top: 10px;
+    font-weight: bold;
+}
+.result-win { color: #4caf50; }
+.result-lose { color: #f44336; }
+.result-push { color: #ff9800; }
+
+.controls-wrapper {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-clear {
+    padding: 10px 20px;
+    cursor: pointer;
+    background: #e0e0e0;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    color: black;
+    font-size: 1rem;
+}
+
+.btn-deal {
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: gold;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    color: black;
+    font-size: 1rem;
+}
+
+/* Styl dla nieaktywnych przycisków */
+.btn-clear:disabled,
+.btn-deal:disabled {
+    background-color: #555; 
+    color: #aaa;            
+    border: 1px solid #444; 
+    cursor: not-allowed;    
+    opacity: 0.6;           
+    transform: none;        
+}
+
+/* --- Karty --- */
 .card-image {
     position: absolute; 
     width: 5%; 
@@ -123,32 +241,11 @@ body {
     z-index: 50; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
-.current-balance {
-    position: absolute;
-    top: 600px;
-    left: 50px;
-    z-index: 10;
-    display: flex;
-    font-size: 1.1em;
-    padding-top: 5px;
-    width: 100%;
-    border-top: none; 
-    border-top: 0;
-}
 
-.balance-label {
-    font-weight: normal;
-    margin-right: 5px;
-    opacity: 0.8;
-}
+.dealer-card { top: 15%; }
+.player-card { top: 40%; }
 
-.balance-amount {
-    font-weight: bold;
-    font-size: 1.2em;
-    color: #ffd700;
-}
-
-
+/* --- Przyciski Akcji (Środek Dół) --- */
 .game-actions {
     position: absolute;
     bottom: 30px;
@@ -158,12 +255,7 @@ body {
     display: flex;
     justify-content: center;
     gap: 20px;
-    padding: 0px;
-    width: auto;
-    max-width: 600px;
-    background-color: transparent; 
-    box-shadow: none;
-   
+    margin-top: 20px;
 }
 
 .action-button {
@@ -177,6 +269,7 @@ body {
     text-transform: uppercase;
     min-width: 100px;
 }
+
 .action-button.disabled-action {
     background-color: transparent !important; 
     color: #ffffff !important;
@@ -186,89 +279,126 @@ body {
     pointer-events: none;
 }
 
+.action-button.hit { background-color: #28a745; }
+.action-button.hit:hover { background-color: #218838; }
 
+.action-button.double { background-color: #7016cb; }
+.action-button.double:hover { background-color: #6914b4; }
 
-.action-button.hit {
-    background-color: #28a745;
-}
+.action-button.stand { background-color: #007bff; }
+.action-button.stand:hover { background-color: #0069d9; }
 
-.action-button.hit:hover {
-    background-color: #218838;
-}
-
-.action-button.hit:hover {
-    background-color: #218838;
-}
-
-.action-button.double {
-    background-color: #7016cb;
-}
-
-.action-button.double:hover {
-    background-color: #6914b4;
-}
-
-.action-button.stand {
-    background-color: #007bff;
-}
-
-.action-button.stand:hover {
-    background-color: #0069d9;
-}
-
-.action-button.split {
-    background-color: #ffc107;
-    color: #333;
-}
-
-.action-button.split:hover {
-    background-color: #e0a800;
-}
+.action-button.split { background-color: #ffc107; color: #333; }
+.action-button.split:hover { background-color: #e0a800; }
 
 .action-button:active {
     transform: translateY(2px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* --- Modal --- */
+.modal-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.9);
+    /* Ustawiamy biały ogólnie, ale klasa .modal-title jest ważniejsza */
+    color: white; 
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    border: 2px solid gold;
+    min-width: 300px;
+}
+
+/* TU JEST NOWA KLASA DLA TYTUŁU "WYGRANA" */
+.modal-title {
+    color: #ffffff; /* Biały */
+    font-size: 2.5rem;
+    margin: 0 0 15px 0;
+    text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.modal-text {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    font-weight: bold;
+}
+.modal-button {
+    margin-top: 10px;
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    cursor: pointer;
+    background: gold;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
 
 @media (max-width: 768px) {
-    .back-button {
-        top: 10px;
-        left: 10px;
-        padding: 8px 12px;
-        font-size: 0.9em;
+    .left-bottom-panel { bottom: 10px; left: 10px; font-size: 0.9em; }
+    .btn-clear, .btn-deal { padding: 8px 12px; font-size: 0.9em; }
+    .back-button { top: 10px; left: 10px; padding: 8px 12px; font-size: 0.9em; }
+    .betting-ui { 
+        bottom: 20%; 
+        left: 10%; 
+        padding: 10px; 
     }
+    .chip-selection .chip-image {
+        margin-left: -15px; 
+    }
+    .chip-image { width: 6vw; height: 6vw; }
+    .game-actions { bottom: 15px; gap: 10px; width: 90%; }
+    .action-button { padding: 12px 15px; font-size: 1em; min-width: 80px; }
+}
 
-    .betting-ui {
-        top: 60px;
-        left: 10px;
-        padding: 10px;
-        gap: 10px;
-    }
 
-    .chip-image {
-        width: 40px;
-        height: 40px;
-    }
 
-    .current-balance {
-        font-size: 0.9em;
-    }
+.fireworks-container {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; 
+  z-index: 1000; 
+}
 
-    .balance-amount {
-        font-size: 1.1em;
-    }
+.hand-value {
+    position: absolute;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: normal;
+    text-shadow: 2px 2px 4px black;
+    z-index: 40; 
+    transform: translateX(-50%);
+}
 
-    .game-actions {
-        bottom: 15px;
-        gap: 10px;
-        padding: 10px;
-        width: 90%;
-    }
+.dealer-value {
+    top: 30%; 
+    left: 50%;
+    padding: 5px;
+    border-radius: 20%;
+    border: 2px solid gold;
+    background-color: black;
+}
 
-    .action-button {
-        padding: 12px 15px;
-        font-size: 1em;
-        min-width: 80px;
-    }
+.player-main-value {
+    top: 60%; 
+    padding: 5px;
+    border-radius: 20%;
+    border: 2px solid gold;
+    background-color: black;
+
+}
+
+.player-split-value {
+    top: 60%;
+    padding: 5px;
+    border-radius: 20%;
+    border: 2px solid gold;
+    background-color: black;
 }

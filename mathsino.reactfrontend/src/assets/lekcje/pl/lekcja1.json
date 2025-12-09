@@ -1,0 +1,165 @@
+{
+  "lesson_id": 1,
+  "lesson_title": "Podstawowe Zasady i Mechanika",
+  "introduction": {
+    "avatar_pose": "A",
+    "text": "Witaj przy stole! W Blackjacku grasz przeciwko mnie. Cel jest prosty: zdobądź więcej punktów ode mnie, nie przekraczając 21. Figury to 10, As to 1 lub 11. Ważna zasada: gram jak robot – muszę dobierać przy 16 lub mniej. Zawsze pasuję przy 17 lub więcej. Zaczynajmy!"
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "title": "Mechanika HIT i BUST",
+      "goal": "Pokazanie przegranej przez przekroczenie 21 (Bust/Fura).",
+      "setup": {
+        "player_hand": ["7_of_clubs", "5_of_diamonds"],
+        "dealer_up_card": "6_of_spades",
+        "dealer_hidden_card": "10_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Masz 12 punktów (7 + 5). To za mało, by czuć się bezpiecznie przy mojej 6. Musisz wziąć kartę. Kliknij HIT (Dobierz).",
+          "required_action": "HIT",
+          "cards_added": ["jack_of_diamonds"],
+          "player_score_after": 22
+        }
+      ],
+      "finish": {
+        "avatar_pose": "C",
+        "text": "Ała! 22 to 'Bust' (Fura). Przekroczyłeś 21 i przegrywasz automatycznie, bez względu na to, co ja mam. Pamiętaj: chciwość gubi!",
+        "result_status": "LOSE"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Mechanika STAND (Pas)",
+      "goal": "Pokazanie wygranej przez spasowanie (Krupier furuje).",
+      "setup": {
+        "player_hand": ["king_of_hearts", "9_of_clubs"],
+        "dealer_up_card": "8_of_diamonds",
+        "dealer_hidden_card": "5_of_spades"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Masz 19 punktów. To silna ręka. Ja muszę dobierać do 16, więc mogę przekroczyć 21. Nie ryzykuj. Kliknij STAND (Pasuj).",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 19
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["queen_of_spades"],
+        "dealer_final_score": 23,
+        "avatar_pose": "B",
+        "text": "Wygrałeś! Cierpliwie czekałeś z 19. Ja miałem 13, musiałem dobrać i przekroczyłem z 23.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Budowanie Ręki (Wiele dobrań)",
+      "goal": "Pokazanie, że czasem trzeba dobrać kilka razy.",
+      "setup": {
+        "player_hand": ["2_of_hearts", "3_of_clubs"],
+        "dealer_up_card": "10_of_diamonds",
+        "dealer_hidden_card": "7_of_spades"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Masz tylko 5 punktów. Ja mam mocną 10. Musisz zbudować swoją rękę. Kliknij HIT.",
+          "required_action": "HIT",
+          "cards_added": ["5_of_hearts"],
+          "player_score_after": 10
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "C",
+          "text": "Masz 10 punktów. Wciąż za mało na moją 10. Bądź odważny! Kliknij HIT ponownie.",
+          "required_action": "HIT",
+          "cards_added": ["king_of_clubs"],
+          "player_score_after": 20
+        },
+        {
+          "step_order": 3,
+          "avatar_pose": "B",
+          "text": "Teraz masz 20! Świetny wynik. Nie ryzykuj już. Kliknij STAND.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 17,
+        "avatar_pose": "B",
+        "text": "Brawo! Zamieniłeś 5 punktów na 20. Ja mam 17, więc wygrywasz.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Mechanika DOUBLE DOWN",
+      "goal": "Nauka podwajania stawki.",
+      "setup": {
+        "player_hand": ["5_of_clubs", "6_of_diamonds"],
+        "dealer_up_card": "5_of_hearts",
+        "dealer_hidden_card": "9_of_clubs"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Masz 11. Ja mam słabą 5. Szanse są mocno po twojej stronie. Użyj DOUBLE DOWN, aby podwoić zakład i dostać dokładnie jedną kartę.",
+          "required_action": "DOUBLE",
+          "cards_added": ["9_of_spades"],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["king_of_diamonds"],
+        "dealer_final_score": 24,
+        "avatar_pose": "B",
+        "text": "Idealnie! Dostałeś 9, co daje razem 20. Ja przekroczyłem 21. Wygrywasz podwójną stawkę!",
+        "result_status": "WIN_DOUBLE"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Mechanika SPLIT (Rozdzielenie)",
+      "goal": "Nauka rozdzielania par.",
+      "setup": {
+        "player_hand": ["8_of_spades", "8_of_hearts"],
+        "dealer_up_card": "9_of_clubs",
+        "dealer_hidden_card": "8_of_diamonds"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Masz dwie ósemki (16). To najgorsza ręka w grze. Ratuj się i użyj SPLIT, aby rozdzielić je na dwie osobne ręce.",
+          "required_action": "SPLIT",
+          "cards_added_hand_1": ["10_of_diamonds"],
+          "cards_added_hand_2": ["ace_of_clubs"],
+          "player_score_hand_1": 18,
+          "player_score_hand_2": 19
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 17,
+        "avatar_pose": "B",
+        "text": "Uratowany! Zamieniłeś kiepskie 16 na 18 i 19. Wygrałeś obie ręce! Split uratował sytuację.",
+        "result_status": "WIN_BOTH"
+      }
+    }
+  ],
+  "conclusion": {
+    "avatar_pose": "A",
+    "text": "Dobra robota! Znasz już zasady i moje ograniczenia. W następnej lekcji przestaniemy zgadywać. Zaczniemy uczyć się Strategii Podstawowej – matematycznego sposobu na pokonanie kasyna. Gotowy?"
+  }
+}

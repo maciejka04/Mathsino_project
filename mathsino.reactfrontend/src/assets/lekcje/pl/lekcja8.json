@@ -1,0 +1,216 @@
+{
+  "lesson_id": 8,
+  "lesson_title": "Pary Część 1: Złote Zasady",
+  "introduction": {
+    "avatar_pose": "A",
+    "text": "Wchodzimy w ostatnią mechanikę: SPLIT (Rozdzielenie). Kiedy masz dwie identyczne karty, możesz dopłacić, aby grać dwiema rękami. Ale czy powinieneś? Dziś poznamy 'Złote Zasady'. Są pary, które ZAWSZE rozdzielamy, i takie, których NIGDY nie ruszamy."
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "title": "Zawsze Rozdzielaj Asy (A,A na 9)",
+      "goal": "Nauka najważniejszego splitu: Asy.",
+      "setup": {
+        "player_hand": ["ace_of_spades", "ace_of_diamonds"],
+        "dealer_up_card": "9_of_clubs",
+        "dealer_hidden_card": "8_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "B",
+          "text": "Dwa Asy. Razem to tylko 2 lub 12. Ale osobno? To dwie jedenastki! To najsilniejszy ruch w grze. ZAWSZE rozdzielaj Asy.",
+          "required_action": "SPLIT",
+          "cards_added_hand_1": ["king_of_hearts"],
+          "cards_added_hand_2": ["queen_of_clubs"],
+          "player_score_hand_1": 21,
+          "player_score_hand_2": 21
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 17,
+        "avatar_pose": "B",
+        "text": "Spójrz na to! Dwie ręce po 21. Zamieniłeś kłopotliwą rękę w podwójne zwycięstwo.",
+        "result_status": "WIN_BOTH"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Jak działa Split (Trening)",
+      "goal": "Wyjaśnienie, że po rozdzieleniu gra się każdą ręką osobno.",
+      "setup": {
+        "player_hand": ["8_of_diamonds", "8_of_clubs"],
+        "dealer_up_card": "6_of_spades",
+        "dealer_hidden_card": "10_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Czekaj! Zanim przejdziemy dalej, zrozumiejmy JAK działa Split. Kiedy klikniesz Split, twoje karty się rozdzielają. Wtedy grasz Ręką 1 (Lewa) aż do spasowania lub fury. DOPIERO POTEM przechodzisz do Ręki 2 (Prawa). Spróbuj z tymi 8-kami na moją 6.",
+          "required_action": "SPLIT",
+          "cards_added_hand_1": ["3_of_hearts"],
+          "cards_added_hand_2": ["10_of_diamonds"],
+          "player_score_hand_1": 11,
+          "player_score_hand_2": 18
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "A",
+          "text": "Widzisz? Ręka 1 ma 11 (8+3). Skupiamy się TYLKO na tej ręce teraz. Ignoruj drugą. Masz 11 na 6. Wiesz co robić!",
+          "required_action": "DOUBLE",
+          "cards_added": ["king_of_spades"],
+          "player_score_after": 21
+        },
+        {
+          "step_order": 3,
+          "avatar_pose": "B",
+          "text": "Świetnie! Ręka 1 skończona (21). Teraz uwaga przechodzi na Rękę 2. Masz 18 (8+10). To dobry wynik. Nie zepsuj tego. Stand.",
+          "required_action": "STAND",
+          "cards_added_to_split": [],
+          "player_score_after": 18
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["queen_of_hearts"],
+        "dealer_final_score": 26,
+        "avatar_pose": "B",
+        "text": "Perfekcyjnie. Rozegrałeś dwie osobne mini-gry. Ja przekroczyłem, więc obie twoje ręce wygrywają!",
+        "result_status": "WIN_BOTH"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Misja Ratunkowa (8,8 na 10)",
+      "goal": "Nauka rozdzielania 8-mek, by uratować przegrywającą rękę.",
+      "setup": {
+        "player_hand": ["8_of_spades", "8_of_hearts"],
+        "dealer_up_card": "10_of_diamonds",
+        "dealer_hidden_card": "7_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Teraz prawdziwy test. Dwie Ósemki na 10. Razem 16 to przegrana. Ale dwie startowe 8-ki dają ci szansę na walkę. ZAWSZE rozdzielaj 8-ki, nawet przeciwko 10.",
+          "required_action": "SPLIT",
+          "cards_added_hand_1": ["10_of_spades"],
+          "cards_added_hand_2": ["ace_of_hearts"],
+          "player_score_hand_1": 18,
+          "player_score_hand_2": 19
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "A",
+          "text": "Ręka 1 to 18. Przeciwko 10 to najlepsze, na co możemy liczyć. Stand.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 18
+        },
+        {
+          "step_order": 3,
+          "avatar_pose": "B",
+          "text": "Ręka 2 to 19. Doskonale. Stand.",
+          "required_action": "STAND",
+          "cards_added_to_split": [],
+          "player_score_after": 19
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 17,
+        "avatar_pose": "B",
+        "text": "Niesamowita poprawa. Zdobyłeś 18 i 19. Oba wyniki biją moje 17. Zamieniłeś śmieci w skarb.",
+        "result_status": "WIN_BOTH"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Chciwość Zabija (K,K na 6)",
+      "goal": "Nauczyć NIGDY nie rozdzielać 10-tek/Figur.",
+      "setup": {
+        "player_hand": ["king_of_spades", "king_of_clubs"],
+        "dealer_up_card": "6_of_diamonds",
+        "dealer_hidden_card": "9_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Dwa Króle. Masz 20. Może cię kusić, by rozdzielić i wygrać podwójnie na moją słabą 6. NIE RÓB TEGO. 20 to zwycięska ręka. Nie psuj jej. Po prostu Stand.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["10_of_diamonds"],
+        "dealer_final_score": 25,
+        "avatar_pose": "B",
+        "text": "Ja przekroczyłem. Ty wygrałeś. Proste. Nigdy nie rozdzielaj 20.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Fałszywa Para (5,5 na 5)",
+      "goal": "Nauczyć, że 5,5 traktuje się jak Twarde 10 (Double).",
+      "setup": {
+        "player_hand": ["5_of_hearts", "5_of_diamonds"],
+        "dealer_up_card": "5_of_spades",
+        "dealer_hidden_card": "8_of_clubs"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Dwie Piątki. Czy to para? Nie, to 10! Jeśli rozdzielisz, masz dwie ręce zaczynające się od 5 (bardzo słabe). Jeśli je zostawisz, masz 10. Traktuj to jak Twarde 10. DOUBLE!",
+          "required_action": "DOUBLE",
+          "cards_added": ["king_of_hearts"],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["king_of_clubs"],
+        "dealer_final_score": 23,
+        "avatar_pose": "B",
+        "text": "Poprawnie. Masz 20. Rozdzielanie 5-tek to błąd nowicjusza. Podwajanie 5-tek to ruch zawodowca.",
+        "result_status": "WIN_DOUBLE"
+      }
+    },
+    {
+      "id": 6,
+      "title": "Powtórka: Asy na Asa",
+      "goal": "Wzmocnienie: Rozdzielamy Asy nawet przeciwko Asowi.",
+      "setup": {
+        "player_hand": ["ace_of_hearts", "ace_of_clubs"],
+        "dealer_up_card": "ace_of_spades",
+        "dealer_hidden_card": "9_of_diamonds"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Znowu Asy. Ja też mam Asa. To straszne, ale zasada się nie zmienia. Asy są zbyt potężne, by trzymać je razem. SPLIT.",
+          "required_action": "SPLIT",
+          "cards_added_hand_1": ["10_of_clubs"],
+          "cards_added_hand_2": ["9_of_hearts"],
+          "player_score_hand_1": 21,
+          "player_score_hand_2": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 20,
+        "avatar_pose": "B",
+        "text": "Ręka 1 wygrywa (21 na 20). Ręka 2 remisuje (20 na 20). Ogólnie jesteś na plus.",
+        "result_status": "WIN_AND_PUSH"
+      }
+    }
+  ],
+  "conclusion": {
+    "avatar_pose": "A",
+    "text": "Znasz już Złote Zasady: Rozdzielaj Asy i 8-ki. Nigdy nie rozdzielaj 10-tek i 5-tek. Ale co z 2, 3, 6, 7, 9? To zależy całkowicie od tego, co ma krupier. Nauczymy się tych trudnych podziałów w następnej lekcji!"
+  }
+}

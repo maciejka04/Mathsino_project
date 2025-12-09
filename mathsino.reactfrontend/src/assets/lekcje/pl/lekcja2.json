@@ -1,0 +1,149 @@
+{
+  "lesson_id": 2,
+  "lesson_title": "Twarde Ręce: Proste Decyzje",
+  "introduction": {
+    "avatar_pose": "A",
+    "text": "Witaj ponownie! Dziś zaczynamy Strategię Podstawową. To mapa, która mówi ci dokładnie, co robić. Zaczniemy od 'Twardych Rąk' (rąk bez Asa). Spójrz na krawędzie tabeli: gdy masz bardzo mało, bierzesz. Gdy masz dużo, czekasz. Proste, prawda? Udowodnijmy to!"
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "title": "Bezpieczna Strefa (Suma 8)",
+      "goal": "Pokazanie, że dobieranie przy 8 lub mniej jest bez ryzyka.",
+      "setup": {
+        "player_hand": ["3_of_clubs", "5_of_diamonds"],
+        "dealer_up_card": "6_of_spades",
+        "dealer_hidden_card": "10_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Masz 8 punktów. Wielu graczy boi się tu dobierać, ale to błąd. Najwyższa karta to 10. 8 + 10 = 18. Nie możesz przekroczyć 21. Zawsze HIT!",
+          "required_action": "HIT",
+          "cards_added": ["9_of_clubs"],
+          "player_score_after": 17
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["queen_of_diamonds"],
+        "dealer_final_score": 26,
+        "avatar_pose": "B",
+        "text": "Widzisz? Zamieniłeś słabe 8 na solidne 17. Ja miałem 16, więc musiałem dobrać i przekroczyłem z 26. Bezpieczna wygrana.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Desperacja (Suma 5)",
+      "goal": "Wzmocnienie nawyku dobierania przy bardzo niskich rękach przeciwko silnemu krupierowi.",
+      "setup": {
+        "player_hand": ["2_of_hearts", "3_of_spades"],
+        "dealer_up_card": "ace_of_diamonds",
+        "dealer_hidden_card": "9_of_clubs"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Masz 5 punktów. To w zasadzie nic. Krupier pokazuje Asa – potwora. Nie ma czasu na sztuczki. Po prostu potrzebujesz punktów. Kliknij HIT.",
+          "required_action": "HIT",
+          "cards_added": ["queen_of_hearts"],
+          "player_score_after": 15
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 20,
+        "avatar_pose": "A",
+        "text": "Dostałeś Damę i masz teraz 15. Ja mam 20. Przegrałeś, ale zagrałeś poprawnie. Nie wygrasz każdego rozdania, ale musisz grać właściwie.",
+        "result_status": "LESSON_PASSED"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Twarde 17 na Asa (Pułapka)",
+      "goal": "Nauczyć gracza NIGDY nie dobierać przy Twardym 17.",
+      "setup": {
+        "player_hand": ["10_of_clubs", "7_of_hearts"],
+        "dealer_up_card": "ace_of_spades",
+        "dealer_hidden_card": "7_of_diamonds"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Uwaga! To pułapka. Masz 17. Krupier ma Asa. Instynkt mówi 'Dobierz', ale matematyka mówi 'Czekaj'. Dobieranie na 17 to samobójstwo. Nigdy tego nie rób.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 17
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 18,
+        "avatar_pose": "C",
+        "text": "Przegrałeś (17 na 18), ale... zagrałeś poprawnie! Gdybyś dobrał, prawdopodobnie byś przekroczył 21. W Blackjacku dobra decyzja nie zawsze oznacza wygraną.",
+        "result_status": "LOSE_CORRECTLY"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Oczywisty Pas (Suma 20)",
+      "goal": "Potwierdzenie pasowania przy wysokich wynikach.",
+      "setup": {
+        "player_hand": ["jack_of_spades", "king_of_diamonds"],
+        "dealer_up_card": "9_of_hearts",
+        "dealer_hidden_card": "10_of_clubs"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "B",
+          "text": "Dwie figury! Masz 20. Druga najlepsza ręka w grze. Nie ma nad czym myśleć. Czekaj na wypłatę.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 19,
+        "avatar_pose": "B",
+        "text": "Łatwa kasa. Ja mam 19, ty masz 20. Wygrywasz.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Ryzykowny Pas (18 na 9)",
+      "goal": "Nauka dyscypliny przy 18.",
+      "setup": {
+        "player_hand": ["10_of_hearts", "8_of_spades"],
+        "dealer_up_card": "9_of_diamonds",
+        "dealer_hidden_card": "6_of_clubs"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Masz 18. Krupier ma 9 (wygląda groźnie). Kusi, żeby dobrać? Nie rób tego. Przy 18 ryzyko przekroczenia jest ogromne. Zaufaj matematyce.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 18
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["10_of_spades"],
+        "dealer_final_score": 25,
+        "avatar_pose": "B",
+        "text": "Krupier przekroczył! Widzisz? Miałem 15 (9+6), musiałem dobrać i trafiłem 10. Gdybyś spanikował, mógłbyś przegrać sam ze sobą.",
+        "result_status": "WIN"
+      }
+    }
+  ],
+  "conclusion": {
+    "avatar_pose": "A",
+    "text": "Opanowałeś krawędzie tabeli. Zasada: 5-8 zawsze HIT, 17-21 zawsze STAND. Problemy zaczynają się w środku... W następnej lekcji nauczę cię, jak być agresywnym i kiedy podwajać stawkę!"
+  }
+}

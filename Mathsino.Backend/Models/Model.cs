@@ -23,8 +23,21 @@ public class User
     [StringLength(100)]
     public string ProviderId { get; set; } = string.Empty; 
     // ---------------------------
+    [StringLength(255)] 
+    public string AvatarPath { get; set; } = "snake.png";
 
     public List<UserFriend> Friends { get; set; } = [];
+
+    public int Balance { get; set; } = 0;
+
+    [StringLength(5)]
+    public string Language { get; set; } = "en";
+
+    public int MusicId { get; set; } = 1;
+
+    public bool MusicEnabled { get; set; } = true;
+
+    public bool SoundEffectsEnabled { get; set; } = true;
 }
 
 public class UserFriend
@@ -36,12 +49,19 @@ public class UserFriend
     public User Friend { get; set; } = null!;
 }
 
-public record FriendDto(int Id, string FirstName, string LastName, string Email);
+public record FriendDto(int Id, string FirstName, string LastName, string Email, int Balance, string AvatarPath);
 
 public record UserDto(
     int Id,
     string FirstName,
     string LastName,
     string Email,
-    List<FriendDto> Friends
+    List<FriendDto> Friends,
+    int Balance,
+    string Language,
+    int MusicId,
+    bool MusicEnabled,
+    bool SoundEffectsEnabled
 );
+
+public record UpdateAvatarRequest(string AvatarPath);

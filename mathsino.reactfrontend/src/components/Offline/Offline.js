@@ -8,7 +8,6 @@ import stoImage from '../../assets/zetony/sto.png';
 import piecsetImage from '../../assets/zetony/piecset.png'; 
 import { motion } from 'framer-motion';
 
-
 import reverseCardImage from '../../assets/karty/reverse.png'; 
 
 const DECK_POSITION = { left: 15, top: 30 }; 
@@ -27,16 +26,22 @@ const cardImagesMap = allCardFileNames.reduce((acc, cardName) => {
     return acc;
 }, {});
 
+const getCardProp = (card, prop) => {
+    if (!card) return null;
+    return card[prop.toLowerCase()] || card[prop.charAt(0).toUpperCase() + prop.slice(1)];
+};
+
 const mapBackendCardToFilename = (card) => {
     if (!card) return null;
     
-    let rankName = card.rank.toLowerCase();
+    let rankName = (getCardProp(card, 'rank') || '').toLowerCase();
+    
     if (rankName === 'a') rankName = 'ace';
     else if (rankName === 'k') rankName = 'king';
     else if (rankName === 'q') rankName = 'queen';
     else if (rankName === 'j') rankName = 'jack';
 
-    const suitName = card.suit.toLowerCase();
+    const suitName = (getCardProp(card, 'suit') || '').toLowerCase();
     return `${rankName}_of_${suitName}`;
 };
 
@@ -48,17 +53,38 @@ function Offline() {
     const [gameId, setGameId] = useState(null);
     const [playerId, setPlayerId] = useState(null);
     const [dealerCards, setDealerCards] = useState([]);
+    
     const [playerCards, setPlayerCards] = useState([]);
+    const [splitCards, setSplitCards] = useState([]);
+    
     const [gameStatus, setGameStatus] = useState('Waiting'); 
     const [gameResult, setGameResult] = useState(null);
+    const [splitResult, setSplitResult] = useState(null);
+    
     const [resultProcessed, setResultProcessed] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    
-    
     const [isShuffling, setIsShuffling] = useState(false);
+
+    const [canSplit, setCanSplit] = useState(false);
+    const [canDouble, setCanDouble] = useState(false);
+    const [isSplitActive, setIsSplitActive] = useState(false); 
+    const [hasSplit, setHasSplit] = useState(false);
+
+    const [mainDoubled, setMainDoubled] = useState(false);
+    const [splitDoubled, setSplitDoubled] = useState(false);
 
     const API_URL = "http://localhost:5126";
     const USER_ID = 1; 
+
+    const resetGameFlags = () => {
+        setMainDoubled(false);
+        setSplitDoubled(false);
+        setHasSplit(false);
+        setIsSplitActive(false);
+        setCanSplit(false);
+        setCanDouble(false);
+        setSplitCards([]);
+    };
 
     const startNewGame = async () => {
         if (currentBet <= 0) {
@@ -66,24 +92,22 @@ function Offline() {
             return;
         }
         
-       
         setResultProcessed(false);
         setGameResult(null);
+        setSplitResult(null);
         setShowModal(false);
         setDealerCards([]);
         setPlayerCards([]);
-
-       
-        setIsShuffling(true);
-
         
+        resetGameFlags();
+
+        setIsShuffling(true);
         await new Promise(resolve => setTimeout(resolve, 1000));
 
         try {
             const response = await fetch(`${API_URL}/games/create-singleplayer?userId=${USER_ID}`);
             if (!response.ok) throw new Error("Błąd tworzenia gry");
             const gameData = await response.json();
-            
             
             setIsShuffling(false);
             updateGameState(gameData);
@@ -102,45 +126,107 @@ function Offline() {
         const dealer = gameData.dealer;
         const player = gameData.players.find(p => p.user.id === USER_ID);
 
-        if (player) {
-            setPlayerId(player.playerId);
-            setPlayerCards(player.hand.map(c => ({
-                name: mapBackendCardToFilename(c),
-                src: cardImagesMap[mapBackendCardToFilename(c)]
-            })));
-            setGameResult(player.result);
-            
-            if (gameData.status === 'Completed' && player.result && !resultProcessed) {
-                handleGameResult(player.result);
-            }
-        }
-
         if (dealer) {
             setDealerCards(dealer.hand.map(c => ({
                 name: mapBackendCardToFilename(c),
                 src: cardImagesMap[mapBackendCardToFilename(c)]
             })));
         }
+
+        if (player) {
+            setPlayerId(player.playerId);
+            setPlayerCards(player.hand.map(c => ({
+                name: mapBackendCardToFilename(c),
+                src: cardImagesMap[mapBackendCardToFilename(c)]
+            })));
+
+            setMainDoubled(player.hasDoubledMain);
+            setSplitDoubled(player.hasDoubledSplit);
+
+            
+            let currentIsSplitActive = false;
+            if (player.hasSplit) {
+                setHasSplit(true);
+                setSplitCards(player.splitHand ? player.splitHand.map(c => ({
+                    name: mapBackendCardToFilename(c),
+                    src: cardImagesMap[mapBackendCardToFilename(c)]
+                })) : []);
+                
+                
+                if (player.status !== 'Active' && player.splitStatus === 'Active') {
+                    currentIsSplitActive = true;
+                }
+            }
+            setIsSplitActive(currentIsSplitActive);
+
+            
+            let doubleCondition = false;
+            if (currentIsSplitActive) {
+                
+                doubleCondition = player.splitHand && 
+                                  player.splitHand.length === 2 && 
+                                  player.splitStatus === 'Active' && 
+                                  !player.hasDoubledSplit;
+            } else {
+                
+                doubleCondition = player.hand.length === 2 && 
+                                  player.status === 'Active' && 
+                                  !player.hasDoubledMain;
+            }
+            setCanDouble(doubleCondition);
+            
+            // Split: Tylko przy 2 kartach, takie same rangi, brak splita
+            let splitCondition = false;
+            if (player.hand.length === 2 && !player.hasSplit && player.status === 'Active') {
+                const rank1 = getCardProp(player.hand[0], 'rank');
+                const rank2 = getCardProp(player.hand[1], 'rank');
+                if (rank1 && rank2 && rank1 === rank2) {
+                    splitCondition = true;
+                }
+            }
+            setCanSplit(splitCondition);
+
+            setGameResult(player.result);
+            setSplitResult(player.splitResult);
+            
+            if (gameData.status === 'Completed' && !resultProcessed) {
+                if (player.result && (!player.hasSplit || player.splitResult)) {
+                    handleGameResult(player.result, player.splitResult, player.hasDoubledMain, player.hasDoubledSplit);
+                }
+            }
+        }
+        
         setGameStatus(gameData.status);
     };
 
-    const handleGameResult = (result) => {
+    const handleGameResult = (mainResult, splitRes, isMainDoubledNow, isSplitDoubledNow) => {
         setResultProcessed(true); 
         
         setTimeout(() => {
             setShowModal(true);
         }, 1000); 
 
-        let winAmount = 0;
-        switch (result) {
-            case 'Win': winAmount = currentBet * 2; break;
-            case 'Blackjack': winAmount = currentBet * 2.5; break;
-            case 'Push': winAmount = currentBet; break;
-            case 'Lose': winAmount = 0; break;
-            default: break;
+        let totalWin = 0;
+
+        const calculateWin = (res, bet, isDoubled) => {
+            const actualBet = isDoubled ? bet * 2 : bet;
+            switch (res) {
+                case 'Win': return actualBet * 2;
+                case 'Blackjack': return actualBet * 2.5;
+                case 'Push': return actualBet;
+                case 'Lose': return 0;
+                default: return 0;
+            }
+        };
+
+        totalWin += calculateWin(mainResult, currentBet, isMainDoubledNow);
+
+        if (hasSplit && splitRes) {
+            totalWin += calculateWin(splitRes, currentBet, isSplitDoubledNow);
         }
-        if (winAmount > 0) {
-            setCurrentBalance(prev => prev + winAmount);
+
+        if (totalWin > 0) {
+            setCurrentBalance(prev => prev + totalWin);
         }
     };
 
@@ -156,7 +242,12 @@ function Offline() {
     const handleHit = async () => {
         if (!gameId || !playerId) return;
         try {
-            await fetch(`${API_URL}/games/${gameId}/player-hit/${playerId}`);
+            // ZMIANA: Używamy aktualnego stanu lub zmiennej (tu polegamy na state, bo render już poszedł)
+            if (isSplitActive) {
+                await fetch(`${API_URL}/games/${gameId}/player-hit-split/${playerId}`, { method: 'POST' });
+            } else {
+                await fetch(`${API_URL}/games/${gameId}/player-hit/${playerId}`);
+            }
             await fetchGameStatus(gameId); 
         } catch (error) { console.error("Błąd Hit:", error); }
     };
@@ -165,13 +256,49 @@ function Offline() {
         if (!gameId || !playerId) return;
         try {
             await fetch(`${API_URL}/games/${gameId}/player-pass/${playerId}`);
-            await fetch(`${API_URL}/games/${gameId}/check-results/${playerId}`);
-            await fetchGameStatus(gameId);
+            const data = await fetchGameStatus(gameId);
+            if (data.status === 'Completed') {
+                await fetch(`${API_URL}/games/${gameId}/check-results/${playerId}`);
+                await fetchGameStatus(gameId);
+            }
         } catch (error) { console.error("Błąd Stand:", error); }
     };
     
-    const handleSplit = () => { console.log('Split niezaimplementowany'); };
-    const handleDouble = () => { console.log('Double niezaimplementowany'); };
+    const handleSplitAction = async () => {
+        if (!canSplit) return;
+        if (currentBalance < currentBet) {
+            alert("Brak środków na Split!");
+            return;
+        }
+        try {
+            setCurrentBalance(prev => prev - currentBet);
+            await fetch(`${API_URL}/games/${gameId}/player-split/${playerId}`, { method: 'POST' });
+            await fetchGameStatus(gameId);
+        } catch (error) { console.error("Błąd Split:", error); }
+    };
+    
+    const handleDouble = async () => {
+        if (!canDouble) return;
+        if (currentBalance < currentBet) {
+            alert("Brak środków na Double!");
+            return;
+        }
+        try {
+            setCurrentBalance(prev => prev - currentBet);
+            
+            if (isSplitActive) {
+                await fetch(`${API_URL}/games/${gameId}/player-double-split/${playerId}`, { method: 'POST' });
+            } else {
+                await fetch(`${API_URL}/games/${gameId}/player-double/${playerId}`, { method: 'POST' });
+            }
+            
+            const data = await fetchGameStatus(gameId);
+             if (data.status === 'Completed') {
+                await fetch(`${API_URL}/games/${gameId}/check-results/${playerId}`);
+                await fetchGameStatus(gameId);
+            }
+        } catch (error) { console.error("Błąd Double:", error); }
+    };
 
     const handleChipSelect = (value) => {
         if (gameStatus === 'InProgress' || isShuffling) return; 
@@ -187,9 +314,11 @@ function Offline() {
         if (gameStatus === 'InProgress' || isShuffling) return;
         setCurrentBalance(prev => prev + currentBet);
         setCurrentBet(0);
+        resetGameFlags();
     };
 
     const getResultText = (result) => {
+        if (!result) return '';
         if (result === 'Win') return 'WYGRANA!';
         if (result === 'Lose') return 'PRZEGRANA';
         if (result === 'Push') return 'REMIS';
@@ -197,12 +326,33 @@ function Offline() {
         return '';
     };
 
-    const getResultDescription = (result) => {
-        if (result === 'Lose') return `Straciłeś ${currentBet} PLN`;
-        if (result === 'Push') return `Zwrot stawki (${currentBet} PLN)`;
-        const totalWin = (result === 'Blackjack' ? currentBet * 2.5 : currentBet * 2);
-        const profit = totalWin - currentBet;
-        return `Wygrałeś ${profit} PLN na czysto`;
+    const getFinalMessage = () => {
+        let msg = "";
+        let totalWin = 0;
+        
+        const calc = (res, bet, isDoubled) => {
+            const actualBet = isDoubled ? bet * 2 : bet;
+            if (res === 'Win') return { txt: 'Wygrałeś', val: actualBet * 2 - actualBet }; 
+            if (res === 'Blackjack') return { txt: 'Blackjack', val: actualBet * 2.5 - actualBet };
+            if (res === 'Push') return { txt: 'Zwrot', val: 0 };
+            return { txt: 'Przegrałeś', val: -actualBet };
+        };
+
+        const main = calc(gameResult, currentBet, mainDoubled);
+        totalWin += main.val;
+        
+        if (hasSplit) {
+            const split = calc(splitResult, currentBet, splitDoubled);
+            totalWin += split.val;
+            msg = `Ręka 1: ${getResultText(gameResult)} | Ręka 2: ${getResultText(splitResult)}`;
+        } else {
+            msg = getResultText(gameResult);
+        }
+
+        return {
+            title: msg,
+            desc: totalWin >= 0 ? `Wygrałeś łącznie ${totalWin} PLN na czysto` : `Straciłeś łącznie ${Math.abs(totalWin)} PLN`
+        };
     };
 
     const getResultClass = (result) => {
@@ -211,36 +361,53 @@ function Offline() {
         return 'result-lose';
     };
 
+    const displayedBetOnTable = () => {
+        if (gameStatus === 'Waiting') {
+            return currentBet;
+        }
+        let total = currentBet; 
+        if (mainDoubled) total += currentBet;
+        if (hasSplit) {
+            total += currentBet;
+            if (splitDoubled) total += currentBet;
+        }
+        return total;
+    };
+
     return (
         <div className="offline-container">
             <button className="back-button" onClick={handleGoBack}>&#8592; Exit</button>
             
             {/* Modal */}
-            {showModal && gameResult && (
+            {showModal && (gameResult || splitResult) && (
                 <div className="modal-overlay">
-                    <h2 className="modal-title">{getResultText(gameResult)}</h2>
-                    <p className={`modal-text ${getResultClass(gameResult)}`}>
-                        {getResultDescription(gameResult)}
+                    <h2 className="modal-title" style={{fontSize: hasSplit ? '1.5rem' : '2.5rem'}}>
+                        {getFinalMessage().title}
+                    </h2>
+                    <p className="modal-text" style={{color: 'white'}}>
+                        {getFinalMessage().desc}
                     </p>
-                    <button className="modal-button" onClick={() => { setShowModal(false); setCurrentBet(0); setGameStatus('Waiting'); }}>OK</button>
+                    <button className="modal-button" onClick={() => { 
+                        setShowModal(false); 
+                        setCurrentBet(0); 
+                        setGameStatus('Waiting');
+                        resetGameFlags();
+                    }}>OK</button>
                 </div>
             )}
 
             <div className="game-table-area">
                 <img src={tableImage} alt="Stół do gry" className="game-table-image" />
                 
-                {/* --- TASOWARKA (LEWA STRONA) --- */}
+                {/* TASOWARKA */}
                 <div style={{ 
                     position: 'absolute', 
                     left: `${DECK_POSITION.left}%`, 
                     top: `${DECK_POSITION.top}%`, 
                     zIndex: 5 
                 }}>
-                    {}
                     <img src={reverseCardImage} alt="Deck Base" style={{ position: 'absolute', width: '5vw', borderRadius: '4px', left: '0px', top: '0px' }} />
                     <img src={reverseCardImage} alt="Deck Base" style={{ position: 'absolute', width: '5vw', borderRadius: '4px', left: '2px', top: '-2px' }} />
-                    
-                    {}
                     <motion.img
                         src={reverseCardImage}
                         alt="Shuffling Card"
@@ -249,44 +416,25 @@ function Offline() {
                             x: [0, -20, 20, -20, 20, 0], 
                             y: [0, -5, 5, -5, 5, 0],   
                             rotateZ: [0, -10, 10, -10, 10, 0] 
-                        } : { 
-                            x: 0, y: 0, rotateZ: 0 
-                        }}
-                        transition={{ 
-                            duration: 0.8,      
-                            ease: "easeInOut"
-                        }}
+                        } : { x: 0, y: 0, rotateZ: 0 }}
+                        transition={{ duration: 0.8, ease: "easeInOut" }}
                     />
                 </div>
 
-                {}
+                {/* DEALER CARDS */}
                 {dealerCards.map((card, index) => {
                     const isFaceDown = index === 1 && gameStatus === 'InProgress';
-                    
                     const finalLeft = 46 + index * 3;
                     const startX = `${DECK_POSITION.left - finalLeft}vw`;
                     const startY = `${DECK_POSITION.top - 10}vh`;
 
                     return (
                         <motion.div
-                            key={index}
+                            key={`dealer-${index}`}
                             className="card-image dealer-card"
                             style={{ left: `${finalLeft}%` }}
-                            initial={{ 
-                                x: startX, 
-                                y: startY, 
-                                opacity: 0, 
-                                scale: 0.5, 
-                                rotate: 180 
-                            }}
-                            animate={{ 
-                                x: 0, 
-                                y: 0, 
-                                opacity: 1, 
-                                scale: 1, 
-                                rotate: 0, 
-                                rotateY: isFaceDown ? 180 : 0 
-                            }}
+                            initial={{ x: startX, y: startY, opacity: 0, scale: 0.5, rotate: 180 }}
+                            animate={{ x: 0, y: 0, opacity: 1, scale: 1, rotate: 0, rotateY: isFaceDown ? 180 : 0 }}
                             transition={{ duration: 0.6, delay: index * 0.2, type: "spring", stiffness: 80 }}
                         >
                             <img 
@@ -298,27 +446,47 @@ function Offline() {
                     );
                 })}
 
-                {}
+                {/* PLAYER CARDS (MAIN) */}
                 {playerCards.map((card, index) => {
-                    const finalLeft = 46 + index * 3;
+                    const offset = hasSplit ? -10 : 0; 
+                    const finalLeft = (46 + index * 3) + offset;
                     const startX = `${DECK_POSITION.left - finalLeft}vw`;
                     const startY = `${DECK_POSITION.top - 40}vh`;
 
                     return (
                         <motion.img 
-                            key={index}
+                            key={`player-${index}`}
                             src={card.src} 
                             alt={card.name} 
                             className="card-image player-card" 
-                            style={{ left: `${finalLeft}%` }} 
-                            
-                            initial={{ 
-                                x: startX, 
-                                y: startY, 
-                                opacity: 0, 
-                                scale: 0.5, 
-                                rotate: -180 
-                            }}
+                            style={{ 
+                                left: `${finalLeft}%`,
+                                border: (hasSplit && !isSplitActive && gameStatus === 'InProgress') ? '2px solid gold' : 'none'
+                            }} 
+                            initial={{ x: startX, y: startY, opacity: 0, scale: 0.5, rotate: -180 }}
+                            animate={{ x: 0, y: 0, opacity: 1, scale: 1, rotate: 0 }}
+                            transition={{ duration: 0.7, delay: index * 0.2 + 0.1, type: "spring", stiffness: 80 }}
+                        />
+                    );
+                })}
+
+                {/* PLAYER CARDS (SPLIT) */}
+                {hasSplit && splitCards.map((card, index) => {
+                    const finalLeft = (46 + index * 3) + 10;
+                    const startX = `${DECK_POSITION.left - finalLeft}vw`;
+                    const startY = `${DECK_POSITION.top - 40}vh`;
+
+                    return (
+                        <motion.img 
+                            key={`split-${index}`}
+                            src={card.src} 
+                            alt={card.name} 
+                            className="card-image player-card" 
+                            style={{ 
+                                left: `${finalLeft}%`,
+                                border: (isSplitActive && gameStatus === 'InProgress') ? '2px solid gold' : 'none'
+                            }} 
+                            initial={{ x: startX, y: startY, opacity: 0, scale: 0.5, rotate: -180 }}
                             animate={{ x: 0, y: 0, opacity: 1, scale: 1, rotate: 0 }}
                             transition={{ duration: 0.7, delay: index * 0.2 + 0.1, type: "spring", stiffness: 80 }}
                         />
@@ -332,14 +500,8 @@ function Offline() {
                     Saldo: <span className="balance-amount">{currentBalance.toLocaleString('pl-PL')} PLN</span>
                 </span>
                 <span className="balance-sublabel">
-                    Na stole: {currentBet} PLN
+                    Na stole: {displayedBetOnTable()} PLN
                 </span>
-
-                {gameResult && (
-                    <div className={`result-text ${getResultClass(gameResult)}`}>
-                        {getResultText(gameResult)}
-                    </div>
-                )}
 
                 <div className="controls-wrapper">
                     <button 
@@ -372,9 +534,25 @@ function Offline() {
             {/* Przyciski Akcji */}
             <div className="game-actions">
                 <button className="action-button stand" onClick={handleStand} disabled={gameStatus !== 'InProgress' || isShuffling}>Stand</button>
-                <button className="action-button split disabled-action" onClick={handleSplit}>Split</button>
+                
+               
+                
                 <button className="action-button hit" onClick={handleHit} disabled={gameStatus !== 'InProgress' || isShuffling}>Hit</button>
-                <button className="action-button double disabled-action" onClick={handleDouble}>Double</button>
+                
+                <button 
+                    className={`action-button double ${!canDouble ? 'disabled-action' : ''}`} 
+                    onClick={handleDouble} 
+                    disabled={!canDouble || gameStatus !== 'InProgress'}
+                >
+                    Double
+                </button>
+                 <button 
+                    className={`action-button split ${!canSplit ? 'disabled-action' : ''}`} 
+                    onClick={handleSplitAction} 
+                    disabled={!canSplit || gameStatus !== 'InProgress'}
+                >
+                    Split
+                </button>
             </div>
         </div>
     );
