@@ -15,6 +15,7 @@ public class MathsinoContext : DbContext
 
     public DbSet<SingleGame> SingleGames => Set<SingleGame>();
 
+    [Obsolete]
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<UserFriend>().HasKey(uf => new { uf.UserId, uf.FriendId });
@@ -22,14 +23,14 @@ public class MathsinoContext : DbContext
         modelBuilder
             .Entity<UserFriend>()
             .HasOne(uf => uf.User)
-            .WithMany(u => u.Friends)
+            .WithMany(u => u.SentFriendRequests)
             .HasForeignKey(uf => uf.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder
             .Entity<UserFriend>()
             .HasOne(uf => uf.Friend)
-            .WithMany()
+            .WithMany(u => u.ReceivedFriendRequests)
             .HasForeignKey(uf => uf.FriendId)
             .OnDelete(DeleteBehavior.Restrict);
 
@@ -60,8 +61,12 @@ public class MathsinoContext : DbContext
         modelBuilder
             .Entity<UserFriend>()
             .HasData(
-                new UserFriend { UserId = 1, FriendId = 2 },
-                new UserFriend { UserId = 2, FriendId = 1 }
+                new UserFriend
+                {
+                    UserId = 1,
+                    FriendId = 2,
+                    Status = FriendStatus.Accepted,
+                }
             );
     }
 }
