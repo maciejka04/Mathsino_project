@@ -6,6 +6,13 @@ namespace Mathsino.Backend.Services;
 
 public class UsersService(ILogger<UsersService>? logger, MathsinoContext dbContext)
 {
+    public async Task<List<User>> GetUsersAsync()
+    {
+        logger?.LogInformation("Fetching all users");
+        var users = await dbContext.Users.ToListAsync();
+        return users;
+    }
+
     public async Task<User> GetUserByIdAsync(int id)
     {
         logger?.LogInformation("Fetching user with ID {UserId}", id);

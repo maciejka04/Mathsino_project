@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mathsino.Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class ResultsToDb : Migration
+    public partial class UpdateFriendshipRelations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,7 +25,12 @@ namespace Mathsino.Backend.Migrations
                     Email = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Provider = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     ProviderId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Balance = table.Column<int>(type: "integer", nullable: false)
+                    AvatarPath = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    Balance = table.Column<int>(type: "integer", nullable: false),
+                    Language = table.Column<string>(type: "character varying(5)", maxLength: 5, nullable: false),
+                    MusicId = table.Column<int>(type: "integer", nullable: false),
+                    MusicEnabled = table.Column<bool>(type: "boolean", nullable: false),
+                    SoundEffectsEnabled = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -63,7 +68,8 @@ namespace Mathsino.Backend.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "integer", nullable: false),
-                    FriendId = table.Column<int>(type: "integer", nullable: false)
+                    FriendId = table.Column<int>(type: "integer", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -84,21 +90,17 @@ namespace Mathsino.Backend.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Balance", "Email", "FirstName", "LastName", "Provider", "ProviderId" },
+                columns: new[] { "Id", "AvatarPath", "Balance", "Email", "FirstName", "Language", "LastName", "MusicEnabled", "MusicId", "Provider", "ProviderId", "SoundEffectsEnabled" },
                 values: new object[,]
                 {
-                    { 1, 5000, "alice.smith@example.com", "Alice", "Smith", "", "" },
-                    { 2, 3000, "bob.johnson@example.com", "Bob", "Johnson", "", "" }
+                    { 1, "snake.png", 5000, "alice.smith@example.com", "Alice", "en", "Smith", true, 1, "", "", true },
+                    { 2, "mouse.png", 3000, "bob.johnson@example.com", "Bob", "en", "Johnson", true, 1, "", "", true }
                 });
 
             migrationBuilder.InsertData(
                 table: "UserFriends",
-                columns: new[] { "FriendId", "UserId" },
-                values: new object[,]
-                {
-                    { 2, 1 },
-                    { 1, 2 }
-                });
+                columns: new[] { "FriendId", "UserId", "Status" },
+                values: new object[] { 2, 1, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_SingleGames_UserId",

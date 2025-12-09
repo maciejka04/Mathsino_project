@@ -96,6 +96,7 @@ builder.Services.AddDbContextPool<MathsinoContext>(options =>
 );
 
 builder.Services.AddScoped<UsersService>();
+builder.Services.AddScoped<FriendService>();
 builder.Services.AddSingleton<GameService>();
 builder.Services.AddAuthorization();
 
@@ -108,7 +109,7 @@ using (var scope = app.Services.CreateScope())
     {
         // TUTAJ WPISZ SWOJĄ NAZWĘ KONTEKSTU (np. MathsinoDbContext)
         var context = services.GetRequiredService<MathsinoContext>();
-        
+
         // Ta komenda robi to samo co "dotnet ef database update", ale automatycznie!
         context.Database.Migrate();
     }
@@ -187,7 +188,7 @@ app.MapGet(
 
                     var userName = context.User.FindFirst(ClaimTypes.Name)?.Value;
                     var email = context.User.FindFirst(ClaimTypes.Email)?.Value;
-                    
+
                     return Results.Ok(
                         new
                         {
@@ -208,34 +209,35 @@ app.MapGet(
     .RequireAuthorization();
 
 app.MapPut(
-    "/api/user/avatar",
-    async (HttpContext context, UpdateAvatarRequest request, MathsinoContext db) =>
-    {
-        if (context.User.Identity?.IsAuthenticated == true)
+        "/api/user/avatar",
+        async (HttpContext context, UpdateAvatarRequest request, MathsinoContext db) =>
         {
-            var userIdString = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (int.TryParse(userIdString, out var userId))
+            if (context.User.Identity?.IsAuthenticated == true)
             {
-                var user = await db.Users.FindAsync(userId);
-                if (user != null)
+                var userIdString = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (int.TryParse(userIdString, out var userId))
                 {
-                    user.AvatarPath = request.AvatarPath;
-                    await db.SaveChangesAsync();
-                    
-                    return Results.Ok(new { message = "Awatar zaktualizowany pomyślnie." });
+                    var user = await db.Users.FindAsync(userId);
+                    if (user != null)
+                    {
+                        user.AvatarPath = request.AvatarPath;
+                        await db.SaveChangesAsync();
+
+                        return Results.Ok(new { message = "Awatar zaktualizowany pomyślnie." });
+                    }
+                    return Results.NotFound(new { message = "Użytkownik nie znaleziony." });
                 }
-                return Results.NotFound(new { message = "Użytkownik nie znaleziony." });
             }
+            return Results.Unauthorized();
         }
-        return Results.Unauthorized();
-    }
-)
+    )
     .RequireAuthorization();
 
 app.MapUserEndPoints();
 app.MapGameEndPoints();
 
 app.MapBalanceEndPoints();
+app.MapFriendEndPoints();
 
 await app.RunAsync();
 
@@ -269,14 +271,14 @@ static async Task OnCreatingTicketHandler(
     );
 
     /*
-    if (user != null && user.Balance < 5000) 
+    if (user != null && user.Balance < 5000)
     {
         // TYMCZASOWA LINIA: Zapewnienie, że istniejący użytkownik ma min. 5000 na start
         user.Balance = 5000;
         await dbContext.SaveChangesAsync();
     }
     */
-    
+
     if (user == null)
     {
         // 2. Utwórz nowego użytkownika, jeśli nie istnieje
@@ -294,7 +296,7 @@ static async Task OnCreatingTicketHandler(
             Provider = provider,
             ProviderId = providerId,
             AvatarPath = "snake.png",
-            Balance = 5000
+            Balance = 5000,
         };
         dbContext.Users.Add(user);
         await dbContext.SaveChangesAsync();

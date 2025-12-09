@@ -95,8 +95,14 @@ const resources = {
       /* --- FRIENDS.JS --- */
       "friends_title": "Friends",
       "friends_add_friend": "Add Friend",
-      "friends_placeholder": "Type username...",
+      "friends_placeholder": "Enter user ID...",
       "friends_add": "Add",
+      "friends_sent_requests": "Sent Requests ({{count}})",
+      "friends_no_sent_requests": "You haven't sent any requests",
+      "friends_waiting": "Waiting",
+      "friends_cancel": "Cancel",
+      "friends_cancel_error": "Failed to cancel request",
+      "friends_cancel_confirm": "Cancel friend request to {{name}}?",
       "friends_requests": "Friend Requests ({{count}})",
       "friends_no_requests": "You have no new friend requests.",
       "friends_accept": "Accept",
@@ -107,6 +113,16 @@ const resources = {
       "friends_offline": "Offline",
       "friends_check": "Check Profile",
       "friends_delete": "Delete",
+      "friends_enter_valid_id": "Please enter a valid user ID",
+      "friends_cant_add_yourself": "You cannot add yourself!",
+      "friends_request_sent": "Friend request sent!",
+      "friends_remove_error": "Failed to remove friend",
+      "friends_remove_confirm": "Remove {{name}} from friends?",
+      "friends_accept_error": "Failed to accept friend request",
+      "friends_decline_error": "Failed to decline friend request",
+      "loading": "Loading...",
+      "error": "Error",
+      "retry": "Retry",
 
       /* --- PROFILE.JS --- */
       "profile_title": "Profile",
@@ -142,7 +158,7 @@ const resources = {
       "resources_terms_of_service": "Terms of Service",
       /* --- LEARN.JS --- */
       "learn_read_more": "Read more",
-      
+
       "learn_l1_title": "Lesson 1",
       "learn_l1_subtitle": "Basic Rules & Mechanics",
       "learn_l1_desc": "Introduction to the game basics.",
@@ -273,8 +289,14 @@ const resources = {
       /* --- FRIENDS.JS --- */
       "friends_title": "Znajomi",
       "friends_add_friend": "Dodaj znajomego",
-      "friends_placeholder": "Wpisz nazwę użytkownika...",
+      "friends_placeholder": "Wpisz ID użytkownika...",
       "friends_add": "Dodaj",
+      "friends_sent_requests": "Wysłane zaproszenia ({{count}})",
+      "friends_no_sent_requests": "Nie wysłałeś żadnych zaproszeń",
+      "friends_waiting": "Oczekujące",
+      "friends_cancel": "Anuluj",
+      "friends_cancel_error": "Nie udało się anulować zaproszenia",
+      "friends_cancel_confirm": "Anulować zaproszenie do {{name}}?",
       "friends_requests": "Zaproszenia do znajomych ({{count}})",
       "friends_no_requests": "Nie masz nowych zaproszeń.",
       "friends_accept": "Akceptuj",
@@ -285,6 +307,16 @@ const resources = {
       "friends_offline": "Offline",
       "friends_check": "Profil",
       "friends_delete": "Usuń",
+      "friends_enter_valid_id": "Wpisz prawidłowe ID użytkownika",
+      "friends_cant_add_yourself": "Nie możesz dodać samego siebie!",
+      "friends_request_sent": "Zaproszenie wysłane!",
+      "friends_remove_error": "Nie udało się usunąć znajomego",
+      "friends_remove_confirm": "Usunąć {{name}} ze znajomych?",
+      "friends_accept_error": "Nie udało się zaakceptować zaproszenia",
+      "friends_decline_error": "Nie udało się odrzucić zaproszenia",
+      "loading": "Ładowanie...",
+      "error": "Błąd",
+      "retry": "Spróbuj ponownie",
 
       /* --- PROFILE.JS --- */
       "profile_title": "Profil",
@@ -367,7 +399,7 @@ i18n
     lng: 'en',
     fallbackLng: 'en',
     interpolation: {
-      escapeValue: false 
+      escapeValue: false
     }
   });
 

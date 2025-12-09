@@ -161,6 +161,9 @@ namespace Mathsino.Backend.Migrations
                     b.Property<int>("FriendId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
                     b.HasKey("UserId", "FriendId");
 
                     b.HasIndex("FriendId");
@@ -171,12 +174,8 @@ namespace Mathsino.Backend.Migrations
                         new
                         {
                             UserId = 1,
-                            FriendId = 2
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            FriendId = 1
+                            FriendId = 2,
+                            Status = 1
                         });
                 });
 
@@ -194,13 +193,13 @@ namespace Mathsino.Backend.Migrations
             modelBuilder.Entity("Mathsino.Backend.Models.UserFriend", b =>
                 {
                     b.HasOne("Mathsino.Backend.Models.User", "Friend")
-                        .WithMany()
+                        .WithMany("ReceivedFriendRequests")
                         .HasForeignKey("FriendId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Mathsino.Backend.Models.User", "User")
-                        .WithMany("Friends")
+                        .WithMany("SentFriendRequests")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -212,7 +211,9 @@ namespace Mathsino.Backend.Migrations
 
             modelBuilder.Entity("Mathsino.Backend.Models.User", b =>
                 {
-                    b.Navigation("Friends");
+                    b.Navigation("ReceivedFriendRequests");
+
+                    b.Navigation("SentFriendRequests");
                 });
 #pragma warning restore 612, 618
         }
