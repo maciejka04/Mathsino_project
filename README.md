@@ -104,6 +104,7 @@ npm install react-router-dom
 npm install chart.js react-chartjs-2
 npm install framer-motion@12.23.24
 npm install fireworks-js
+npm install i18next react-i18next i18next-browser-languagedetector
 ```
 
 ```bash
