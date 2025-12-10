@@ -15,9 +15,17 @@ public class UsersService(ILogger<UsersService>? logger, MathsinoContext dbConte
 
     public async Task<User> GetUserByIdAsync(int id)
     {
-        logger?.LogInformation("Fetching user with ID {UserId}", id);
+        logger?.LogInformation("Fetching user with ID {id}", id);
         return await dbContext.Users.FindAsync(id)
             ?? throw new KeyNotFoundException($"User with ID {id} not found.");
+    }
+
+    public async Task<User> GetUserByUserNameAsync(string userName)
+    {
+        logger?.LogInformation("Fetching user with UserName {userName}", userName);
+        var user = await dbContext.Users.FirstOrDefaultAsync(x => x.UserName == userName);
+        return user
+            ?? throw new KeyNotFoundException($"User with UserName '{userName}' not found.");
     }
 
     public async Task<List<SingleGameDto>> GetUserGamesByUserIdAsync(int userId)

@@ -31,6 +31,39 @@ public static class UserEndPoints
             }
         );
         app.MapGet(
+            "/users/user-name/{userName}",
+            async (string userName, UsersService usersService) =>
+            {
+                var user = await usersService.GetUserByUserNameAsync(userName);
+                return Results.Ok(user);
+            }
+        );
+
+        app.MapPut(
+            "/users/{userId}/user-name/{newUserName}",
+            async (int userId, string newUserName, UserNameService userNameService) =>
+            {
+                try
+                {
+                    var (success, message) = await userNameService.ChangeUserNameAsync(
+                        userId,
+                        newUserName
+                    );
+
+                    if (success)
+                    {
+                        return Results.Ok(new { message });
+                    }
+
+                    return Results.BadRequest(new { message });
+                }
+                catch (Exception ex)
+                {
+                    return Results.BadRequest(new { message = ex.Message });
+                }
+            }
+        );
+        app.MapGet(
             "/users/{userId}/games",
             async (int userId, UsersService usersService) =>
             {
