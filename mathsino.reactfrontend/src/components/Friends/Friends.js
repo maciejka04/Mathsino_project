@@ -107,36 +107,35 @@ function Friends() {
     e.preventDefault();
     if (!searchTerm || !user?.id) return;
 
-    const friendId = parseInt(searchTerm);
+    const cleanUsername = searchTerm.trim().startsWith('@')
+      ? searchTerm.trim().substring(1)
+      : searchTerm.trim();
 
-    if (isNaN(friendId)) {
-      alert(t('friends_enter_valid_id') || 'Please enter a valid user ID');
-      return;
-    }
-
-    if (friendId === user.id) {
-      alert(t('friends_cant_add_yourself') || 'You cannot add yourself as a friend!');
+    if (!cleanUsername) {
+      alert(t('friends_enter_username') || 'Please enter a username');
       return;
     }
 
     try {
       const response = await fetch(
-        `${API_URL}/friends/${user.id}/add/${friendId}`,
+        `${API_URL}/friends/${user.id}/add-by-username/${cleanUsername}`,
         { method: 'POST' }
       );
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || 'Failed to send friend request');
+        alert(data.message || t('friends_request_failed') || 'Failed to send friend request');
+        return;
       }
 
-      alert(t('friends_request_sent') || 'Friend request sent!');
+      alert(data.message || t('friends_request_sent') || 'Friend request sent!');
       setSearchTerm('');
-
       await fetchSentRequests();
+
     } catch (err) {
       console.error('Error sending friend request:', err);
-      alert(err.message || 'Failed to send friend request');
+      alert(t('friends_error') || 'An error occurred');
     }
   };
 
@@ -288,7 +287,7 @@ function Friends() {
         <form onSubmit={handleAddFriend} className="add-friend-form">
           <input
             type="text"
-            placeholder={t('friends_placeholder') || 'Enter user ID'}
+            placeholder={t('friends_placeholder') || 'Enter @username'}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="add-friend-input"

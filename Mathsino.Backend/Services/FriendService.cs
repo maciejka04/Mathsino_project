@@ -79,6 +79,87 @@ namespace Mathsino.Backend.Services
             return true;
         }
 
+        public async Task<(bool Success, string Message)> SendFriendRequestByUserNameAsync(
+            int userId,
+            string friendUserName
+        )
+        {
+            _logger?.LogInformation(
+                "User {UserId} sending friend request to username '{FriendUserName}'",
+                userId,
+                friendUserName
+            );
+
+            var friend = await _dbContext.Users.FirstOrDefaultAsync(u =>
+                u.UserName.ToLower() == friendUserName.ToLower()
+            );
+
+            if (friend == null)
+            {
+                _logger?.LogWarning(
+                    "User with username '{FriendUserName}' does not exist",
+                    friendUserName
+                );
+                return (false, "User not found");
+            }
+
+            if (userId == friend.Id)
+            {
+                _logger?.LogWarning(
+                    "User {UserId} tried to send friend request to themselves (username: {FriendUserName})",
+                    userId,
+                    friendUserName
+                );
+                return (false, "You cannot add yourself as a friend");
+            }
+
+            var existingRelation = await _dbContext.UserFriends.FirstOrDefaultAsync(uf =>
+                (uf.UserId == userId && uf.FriendId == friend.Id)
+                || (uf.UserId == friend.Id && uf.FriendId == userId)
+            );
+
+            if (existingRelation != null)
+            {
+                if (existingRelation.Status == FriendStatus.Accepted)
+                {
+                    _logger?.LogWarning(
+                        "Users {UserId} and {FriendId} are already friends",
+                        userId,
+                        friend.Id
+                    );
+                    return (false, "You are already friends");
+                }
+                else if (existingRelation.Status == FriendStatus.Requested)
+                {
+                    _logger?.LogWarning(
+                        "Friend request already exists between {UserId} and {FriendId}",
+                        userId,
+                        friend.Id
+                    );
+                    return (false, "Friend request already sent");
+                }
+            }
+
+            var friendRequest = new UserFriend
+            {
+                UserId = userId,
+                FriendId = friend.Id,
+                Status = FriendStatus.Requested,
+            };
+
+            _dbContext.UserFriends.Add(friendRequest);
+            await _dbContext.SaveChangesAsync();
+
+            _logger?.LogInformation(
+                "Friend request sent from {UserId} to {FriendId} (username: {FriendUserName})",
+                userId,
+                friend.Id,
+                friendUserName
+            );
+
+            return (true, "Friend request sent successfully");
+        }
+
         public async Task<bool> AcceptFriendRequestAsync(int userId, int senderId)
         {
             _logger?.LogInformation(

@@ -237,7 +237,6 @@ app.MapPut(
 
 app.MapUserEndPoints();
 app.MapGameEndPoints();
-
 app.MapBalanceEndPoints();
 app.MapFriendEndPoints();
 
