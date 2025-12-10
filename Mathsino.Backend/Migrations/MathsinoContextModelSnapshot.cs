@@ -116,6 +116,11 @@ namespace Mathsino.Backend.Migrations
                     b.Property<bool>("SoundEffectsEnabled")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
@@ -134,7 +139,8 @@ namespace Mathsino.Backend.Migrations
                             MusicId = 1,
                             Provider = "",
                             ProviderId = "",
-                            SoundEffectsEnabled = true
+                            SoundEffectsEnabled = true,
+                            UserName = "alismi"
                         },
                         new
                         {
@@ -149,7 +155,8 @@ namespace Mathsino.Backend.Migrations
                             MusicId = 1,
                             Provider = "",
                             ProviderId = "",
-                            SoundEffectsEnabled = true
+                            SoundEffectsEnabled = true,
+                            UserName = "bobjoh"
                         });
                 });
 

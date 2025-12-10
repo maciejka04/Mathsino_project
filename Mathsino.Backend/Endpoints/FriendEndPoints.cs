@@ -38,6 +38,32 @@ public static class FriendEndPoints
                 return Results.Ok(friends);
             }
         );
+
+        app.MapPost(
+            "/friends/{userId}/add-by-username/{friendUserName}",
+            async (FriendService friendService, int userId, string friendUserName) =>
+            {
+                try
+                {
+                    var (success, message) = await friendService.SendFriendRequestByUserNameAsync(
+                        userId,
+                        friendUserName
+                    );
+
+                    if (success)
+                    {
+                        return Results.Ok(new { message });
+                    }
+
+                    return Results.BadRequest(new { message });
+                }
+                catch (Exception ex)
+                {
+                    return Results.BadRequest(new { message = ex.Message });
+                }
+            }
+        );
+
         app.MapPost(
             "/friends/{userId}/accept/{senderId}",
             async (FriendService friendService, int userId, int senderId) =>
