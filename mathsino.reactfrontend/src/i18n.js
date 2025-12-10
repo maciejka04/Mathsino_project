@@ -135,6 +135,7 @@ const resources = {
       "profile_logout": "Log Out",
       "profile_danger_zone": "Danger Zone",
       "profile_reset_progress": "Reset Progress",
+      "profile_edit_username": "Edit",
 
       /* --- RESOURCES.JS --- */
       "resources_title": "Settings & Resources",
@@ -329,6 +330,7 @@ const resources = {
       "profile_logout": "Wyloguj się",
       "profile_danger_zone": "Strefa niebezpieczna",
       "profile_reset_progress": "Zresetuj postępy",
+      "profile_edit_username": "Edytuj",
 
       /* --- RESOURCES.JS --- */
       "resources_title": "Ustawienia i Zasoby",

@@ -199,6 +199,7 @@ app.MapGet(
                             Email = email,
                             AvatarPath = user.AvatarPath,
                             Balance = user.Balance,
+                            UserNameTag = user.UserName,
                             Message = "Zalogowano pomyślnie!",
                         }
                     );

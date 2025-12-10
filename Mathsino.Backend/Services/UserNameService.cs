@@ -63,7 +63,7 @@ namespace Mathsino.Backend.Services
             if (userName.Length < 3 || userName.Length > 30)
                 return false;
 
-            return Regex.IsMatch(userName, @"^[a-zA-Z0-9]+$");
+            return Regex.IsMatch(userName, @"^[a-zA-Z0-9_.]+$");
         }
 
         public async Task<(bool Success, string Message)> ChangeUserNameAsync(
