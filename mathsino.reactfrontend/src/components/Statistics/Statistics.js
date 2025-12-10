@@ -167,8 +167,6 @@ function Statistics() {
 
         const giveReward = async () => {
               try {
-                  // Pamiętaj o naszym bezpiecznym endpoincie z poprzednich kroków!
-                  // Używam bezpieczniejszego 'claim-ad-reward' zamiast 'add?amount=...'
                   const response = await fetch(`${API_URL}/user/${USER_ID}/claim-ad-reward`, {
                       method: 'POST',
                       credentials: 'include',
