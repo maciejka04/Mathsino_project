@@ -92,6 +92,14 @@ const resources = {
       "ad_error_reward": "Error granting reward.",
       "ad_error_network": "Server connection error.",
 
+      "stats_friend_balance": "Friend's Balance", 
+      "stats_my_balance": "Your Balance",
+      "stats_friend_summary": "Summary",
+      "stats_friend": "Friend",
+      "stats_game": "Game",
+      "stats_error_fetching": "Failed to fetch statistics",
+      "loading_profile": "Loading profile...",
+
       /* --- FRIENDS.JS --- */
       "friends_title": "Friends",
       "friends_add_friend": "Add Friend",
@@ -130,6 +138,9 @@ const resources = {
       "friends_request_failed": "Failed to send friend request",
       "friends_error": "An error occurred",
 
+      "friends_error": "An error occurred",
+      "back_to_friends": "Back to Friends",
+
       /* --- PROFILE.JS --- */
       "profile_title": "Profile",
       "profile_subtitle": "Manage your account and avatar.",
@@ -142,6 +153,8 @@ const resources = {
       "profile_danger_zone": "Danger Zone",
       "profile_reset_progress": "Reset Progress",
       "profile_edit_username": "Edit",
+
+      "profile_not_found": "Profile not found",
 
       /* --- RESOURCES.JS --- */
       "resources_title": "Settings & Resources",
@@ -293,6 +306,14 @@ const resources = {
       "ad_error_reward": "Błąd podczas przyznawania nagrody.",
       "ad_error_network": "Błąd połączenia z serwerem.",
 
+      "stats_friend_balance": "Saldo Znajomego", 
+      "stats_my_balance": "Twoje Saldo",
+      "stats_friend_summary": "Podsumowanie",
+      "stats_friend": "Znajomy",
+      "stats_game": "Gra",
+      "stats_error_fetching": "Błąd pobierania statystyk",
+      "loading_profile": "Ładowanie profilu...",
+
       /* --- FRIENDS.JS --- */
       "friends_title": "Znajomi",
       "friends_add_friend": "Dodaj znajomego",
@@ -330,6 +351,8 @@ const resources = {
       "friends_request_sent": "Zaproszenie wysłane pomyślnie!",
       "friends_request_failed": "Nie udało się wysłać zaproszenia",
       "friends_error": "Wystąpił błąd",
+      "friends_error": "Wystąpił błąd",
+      "back_to_friends": "Wróć do Znajomych",
 
       /* --- PROFILE.JS --- */
       "profile_title": "Profil",
@@ -343,6 +366,8 @@ const resources = {
       "profile_danger_zone": "Strefa niebezpieczna",
       "profile_reset_progress": "Zresetuj postępy",
       "profile_edit_username": "Edytuj",
+
+      "profile_not_found": "Profil nie został znaleziony",
 
       /* --- RESOURCES.JS --- */
       "resources_title": "Ustawienia i Zasoby",

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useOutletContext } from 'react-router-dom';
 import './Friends.css';
 
 import defaultAvatar from '../../assets/profilepic/snake.png';
 import clickSound from '../../assets/mouse-click.mp3';
 import { getAvatarUrl, DEFAULT_AVATAR } from '../../utils/avatarHelper';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 
 const playClickSound = () => {
   const audio = new Audio(clickSound);
@@ -17,6 +17,7 @@ const API_URL = "http://localhost:5126";
 function Friends() {
   const { t } = useTranslation();
   const { user, refreshUser } = useOutletContext();
+  const navigate = useNavigate();
 
   const [friends, setFriends] = useState([]);
   const [requests, setRequests] = useState([]);
@@ -175,7 +176,8 @@ function Friends() {
     const friend = friends.find(f => f.id === id);
     if (!friend) return;
 
-    alert(`TODO: Navigate to profile of ${friend.name} (ID: ${id})`);
+    playClickSound();
+    navigate(`/profile/${id}`);
   };
 
   const handleAcceptRequest = async (senderId) => {

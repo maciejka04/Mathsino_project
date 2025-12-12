@@ -18,8 +18,7 @@ import PrivacyPolicy from './components/PrivacyPolicy';
 import DataDeletion from './components/DataDeletion';
 import ProtectedRoute from './components/ProtectedRoute';
 import LessonPage from './components/Lesson/LessonPage';
-
-
+import FriendProfile from './components/Friends/FriendProfile';
 
 
 function App() {
@@ -48,6 +47,9 @@ function App() {
         } />
         <Route path="friends" element={
           <ProtectedRoute><Friends /></ProtectedRoute>
+        } />
+        <Route path="profile/:friendId" element={
+          <ProtectedRoute><FriendProfile /></ProtectedRoute>
         } />
         <Route path="resources" element={
           <ProtectedRoute><Resources /></ProtectedRoute>

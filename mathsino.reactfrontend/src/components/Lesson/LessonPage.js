@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next'; // IMPORT I18N
-import audioService from '../../services/audioService';
 import clickSound from '../../assets/mouse-click.mp3';
 
 
@@ -69,6 +68,8 @@ const LessonPage = () => {
   const navigate = useNavigate();
   const { i18n } = useTranslation(); // HOOK DO JĘZYKA
 
+  const lessonAudioRef = useRef(null);
+
   // Stan na dane lekcji (ładowane dynamicznie)
   const [currentLessonData, setCurrentLessonData] = useState(null);
   const [loadingLesson, setLoadingLesson] = useState(true);
@@ -88,6 +89,19 @@ const LessonPage = () => {
   const [isWrongAction, setIsWrongAction] = useState(false);
 
   const scenario = currentLessonData ? currentLessonData.scenarios[currentScenarioIndex] : null;
+
+    const playClickSound = () => {
+        const audio = new Audio(clickSound);
+        audio.play().catch(e => console.warn("Audio playback failed (click):", e));
+    };
+
+    const stopLessonAudio = () => {
+        if (lessonAudioRef.current) {
+            lessonAudioRef.current.pause();
+            lessonAudioRef.current.currentTime = 0;
+            lessonAudioRef.current = null; 
+        }
+    };
 
   // --- 0. DYNAMICZNE ŁADOWANIE LEKCJI ---
   useEffect(() => {
@@ -122,8 +136,15 @@ const LessonPage = () => {
   // --- 1. SETUP ON LESSON LOADED ---
   useEffect(() => {
     if (currentLessonData) {
-        // Dźwięk przy pierwszym załadowaniu lekcji
-        audioService.playSoundEffect(lessonSoundMap[id]);
+
+        stopLessonAudio(); 
+
+        const lessonUrl = lessonSoundMap[id];
+        if (lessonUrl) {
+             const audioInstance = new Audio(lessonUrl);
+             audioInstance.play().catch(e => console.warn("Audio playback failed (lesson):", e));
+             lessonAudioRef.current = audioInstance;
+        }
 
         setLessonPhase('INTRO');
         setCurrentScenarioIndex(0);
@@ -165,6 +186,12 @@ const LessonPage = () => {
       }
     }
   }, [lessonPhase, currentScenarioIndex, scenario]);
+
+  useEffect(() => {
+      return () => {
+          stopLessonAudio();
+      };
+  }, []);
 
   // --- ACTIONS ---
   const startLesson = () => setLessonPhase('GAME');
@@ -278,12 +305,14 @@ const LessonPage = () => {
         <button
             className="back-button"
             onClick={() => {
-                audioService.playSoundEffect(clickSound);
+                stopLessonAudio();
+                playClickSound();
+                
                 setTimeout(() => {
-                navigate('/learn');
+                    navigate('/learn');
                 }, 400); 
             }}
-            >
+        >
             &#8592; Exit Lesson
         </button>
 
