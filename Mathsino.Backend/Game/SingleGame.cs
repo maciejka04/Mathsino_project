@@ -13,6 +13,8 @@ namespace Mathsino.Backend.Game
 
         public int UserId { get; set; }
 
+        public int BetAmount { get; set; } = 0;
+
         public Guid PlayerId { get; set; }
 
         public DateTime StartTime { get; set; }

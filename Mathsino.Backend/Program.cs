@@ -98,7 +98,8 @@ builder.Services.AddDbContextPool<MathsinoContext>(options =>
 builder.Services.AddScoped<UsersService>();
 builder.Services.AddScoped<FriendService>();
 builder.Services.AddScoped<UserNameService>();
-builder.Services.AddSingleton<GameService>();
+builder.Services.AddScoped<BalanceService>();
+builder.Services.AddScoped<GameService>();
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
