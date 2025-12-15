@@ -1,3 +1,4 @@
+using Mathsino.Backend.Game;
 using Mathsino.Backend.Models;
 
 namespace Mathsino.Backend.Services;
@@ -45,5 +46,38 @@ public class BalanceService
         if (user == null)
             throw new KeyNotFoundException($"User {userId} not found");
         return user.Balance;
+    }
+
+    public async Task SaveBalanceSnapshot(int userId)
+    {
+        logger?.LogInformation("Saving balance snapshot for user {UserId}", userId);
+
+        var user = await dbContext.Users.FindAsync(userId);
+        if (user == null)
+        {
+            logger?.LogError("User {UserId} not found for snapshot", userId);
+            throw new KeyNotFoundException($"User {userId} not found");
+        }
+
+        var snapshotRecord = new SingleGame
+        {
+            GameId = Guid.NewGuid(),
+            UserId = userId,
+            PlayerId = Guid.NewGuid(),
+            StartTime = DateTime.Now,
+            EndTime = DateTime.Now,
+            SingleGameResult = GameResult.Snapshot,
+            SingleGameSplitResult = null,
+            BalanceAfterGame = user.Balance,
+        };
+
+        await dbContext.SingleGames.AddAsync(snapshotRecord);
+        await dbContext.SaveChangesAsync();
+
+        logger?.LogInformation(
+            "Balance snapshot saved: {Balance} PLN for user {UserId}",
+            user.Balance,
+            userId
+        );
     }
 }

@@ -292,6 +292,7 @@ static async Task OnCreatingTicketHandler(
         var lastName = context.Principal?.FindFirst(ClaimTypes.Surname)?.Value ?? "";
 
         var userName = await userNameService.GenerateUniqueUserNameAsync(firstName, lastName);
+        var balanceService = scope.ServiceProvider.GetRequiredService<BalanceService>();
 
         user = new User
         {
@@ -306,6 +307,8 @@ static async Task OnCreatingTicketHandler(
         };
         dbContext.Users.Add(user);
         await dbContext.SaveChangesAsync();
+
+        await balanceService.SaveBalanceSnapshot(user.Id);
     }
 
     // 3. Utwórz ClaimsPrincipal z użyciem wewnętrznego ID użytkownika z bazy
