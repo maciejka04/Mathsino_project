@@ -10,6 +10,8 @@ namespace Mathsino.Backend.Game
         public Guid PlayerId { get; set; } = Guid.NewGuid();
         public User User { get; set; } = default!;
 
+        public int BetAmount { get; set; } = 0;
+
         public List<Card> Hand { get; set; } = new List<Card>();
 
         public List<Card>? SplitHand { get; set; } = null;
@@ -22,7 +24,6 @@ namespace Mathsino.Backend.Game
 
         public bool HasDoubledMain { get; set; } = false;
         public bool HasDoubledSplit { get; set; } = false;
-
 
         public bool HasSplit => SplitHand != null;
 
@@ -42,6 +43,5 @@ namespace Mathsino.Backend.Game
 
             return value;
         }
-
     }
 }

@@ -106,38 +106,38 @@ const mapBackendCardToFilename = (card) => {
 };
 
 const calculateHandValue = (hand) => {
-    let sum = 0;
-    let numAces = 0;
+  let sum = 0;
+  let numAces = 0;
 
-    for (const card of hand) {
-        if (!card || !card.name) continue;
-        
-        const rank = card.name.split('_of_')[0].toLowerCase();
+  for (const card of hand) {
+    if (!card || !card.name) continue;
 
-        if (rank === 'ace') {
-            numAces += 1;
-            sum += 11; 
-        } else if (['king', 'queen', 'jack', '10'].includes(rank)) {
-            sum += 10;
-        } else {
-            const numericalRank = parseInt(rank, 10);
-            if (!isNaN(numericalRank)) {
-                sum += numericalRank;
-            }
-        }
+    const rank = card.name.split('_of_')[0].toLowerCase();
+
+    if (rank === 'ace') {
+      numAces += 1;
+      sum += 11;
+    } else if (['king', 'queen', 'jack', '10'].includes(rank)) {
+      sum += 10;
+    } else {
+      const numericalRank = parseInt(rank, 10);
+      if (!isNaN(numericalRank)) {
+        sum += numericalRank;
+      }
     }
+  }
 
-    // Korekta dla Asów
-    while (sum > 21 && numAces > 0) {
-        sum -= 10; 
-        numAces -= 1;
-    }
+  // Korekta dla Asów
+  while (sum > 21 && numAces > 0) {
+    sum -= 10;
+    numAces -= 1;
+  }
 
-    return sum;
+  return sum;
 };
 
 function Online() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { user, refreshUser } = useOutletContext();
   //const [currentBalance, setCurrentBalance] = useState(5000);
@@ -183,64 +183,35 @@ function Online() {
 
   console.log("ONLINE USER ID:", USER_ID);
 
-  const updateBalance = async (type, amount) => {
-    const endpoint = `${API_URL}/user/${USER_ID}/balance/${type}?amount=${amount}`;
-    
-    try {
-        const response = await fetch(endpoint, {
-            method: 'POST', 
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-        });
-
-        if (response.ok && refreshUser) {
-            refreshUser(); 
-            return true;
-        } else if (response.status === 400) {
-             const error = await response.text();
-             if (error.includes('Insufficient balance')) {
-                 return false;
-             }
-             alert(`Błąd: ${error}`);
-             return false;
-        } else {
-            throw new Error(`Błąd serwera: ${response.status}`);
-        }
-    } catch (error) {
-        console.error("Błąd aktualizacji salda:", error);
-        return false;
-    }
-};
-
 
   React.useEffect(() => {
     let fireworks;
     if (showFireworks && fireworksContainerRef.current) {
-        fireworks = new Fireworks(fireworksContainerRef.current, {
-            autoresize: true,
-            opacity: 0.9,
-            acceleration: 1.05,
-            friction: 0.97,
-            particles: 50,
-            gravity: 1.5,
-            traceSpeed: 0.5,
-            delay: { min: 15, max: 30 },
-            mouse: { click: false, move: false }, 
-            boundaries: { 
-                x: 50,
-                y: 50,
-                width: fireworksContainerRef.current.clientWidth - 100,
-                height: fireworksContainerRef.current.clientHeight * 0.7,
-            },
-        });
-        
-        fireworks.start();
+      fireworks = new Fireworks(fireworksContainerRef.current, {
+        autoresize: true,
+        opacity: 0.9,
+        acceleration: 1.05,
+        friction: 0.97,
+        particles: 50,
+        gravity: 1.5,
+        traceSpeed: 0.5,
+        delay: { min: 15, max: 30 },
+        mouse: { click: false, move: false },
+        boundaries: {
+          x: 50,
+          y: 50,
+          width: fireworksContainerRef.current.clientWidth - 100,
+          height: fireworksContainerRef.current.clientHeight * 0.7,
+        },
+      });
+
+      fireworks.start();
     }
-    
+
     return () => {
-        if (fireworks) {
-            fireworks.stop();
-        }
+      if (fireworks) {
+        fireworks.stop();
+      }
     };
   }, [showFireworks]);
 
@@ -250,20 +221,20 @@ function Online() {
   }, []);
 
   React.useEffect(() => {
-  shuffleAudio.current = new Audio(shuffleSound);
+    shuffleAudio.current = new Audio(shuffleSound);
 
-  winAudio.current = new Audio(winSound);
-  loseAudio.current = new Audio(loseSound);
-  pushAudio.current = new Audio(pushSound);
-  blackjackAudio.current = new Audio(blackjackSound);
-  fireworksAudio.current = new Audio(fireworksSound);
+    winAudio.current = new Audio(winSound);
+    loseAudio.current = new Audio(loseSound);
+    pushAudio.current = new Audio(pushSound);
+    blackjackAudio.current = new Audio(blackjackSound);
+    fireworksAudio.current = new Audio(fireworksSound);
 
-  winAudio.current.volume = 1.0;
-  loseAudio.current.volume = 0.6;
-  pushAudio.current.volume = 0.9;
-  blackjackAudio.current.volume = 1.0;
-  fireworksAudio.current.volume = 0.7;
-}, []);
+    winAudio.current.volume = 1.0;
+    loseAudio.current.volume = 0.6;
+    pushAudio.current.volume = 0.9;
+    blackjackAudio.current.volume = 1.0;
+    fireworksAudio.current.volume = 0.7;
+  }, []);
 
 
   const resetGameFlags = () => {
@@ -299,22 +270,29 @@ function Online() {
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    const success = await updateBalance('deduct', currentBet);
-    if (!success) {
-        alert(t('not_enough_funds'));
-        setCurrentBet(0); 
-        setIsShuffling(false);
-        return; 
-    }
-
     try {
       const response = await fetch(
-        `${API_URL}/games/create-singleplayer?userId=${USER_ID}`
+        `${API_URL}/games/create-singleplayer?userId=${USER_ID}&betAmount=${currentBet}`,
+        { method: 'POST' }
       );
-      if (!response.ok) throw new Error("Błąd tworzenia gry");
+      if (!response.ok) {
+        const errorText = await response.text();
+        setIsShuffling(false);
+
+        if (errorText.includes('Insufficient balance')) {
+          alert(t('not_enough_funds'));
+        } else {
+          alert(`Błąd: ${errorText}`);
+        }
+        return;
+      }
       const gameData = await response.json();
 
       setIsShuffling(false);
+
+      if (refreshUser) {
+        refreshUser();
+      }
       updateGameState(gameData);
 
       if (gameData.status === "Completed") {
@@ -324,9 +302,7 @@ function Online() {
 
     } catch (error) {
       console.error("Nie udało się rozpocząć gry:", error);
-      alert("Błąd połączenia. Środki zostały zwrócone.");
-      updateBalance('add', currentBet);
-      setCurrentBet(0);
+      alert("Błąd połączenia z serwerem.");
       setIsShuffling(false);
     }
   };
@@ -422,70 +398,44 @@ function Online() {
     setGameStatus(gameData.status);
   };
 
-const handleGameResult = (
-  mainResult,
-  splitRes,
-  isMainDoubledNow,
-  isSplitDoubledNow
- ) => {
-  setResultProcessed(true);
-  resultProcessedRef.current = true;
+  const handleGameResult = (
+    mainResult,
+    splitRes,
+    isMainDoubledNow,
+    isSplitDoubledNow
+  ) => {
+    setResultProcessed(true);
+    resultProcessedRef.current = true;
 
     // --- DŹWIĘKI ---
-  if (mainResult === "Win") audioService.playSoundEffect(winSound);
-  if (mainResult === "Lose") audioService.playSoundEffect(loseSound);
-  if (mainResult === "Push") audioService.playSoundEffect(pushSound);
-  if (mainResult === "Blackjack") {
-   audioService.playSoundEffect(blackjackSound);
-   audioService.playSoundEffect(fireworksSound);
-  }
-
-    // Dźwięki dla splita (uproszczone, żeby nie grało 2x na raz)
-  if (hasSplit && splitRes && splitRes !== mainResult) {
-       // Odtwórz dźwięk dla drugiego wyniku tylko jeśli jest inny
-       // (Można tu dodać timeout, ale to detal)
-  }
-
-  if (mainResult === "Blackjack" || splitRes === "Blackjack") {
-    setShowFireworks(true);
-    setTimeout(() => setShowFireworks(false), 8000); 
+    if (mainResult === "Win") audioService.playSoundEffect(winSound);
+    if (mainResult === "Lose") audioService.playSoundEffect(loseSound);
+    if (mainResult === "Push") audioService.playSoundEffect(pushSound);
+    if (mainResult === "Blackjack") {
+      audioService.playSoundEffect(blackjackSound);
+      audioService.playSoundEffect(fireworksSound);
     }
 
-  setTimeout(() => {
-   setShowModal(true);
-  }, 1000);
+    // Dźwięki dla splita (uproszczone, żeby nie grało 2x na raz)
+    if (hasSplit && splitRes && splitRes !== mainResult) {
+      // Odtwórz dźwięk dla drugiego wyniku tylko jeśli jest inny
+      // (Można tu dodać timeout, ale to detal)
+    }
 
-  let totalWin = 0;
+    if (mainResult === "Blackjack" || splitRes === "Blackjack") {
+      setShowFireworks(true);
+      setTimeout(() => setShowFireworks(false), 8000);
+    }
 
-  const calculateWin = (res, bet, isDoubled) => {
-   const actualBet = isDoubled ? bet * 2 : bet;
-   switch (res) {
-    case "Win":
-     return actualBet * 2; // Zwrot stawki + zysk
-    case "Blackjack":
-     return actualBet + (actualBet * 1.5); // Zwrot + 1.5x
-    case "Push":
-     return actualBet; // Zwrot stawki
-    case "Lose":
-     return 0;
-    default:
-     return 0;
-   }
+    setTimeout(() => {
+      setShowModal(true);
+    }, 1000);
+
+    if (refreshUser) {
+      refreshUser();
+    }
+
   };
-
-  totalWin += calculateWin(mainResult, currentBet, isMainDoubledNow);
-
-  if (hasSplit && splitRes) {
-   totalWin += calculateWin(splitRes, currentBet, isSplitDoubledNow);
-  }
-
-    // --- POPRAWKA TUTAJ ---
-    // Po prostu dodajemy wygraną kwotę do konta.
-  if (totalWin > 0) {
-      updateBalance('add', totalWin);
-  }
-    // Jeśli totalWin == 0 (przegrana), nic nie robimy, bo zakład przepadł na początku.
- };
 
   const fetchGameStatus = async (gId) => {
     const response = await fetch(`${API_URL}/games/${gId}`);
@@ -585,7 +535,8 @@ const handleGameResult = (
     analyzeMove("Stand");
     if (!gameId || !playerId) return;
     try {
-      await fetch(`${API_URL}/games/${gameId}/player-pass/${playerId}`);
+      await fetch(`${API_URL}/games/${gameId}/player-pass/${playerId}`
+      );
       const data = await fetchGameStatus(gameId);
       if (data.status === "Completed") {
         await fetch(`${API_URL}/games/${gameId}/check-results/${playerId}`);
@@ -600,63 +551,90 @@ const handleGameResult = (
     analyzeMove("Split");
     if (!canSplit) return;
     if (user.balance < currentBet) {
-      alert("Brak środków na Split!");
+      alert(t('not_enough_funds'));
       return;
     }
+
     try {
-      const success = await updateBalance('deduct', currentBet);
-      if (!success) {
-        setCurrentBet(0);
+      const response = await fetch(
+        `${API_URL}/games/${gameId}/player-split/${playerId}`,
+        { method: "POST" }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        if (errorText.includes('Insufficient balance')) {
+          alert(t('not_enough_funds'));
+        } else {
+          alert(`Błąd: ${errorText}`);
+        }
         return;
       }
-      await fetch(`${API_URL}/games/${gameId}/player-split/${playerId}`, {
-        method: "POST",
-      });
+      if (refreshUser) {
+        refreshUser();
+      }
+
       await fetchGameStatus(gameId);
+
     } catch (error) {
       console.error("Błąd Split:", error);
+      alert("Błąd połączenia z serwerem.");
     }
   };
-
   const handleDouble = async () => {
     analyzeMove("Double");
     if (!canDouble) return;
+
     if (user.balance < currentBet) {
-      alert("Brak środków na Double!");
+      alert(t('not_enough_funds'));
       return;
     }
+
     try {
-      const success = await updateBalance('deduct', currentBet);
-      if (!success) {
-        setCurrentBet(0);
-        return;
-      }
+      let response;
+
       if (isSplitActive) {
-        await fetch(
+        response = await fetch(
           `${API_URL}/games/${gameId}/player-double-split/${playerId}`,
           { method: "POST" }
         );
         setSplitDoubled(true);
       } else {
-        await fetch(`${API_URL}/games/${gameId}/player-double/${playerId}`, {
-          method: "POST",
-        });
+        response = await fetch(
+          `${API_URL}/games/${gameId}/player-double/${playerId}`,
+          { method: "POST" }
+        );
         setMainDoubled(true);
       }
 
+      if (!response.ok) {
+        const errorText = await response.text();
+        if (errorText.includes('Insufficient balance')) {
+          alert(t('not_enough_funds'));
+        } else {
+          alert(`Błąd: ${errorText}`);
+        }
+        return;
+      }
+      if (refreshUser) {
+        refreshUser();
+      }
+
       const data = await fetchGameStatus(gameId);
+
       if (data.status === "Completed") {
         await fetch(`${API_URL}/games/${gameId}/check-results/${playerId}`);
         await fetchGameStatus(gameId);
       }
+
     } catch (error) {
       console.error("Błąd Double:", error);
+      alert("Błąd połączenia z serwerem.");
     }
   };
-
   const handleChipSelect = (value) => {
     if (gameStatus === "InProgress" || isShuffling) return;
-    
+
     if (currentBet + value > user.balance) {
       alert(t('not_enough_funds'));
       return;
@@ -736,11 +714,11 @@ const handleGameResult = (
   return (
     <div className="online-container">
       {showFireworks && (
-         <div 
-            className="fireworks-container" 
-            ref={fireworksContainerRef} 
+        <div
+          className="fireworks-container"
+          ref={fireworksContainerRef}
         />
-       )}
+      )}
       <button
         className="back-button"
         onClick={() => {
@@ -755,13 +733,13 @@ const handleGameResult = (
 
 
       <div className="user-info-panel">
-       <img 
+        <img
           src={user.avatarUrl || defaultAvatar}
-          alt={t('online_avatar_alt')} 
-          className="user-avatar" 
-       />
-       <span className="user-name">{user?.name || t('online_guest')}</span>
-              </div>
+          alt={t('online_avatar_alt')}
+          className="user-avatar"
+        />
+        <span className="user-name">{user?.name || t('online_guest')}</span>
+      </div>
       {/* FEEDBACK TRENERA */}
       {strategyFeedback && (
         <div
@@ -823,44 +801,44 @@ const handleGameResult = (
         <img src={tableImage} alt="Stół do gry" className="game-table-image" />
         {/* WARTOSC REKI KRUPIERA */}
         {dealerCards.length > 0 && (
-            <div className="hand-value dealer-value">
-                {`${t('dealer')}:`}{" "}
-                <span style={{ fontWeight: "bold" }}>
-                    {gameStatus === "InProgress" && dealerCards.length === 2
-                        ? calculateHandValue(dealerCards.slice(0, 1))
-                        : calculateHandValue(dealerCards)}
-                </span>
-            </div>
+          <div className="hand-value dealer-value">
+            {`${t('dealer')}:`}{" "}
+            <span style={{ fontWeight: "bold" }}>
+              {gameStatus === "InProgress" && dealerCards.length === 2
+                ? calculateHandValue(dealerCards.slice(0, 1))
+                : calculateHandValue(dealerCards)}
+            </span>
+          </div>
         )}
-        
+
         {/* WARTOSC REKI GRACZA (MAIN) */}
         {playerCards.length > 0 && (
-            <div
-                className="hand-value player-main-value"
-                style={{
-                    left: hasSplit ? "40%" : "50%",
-                }}
-            >
-                {hasSplit ? `${t('hand')} 1` : "Ty"}:{" "}
-                <span style={{ fontWeight: "bold" }}>
-                    {calculateHandValue(playerCards)}
-                </span>
-            </div>
+          <div
+            className="hand-value player-main-value"
+            style={{
+              left: hasSplit ? "40%" : "50%",
+            }}
+          >
+            {hasSplit ? `${t('hand')} 1` : "Ty"}:{" "}
+            <span style={{ fontWeight: "bold" }}>
+              {calculateHandValue(playerCards)}
+            </span>
+          </div>
         )}
 
         {/* WARTOSC REKI GRACZA (SPLIT) */}
         {hasSplit && splitCards.length > 0 && (
-            <div
-                className="hand-value player-split-value"
-                style={{
-                    left: "60%",
-                }}
-            >
-                {`${t('hand')} 2:`}{" "}
-                <span style={{ fontWeight: "bold" }}>
-                    {calculateHandValue(splitCards)}
-                </span>
-            </div>
+          <div
+            className="hand-value player-split-value"
+            style={{
+              left: "60%",
+            }}
+          >
+            {`${t('hand')} 2:`}{" "}
+            <span style={{ fontWeight: "bold" }}>
+              {calculateHandValue(splitCards)}
+            </span>
+          </div>
         )}
         {/* TASOWARKA */}
         <div
@@ -928,7 +906,7 @@ const handleGameResult = (
             <motion.div
               key={`dealer-${index}`}
               className="card-image dealer-card"
-              style={{ left: `${finalLeft}%`}}
+              style={{ left: `${finalLeft}%` }}
               initial={{
                 x: startX,
                 y: startY,
@@ -1036,34 +1014,34 @@ const handleGameResult = (
             );
           })}
 
-          <div className="betting-ui">
-        <div className="chip-selection">
-          <img
-            src={dziesiecImage}
-            alt="10"
-            className="chip-image chip-z4"
-            onClick={() => handleChipSelect(10)}
-          />
-          <img
-            src={piecdziesiatImage}
-            alt="50"
-            className="chip-image chip-z3"
-            onClick={() => handleChipSelect(50)}
-          />
-          <img
-            src={stoImage}
-            alt="100"
-            className="chip-image chip-z2"
-            onClick={() => handleChipSelect(100)}
-          />
-          <img
-            src={piecsetImage}
-            alt="500"
-            className="chip-image chip-z1"
-            onClick={() => handleChipSelect(500)}
-          />
+        <div className="betting-ui">
+          <div className="chip-selection">
+            <img
+              src={dziesiecImage}
+              alt="10"
+              className="chip-image chip-z4"
+              onClick={() => handleChipSelect(10)}
+            />
+            <img
+              src={piecdziesiatImage}
+              alt="50"
+              className="chip-image chip-z3"
+              onClick={() => handleChipSelect(50)}
+            />
+            <img
+              src={stoImage}
+              alt="100"
+              className="chip-image chip-z2"
+              onClick={() => handleChipSelect(100)}
+            />
+            <img
+              src={piecsetImage}
+              alt="500"
+              className="chip-image chip-z1"
+              onClick={() => handleChipSelect(500)}
+            />
+          </div>
         </div>
-      </div>
       </div>
 
       {/* PANEL LEWY DOLNY */}
@@ -1101,7 +1079,7 @@ const handleGameResult = (
       </div>
 
       {/* Żetony */}
-      
+
 
       {/* Przyciski Akcji */}
       <div className="game-actions">

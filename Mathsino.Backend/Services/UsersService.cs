@@ -32,7 +32,9 @@ public class UsersService(ILogger<UsersService>? logger, MathsinoContext dbConte
     {
         logger?.LogInformation("Fetching games for user ID {UserId}", userId);
         return await dbContext
-            .SingleGames.Where(sg => sg.UserId == userId)
+            .SingleGames.Where(sg =>
+                sg.UserId == userId && sg.SingleGameResult != GameResult.Snapshot
+            )
             .Select(sg => new SingleGameDto(
                 sg.Id,
                 sg.GameId,
@@ -75,30 +77,37 @@ public class UsersService(ILogger<UsersService>? logger, MathsinoContext dbConte
     {
         logger?.LogInformation("Calculating stats for user {UserId}", userId);
 
-        var games = await dbContext.SingleGames.Where(sg => sg.UserId == userId).ToListAsync();
+        var allGames = await dbContext.SingleGames.Where(sg => sg.UserId == userId).ToListAsync();
+
+        var realGames = allGames.Where(g => g.SingleGameResult != GameResult.Snapshot).ToList();
+
+        int peakBalance = 5000;
+        if (allGames.Any())
+        {
+            peakBalance = allGames.Max(g => g.BalanceAfterGame);
+        }
 
         return new UserStatsDto
         {
-            TotalGames = games.Count,
-            TotalWins = games.Count(g =>
-                g.SingleGameResult == GameResult.Win || g.SingleGameResult == GameResult.Blackjack
-            ),
-            TotalLosses = games.Count(g => g.SingleGameResult == GameResult.Lose),
-            TotalPushes = games.Count(g => g.SingleGameResult == GameResult.Push),
+            TotalGames = realGames.Count,
+            TotalWins = realGames.Count(g => g.SingleGameResult == GameResult.Win),
+            TotalLosses = realGames.Count(g => g.SingleGameResult == GameResult.Lose),
+            TotalPushes = realGames.Count(g => g.SingleGameResult == GameResult.Push),
             WinRate =
-                games.Count > 0
+                realGames.Count > 0
                     ? (double)(
-                        games.Count(g =>
+                        realGames.Count(g =>
                             g.SingleGameResult == GameResult.Win
                             || g.SingleGameResult == GameResult.Blackjack
                         )
-                        + games.Count(g =>
+                        + realGames.Count(g =>
                             g.SingleGameSplitResult == GameResult.Win
                             || g.SingleGameSplitResult == GameResult.Blackjack
                         )
-                    ) / games.Count
+                    ) / realGames.Count
                     : 0,
-            BlackJacks = games.Count(g => g.SingleGameResult == GameResult.Blackjack),
+            BlackJacks = realGames.Count(g => g.SingleGameResult == GameResult.Blackjack),
+            PeakBalance = peakBalance,
         };
     }
 }
@@ -111,4 +120,6 @@ public record UserStatsDto
     public int TotalPushes { get; init; }
     public double WinRate { get; init; }
     public int BlackJacks { get; init; } = 0;
+
+    public int PeakBalance { get; init; } = 5000;
 }

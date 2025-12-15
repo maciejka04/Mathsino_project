@@ -64,7 +64,6 @@ function Profile() {
   const handleAvatarSelect = (avatarSrc) => {
     setSelectedAvatar(avatarSrc);
     setPendingAvatar(getAvatarFilename(avatarSrc));
-    setSaveStatus('Oczekuje na zapis...');
   };
 
   const handleAvatarSave = async () => {
@@ -236,7 +235,7 @@ function Profile() {
           <img
             src={selectedAvatar}
             alt="Obecny awatar"
-            className="profile-page-avatar"
+            className="profile-large-avatar"
           />
 
           {!isEditingUsername ? (
@@ -319,7 +318,6 @@ function Profile() {
           <button
             className="save-avatar-button"
             onClick={() => { playClickSound(); handleAvatarSave(); }}
-            disabled={saveStatus !== 'Oczekuje na zapis...'}
           >
             {t('profile_save')}
           </button>

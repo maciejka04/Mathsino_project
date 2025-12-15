@@ -319,3 +319,14 @@
   font-size: 0.9rem;
   margin-top: 8px;
 }
+
+.profile-large-avatar {
+  width: 150px;
+  height: 150px;
+  margin-top: 10px;
+  margin-bottom: 16px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--accent-pink);
+  box-shadow: 0 0 15px rgba(216, 58, 122, 0.5);
+}
