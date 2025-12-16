@@ -1,6 +1,7 @@
-using Mathsino.Backend.Models;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using Mathsino.Backend.Models;
+using Mathsino.Backend.Services;
+using Microsoft.EntityFrameworkCore;
 
 public static class BalanceEndPoints
 {
@@ -53,34 +54,28 @@ public static class BalanceEndPoints
                 return Results.Ok(user.Balance);
             }
         );
-       app.MapPost(
-            "user/{id}/claim-ad-reward", // Ta ścieżka była wcześniej niedostępna (404)
-            async (int id, HttpContext context, MathsinoContext db) =>
+        app.MapPost(
+            "user/{id}/claim-ad-reward",
+            async (int id, BalanceService balanceService) =>
             {
-                // 1. AUTORYZACJA: Sprawdź, czy zalogowany użytkownik jest tym, dla którego przyznajemy nagrodę
-                var loggedInUserIdString = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-                if (!int.TryParse(loggedInUserIdString, out var loggedInUserId) || loggedInUserId != id)
+                try
                 {
-                    // Użytkownik próbował przyznać nagrodę innemu ID
-                    return Results.Forbid(); 
-                }
+                    // Dodaj nagrodę
+                    await balanceService.AddBalance(id, 50);
 
-                var user = await db.Users.FindAsync(id);
-                if (user is null)
+                    await balanceService.SaveBalanceSnapshot(id);
+
+                    int newBalance = await balanceService.GetBalance(id);
+                    return Results.Ok(new { balance = newBalance });
+                }
+                catch (KeyNotFoundException ex)
                 {
-                    return Results.NotFound();
+                    return Results.NotFound(new { message = ex.Message });
                 }
-
-                // Ustal kwotę nagrody (zgodnie z frontendem było 50)
-                const int REWARD_AMOUNT = 50; 
-                
-                // 2. Przyznaj nagrodę
-                user.Balance += REWARD_AMOUNT;
-                await db.SaveChangesAsync();
-
-                // Możesz zwrócić aktualny balans lub wiadomość o sukcesie
-                return Results.Ok(new { message = $"Przyznano nagrodę: {REWARD_AMOUNT} PLN", newBalance = user.Balance });
+                catch (Exception ex)
+                {
+                    return Results.Problem(ex.Message);
+                }
             }
         )
         .RequireAuthorization();
@@ -154,5 +149,6 @@ public static class BalanceEndPoints
         )
         .RequireAuthorization();
 
+        
     }
 }

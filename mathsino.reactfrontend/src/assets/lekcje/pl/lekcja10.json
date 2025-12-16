@@ -1,0 +1,165 @@
+{
+  "lesson_id": 10,
+  "lesson_title": "Liczenie Kart: System Hi-Lo",
+  "introduction": {
+    "avatar_pose": "A",
+    "text": "Witaj w klasie mistrzowskiej. Strategia Podstawowa pozwala grać z kasynem na równych zasadach. Ale żeby WYGRYWAĆ, musisz wiedzieć, co zostało w talii. Używamy systemu 'Hi-Lo'. Śledzi on stosunek kart Wysokich do Niskich. To łatwiejsze niż myślisz. Zaczynajmy."
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "title": "Niskie Karty (+1)",
+      "goal": "Wyjaśnienie, że 2, 3, 4, 5, 6 dają +1 do licznika.",
+      "setup": {
+        "player_hand": ["2_of_diamonds", "5_of_clubs"],
+        "dealer_up_card": "4_of_hearts",
+        "dealer_hidden_card": "6_of_spades"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "B",
+          "text": "Karty 2, 3, 4, 5, 6 to 'Niskie Karty'. Gdy znikają ze stołu, to DOBRZE dla Ciebie. Dajemy im wartość +1. Spójrz na stół: 2, 5, 4. To jest +1, +1, +1. Licznik wynosi +3. Kliknij HIT, by zobaczyć więcej.",
+          "required_action": "HIT",
+          "cards_added": ["3_of_spades"],
+          "player_score_after": 10
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 10,
+        "avatar_pose": "B",
+        "text": "Dobrałeś 3. To kolejna Niska Karta (+1). Licznik wynosi teraz +4. Wysoki plusowy licznik oznacza, że w talii zostały same figury!",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 2,
+      "title": "Wysokie Karty (-1)",
+      "goal": "Wyjaśnienie, że 10, J, Q, K, A odejmują -1 od licznika.",
+      "setup": {
+        "player_hand": ["king_of_hearts", "jack_of_spades"],
+        "dealer_up_card": "ace_of_diamonds",
+        "dealer_hidden_card": "10_of_clubs"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Karty 10, J, Q, K oraz As to 'Wysokie Karty'. CHCEMY ich w talii. Gdy pojawiają się na stole, to ŹLE (bo znikają). Dajemy im -1. Patrz: Król (-1), Walet (-1), As (-1). Licznik wynosi -3. Kliknij STAND.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 21,
+        "avatar_pose": "C",
+        "text": "Miałem ukrytą 10. To kolejne -1. Licznik wynosi -4. Ujemny licznik oznacza, że talia jest 'zimna'. Obstawiaj minimum.",
+        "result_status": "LOSE_CORRECTLY"
+      }
+    },
+    {
+      "id": 3,
+      "title": "Neutralne (0)",
+      "goal": "Wyjaśnienie, że 7, 8, 9 to 0.",
+      "setup": {
+        "player_hand": ["7_of_clubs", "9_of_hearts"],
+        "dealer_up_card": "8_of_diamonds",
+        "dealer_hidden_card": "7_of_spades"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Karty 7, 8, 9 są 'Neutralne'. Nie zmieniają szans. Wartość 0. Ignoruj je. Na stole: 7, 9, 8. Licznik to 0. Graj normalnie. Kliknij HIT.",
+          "required_action": "HIT",
+          "cards_added": ["8_of_clubs"],
+          "player_score_after": 24
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 15,
+        "avatar_pose": "A",
+        "text": "Dobrałeś 8. Nadal 0. Niestety masz 24 i przegrałeś, ale w liczeniu kart chodzi o długi dystans.",
+        "result_status": "LESSON_PASSED"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Trening Liczenia",
+      "goal": "Ćwiczenie aktualizacji licznika karta po karcie (bez Busta).",
+      "setup": {
+        "player_hand": ["2_of_hearts", "3_of_clubs"],
+        "dealer_up_card": "5_of_diamonds",
+        "dealer_hidden_card": "jack_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "B",
+          "text": "Policzmy to! Masz 2 (+1) i 3 (+1). Krupier ma 5 (+1). Razem +3. Masz dopiero 5 punktów, więc musisz dobrać. Kliknij HIT.",
+          "required_action": "HIT",
+          "cards_added": ["5_of_spades"],
+          "player_score_after": 10
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "B",
+          "text": "Doszła piątka (+1). Poprzednio było +3. Teraz mamy +4. Masz 10 punktów. HIT!",
+          "required_action": "HIT",
+          "cards_added": ["king_of_spades"],
+          "player_score_after": 20
+        },
+        {
+          "step_order": 3,
+          "avatar_pose": "A",
+          "text": "Doszedł Król (-1). Poprzednio było +4. Teraz jest +3. Masz 20 punktów. To świetny wynik. STAND.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["queen_of_diamonds"],
+        "dealer_final_score": 25,
+        "avatar_pose": "B",
+        "text": "Krupier dobrał Damę i pękł. Licznik zatrzymał się na +3 (Dama to -1, a moja zakryta karta to też figura). Ważne, że trzymasz wynik!",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Po co to wszystko?",
+      "goal": "Wyjaśnienie, że wysoki licznik = wysokie zakłady.",
+      "setup": {
+        "player_hand": ["king_of_clubs", "queen_of_diamonds"],
+        "dealer_up_card": "6_of_clubs",
+        "dealer_hidden_card": "5_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "B",
+          "text": "Licznik jest bardzo wysoki (+10). Talia jest pełna figur. Rozdaję... Patrz! Dostałeś dwie figury (20). Krupier ma 6. Jest ogromna szansa, że krupier dobierze 10 i przegra. Nie ryzykuj. STAND.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["king_of_hearts"],
+        "dealer_final_score": 21,
+        "avatar_pose": "B",
+        "text": "Krupier dobrał Króla! 6+5=11, plus Król = 21. Mialem farta, ale matematycznie miałeś przewagę. Przy wysokim liczniku graj o wysokie stawki!",
+        "result_status": "WIN"
+      }
+    }
+  ],
+  "conclusion": {
+    "avatar_pose": "B",
+    "text": "Ukończyłeś cały kurs! Znasz Strategię Podstawową i rozumiesz Liczenie Kart. Droga do bycia zawodowcem jest długa, ale masz już mapę. Powodzenia przy stołach!"
+  }
+}

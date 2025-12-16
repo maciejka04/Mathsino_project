@@ -98,7 +98,8 @@ builder.Services.AddDbContextPool<MathsinoContext>(options =>
 builder.Services.AddScoped<UsersService>();
 builder.Services.AddScoped<FriendService>();
 builder.Services.AddScoped<UserNameService>();
-builder.Services.AddSingleton<GameService>();
+builder.Services.AddScoped<BalanceService>();
+builder.Services.AddScoped<GameService>();
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -290,6 +291,7 @@ static async Task OnCreatingTicketHandler(
         var lastName = context.Principal?.FindFirst(ClaimTypes.Surname)?.Value ?? "";
         var NewUserPastSpinTime = new DateTime(2025, 12, 1, 12, 0, 0, DateTimeKind.Utc);
         var userName = await userNameService.GenerateUniqueUserNameAsync(firstName, lastName);
+        var balanceService = scope.ServiceProvider.GetRequiredService<BalanceService>();
 
         user = new User
         {
@@ -305,6 +307,8 @@ static async Task OnCreatingTicketHandler(
         };
         dbContext.Users.Add(user);
         await dbContext.SaveChangesAsync();
+
+        await balanceService.SaveBalanceSnapshot(user.Id);
     }
 
     // 3. Utwórz ClaimsPrincipal z użyciem wewnętrznego ID użytkownika z bazy

@@ -33,6 +33,9 @@ namespace Mathsino.Backend.Migrations
                     b.Property<int>("BalanceAfterGame")
                         .HasColumnType("integer");
 
+                    b.Property<int>("BetAmount")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp without time zone");
 

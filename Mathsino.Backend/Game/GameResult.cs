@@ -9,4 +9,5 @@ public enum GameResult
     Lose,
     Push,
     Blackjack,
+    Snapshot,
 }
