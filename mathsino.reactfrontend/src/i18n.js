@@ -228,6 +228,14 @@ const resources = {
       "learn_l9_subtitle": "Card Counting Intro",
       "learn_l9_desc": "Advanced techniques overview.",
 
+      "learn_l10_title": "Lesson 10",
+      "learn_l10_subtitle": "Bankroll Management",
+      "learn_l10_desc": "How to manage your chips wisely.",
+
+      "learn_l11_title": "Lesson 11",
+      "learn_l11_subtitle": "Advanced Betting",
+      "learn_l11_desc": "Systems and patterns.",
+
       /* --- Glossary.js --- */
       "glossary_title": "Blackjack Glossary",
       "glossary_subtitle": "Key terms and definitions.",
@@ -556,6 +564,14 @@ const resources = {
       "learn_l9_title": "Lekcja 9",
       "learn_l9_subtitle": "Liczenie Kart - Wstęp",
       "learn_l9_desc": "Przegląd technik zaawansowanych.", 
+
+      "learn_l10_title": "Lekcja 10",
+      "learn_l10_subtitle": "Zarządzanie kapitałem",
+      "learn_l10_desc": "Jak mądrze zarządzać żetonami.",
+
+      "learn_l11_title": "Lekcja 11",
+      "learn_l11_subtitle": "Zaawansowane zakłady",
+      "learn_l11_desc": "Systemy i schematy obstawiania.",
 
       /* --- Glossary.js --- */
       "glossary_title": "Słownik Blackjacka",

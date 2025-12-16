@@ -1,7 +1,19 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next'; 
-import lekcja1 from '../../assets/lekcja1.jpg';
+//import lekcja1 from '../../assets/lekcja1.jpg';
+import lekcja1 from '../../assets/lessonpic/lesson1.png';
+import lekcja2 from '../../assets/lessonpic/lesson2.png';
+import lekcja3 from '../../assets/lessonpic/lesson3.png';
+import lekcja4 from '../../assets/lessonpic/lesson4.png';
+import lekcja5 from '../../assets/lessonpic/lesson5.png';
+import lekcja6 from '../../assets/lessonpic/lesson6.png';
+import lekcja7 from '../../assets/lessonpic/lesson7.png';
+import lekcja8 from '../../assets/lessonpic/lesson8.png';
+import lekcja9 from '../../assets/lessonpic/lesson9.png';
+import lekcja10 from '../../assets/lessonpic/lesson10.png';
+import lekcja11 from '../../assets/lessonpic/lesson11.png';
+
 import styles from './Learn.module.css'; 
 import audioService from '../../services/audioService';
 import clickSound from '../../assets/mouse-click.mp3';
@@ -25,7 +37,7 @@ const cardData = [
     id: 2,
     topic: 'beach', 
     alt: 'beach', 
-    image: lekcja1, 
+    image: lekcja2, 
     title: 'learn_l2_title',
     subtitle: 'learn_l2_subtitle',
     description: 'learn_l2_desc'
@@ -34,7 +46,7 @@ const cardData = [
     id: 3,
     topic: 'mountain', 
     alt: 'mountain', 
-    image: lekcja1, 
+    image: lekcja3, 
     title: 'learn_l3_title',
     subtitle: 'learn_l3_subtitle',
     description: 'learn_l3_desc'
@@ -43,7 +55,7 @@ const cardData = [
     id: 4,
     topic: 'field', 
     alt: 'field', 
-    image: lekcja1, 
+    image: lekcja4, 
     title: 'learn_l4_title',
     subtitle: 'learn_l4_subtitle',
     description: 'learn_l4_desc'
@@ -52,7 +64,7 @@ const cardData = [
     id: 5,
     topic: 'water', 
     alt: 'water', 
-    image: lekcja1, 
+    image: lekcja5, 
     title: 'learn_l5_title',
     subtitle: 'learn_l5_subtitle',
     description: 'learn_l5_desc'
@@ -61,7 +73,7 @@ const cardData = [
     id: 6,
     topic: 'river', 
     alt: 'river', 
-    image: lekcja1, 
+    image: lekcja6, 
     title: 'learn_l6_title',
     subtitle: 'learn_l6_subtitle',
     description: 'learn_l6_desc'
@@ -70,7 +82,7 @@ const cardData = [
     id: 7,
     topic: 'kite', 
     alt: 'kite', 
-    image: lekcja1, 
+    image: lekcja7, 
     title: 'learn_l7_title',
     subtitle: 'learn_l7_subtitle',
     description: 'learn_l7_desc'
@@ -79,7 +91,7 @@ const cardData = [
     id: 8,
     topic: 'underwater', 
     alt: 'underwater', 
-    image: lekcja1, 
+    image: lekcja8, 
     title: 'learn_l8_title',
     subtitle: 'learn_l8_subtitle',
     description: 'learn_l8_desc'
@@ -88,7 +100,7 @@ const cardData = [
     id: 9,
     topic: 'desert', 
     alt: 'desert', 
-    image: lekcja1, 
+    image: lekcja9, 
     title: 'learn_l9_title',
     subtitle: 'learn_l9_subtitle',
     description: 'learn_l9_desc'
@@ -97,19 +109,19 @@ const cardData = [
     id: 10,
     topic: 'desert', 
     alt: 'desert', 
-    image: lekcja1, 
+    image: lekcja10, 
     title: 'learn_l10_title',
-    subtitle: 'learn_l9_subtitle',
-    description: 'learn_l9_desc'
+    subtitle: 'learn_l10_subtitle',
+    description: 'learn_l10_desc'
   },
      { 
     id: 11,
     topic: 'desert', 
     alt: 'desert', 
-    image: lekcja1, 
+    image: lekcja11, 
     title: 'learn_l11_title',
-    subtitle: 'learn_l9_subtitle',
-    description: 'learn_l9_desc'
+    subtitle: 'learn_l11_subtitle',
+    description: 'learn_l11_desc'
   },
 ];
 

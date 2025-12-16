@@ -14,8 +14,7 @@ const playClickSound = () => {
 export default function SpinWheelCard({ user, refreshUser }) {
   const { t } = useTranslation();
   
-  // WAŻNE: Tablica musi być IDENTYCZNA jak na backendzie
-  const [segments] = useState([100, 100, 100, 200, 200, 300, 500]);
+  const [segments] = useState([10, 20, 25, 30, 40, 50, 100]);
   
   const [cooldown, setCooldown] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +28,6 @@ export default function SpinWheelCard({ user, refreshUser }) {
   const startRotationRef = useRef(0);
   const targetRotationRef = useRef(0);
 
-  // Obsługa cooldownu z localStorage
   useEffect(() => {
     const savedCooldown = localStorage.getItem('spinCooldownUntil');
     if (!savedCooldown) return;
@@ -63,7 +61,6 @@ export default function SpinWheelCard({ user, refreshUser }) {
     const duration = 4000; 
     const progress = Math.min(elapsed / duration, 1);
     
-    // Ease out cubic - płynne hamowanie
     const eased = 1 - Math.pow(1 - progress, 3);
     const currentRotation = startRotationRef.current + (targetRotationRef.current - startRotationRef.current) * eased;
     
@@ -73,7 +70,7 @@ export default function SpinWheelCard({ user, refreshUser }) {
       requestRef.current = requestAnimationFrame(animate);
     } else {
       setWinText(`${t('you_won')}\n${rewardRef.current} PLN`);
-      refreshUser(); // Odświeżamy balans po zakończeniu animacji
+      refreshUser(); 
     }
   };
 
@@ -95,23 +92,15 @@ export default function SpinWheelCard({ user, refreshUser }) {
       const data = await response.json();
 
     if (response.ok) {
-        const rewardIndex = data.rewardIndex; // Indeks z backendu (np. 6 dla 500 PLN)
+        const rewardIndex = data.rewardIndex; 
         rewardRef.current = data.reward; 
 
         const numSegments = segments.length;
         const segmentAngle = 360 / numSegments;
-        const extraRotations = 360 * 8; // 8 pełnych obrotów
-
-        // 1. CSS zaczyna rysować od 0° (godzina 3:00). 
-        // 2. Strzałka jest na górze (godzina 12:00), czyli -90° względem startu CSS.
-        // 3. Chcemy, aby środek segmentu (rewardIndex * segmentAngle + segmentAngle / 2) 
-        //    wylądował dokładnie tam, gdzie jest strzałka.
+        const extraRotations = 360 * 8; 
         
         const currentRotationBase = rotation - (rotation % 360);
         
-        // Obliczamy o ile stopni musimy cofnąć koło, aby dany segment trafił na górę
-        // Formuła: (Indeks * Kąt) + (Kąt / 2) to środek segmentu.
-        // Dodajemy 90 stopni, bo strzałka jest "wcześniej" niż punkt startowy rysowania segmentów.
         const targetAngle = 360 - (rewardIndex * segmentAngle) - (segmentAngle / 2) - 90;
 
         startRotationRef.current = rotation;
@@ -120,7 +109,6 @@ export default function SpinWheelCard({ user, refreshUser }) {
         startTimeRef.current = null;
         requestRef.current = requestAnimationFrame(animate);
 
-        // Ustawienie cooldownu
         const lastSpin = new Date(data.lastSpinTime);
         const nextAvailable = new Date(lastSpin.getTime() + COOLDOWN_MINUTES * 60000);
         setCooldown(nextAvailable.getTime() - Date.now());

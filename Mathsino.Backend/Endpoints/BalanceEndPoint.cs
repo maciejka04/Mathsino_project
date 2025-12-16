@@ -129,7 +129,7 @@ public static class BalanceEndPoints
                                 
                 
                 var random = new Random();
-                int[] possibleRewards = { 100, 100, 100, 200, 200, 300, 500 }; 
+                int[] possibleRewards = { 10, 20, 25, 30, 40, 50, 100 }; 
                 int rewardIndex = random.Next(possibleRewards.Length);
                 int rewardAmount = possibleRewards[rewardIndex];
 
