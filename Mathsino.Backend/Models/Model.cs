@@ -36,6 +36,9 @@ public class User
 
     public int Balance { get; set; } = 0;
 
+    [Column(TypeName = "timestamp with time zone")] 
+    public DateTime? LastSpinTime { get; set; } = null;
+
     [StringLength(5)]
     public string Language { get; set; } = "en";
 
@@ -76,7 +79,8 @@ public record UserDto(
     string Language,
     int MusicId,
     bool MusicEnabled,
-    bool SoundEffectsEnabled
+    bool SoundEffectsEnabled,
+    DateTime? LastSpinTime
 );
 
 public record UpdateAvatarRequest(string AvatarPath);

@@ -182,11 +182,9 @@ app.MapGet(
             if (context.User.Identity?.IsAuthenticated == true)
             {
                 var userIdString = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
                 if (int.TryParse(userIdString, out var userIdInt))
                 {
                     var user = await db.Users.FindAsync(userIdInt);
-
                     var userName = context.User.FindFirst(ClaimTypes.Name)?.Value;
                     var email = context.User.FindFirst(ClaimTypes.Email)?.Value;
 
@@ -200,6 +198,7 @@ app.MapGet(
                             AvatarPath = user.AvatarPath,
                             Balance = user.Balance,
                             UserNameTag = user.UserName,
+                            LastSpinTime = user.LastSpinTime,
                             Message = "Zalogowano pomyślnie!",
                         }
                     );
@@ -289,7 +288,7 @@ static async Task OnCreatingTicketHandler(
             ?? context.Principal?.FindFirst("given_name")?.Value
             ?? "Użytkownik";
         var lastName = context.Principal?.FindFirst(ClaimTypes.Surname)?.Value ?? "";
-
+        var NewUserPastSpinTime = new DateTime(2025, 12, 1, 12, 0, 0, DateTimeKind.Utc);
         var userName = await userNameService.GenerateUniqueUserNameAsync(firstName, lastName);
 
         user = new User
@@ -302,6 +301,7 @@ static async Task OnCreatingTicketHandler(
             ProviderId = providerId,
             AvatarPath = "snake.png",
             Balance = 5000,
+            LastSpinTime = NewUserPastSpinTime,
         };
         dbContext.Users.Add(user);
         await dbContext.SaveChangesAsync();

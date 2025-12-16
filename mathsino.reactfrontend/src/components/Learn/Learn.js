@@ -5,6 +5,7 @@ import lekcja1 from '../../assets/lekcja1.jpg';
 import styles from './Learn.module.css'; 
 import audioService from '../../services/audioService';
 import clickSound from '../../assets/mouse-click.mp3';
+import { isZeroValueString } from 'framer-motion';
 
 const playClickSound = () => {
   audioService.playSoundEffect(clickSound);

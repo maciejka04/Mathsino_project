@@ -46,6 +46,19 @@ const resources = {
       "home_focus_title": "Focus Mode",
       "home_focus_desc": "Play without distractions.",
 
+       /* --- SPINWHEELCARD.JS --- */
+      "spin_wheel_title": "Spin the Wheel",
+      "spin_wheel_desc": "Spin for a chance to win money!",
+      "spin_button": "Spin",
+      "cooldown_required": "Cooldown required",
+      "cooldown_time_left": "Time until next spin:",
+      "cooldown_hours_abbr": "h",
+      "cooldown_minutes_abbr": "m",
+      "cooldown_seconds_abbr": "s",
+      "spin_success_message": "Congratulations! You won: {{reward}} PLN!",
+      "spin_error_message": "Error spinning the wheel.",
+      "you_won": "You won",
+
       /* --- PLAY.JS --- */
       "play_online_alt": "Play Online",
 
@@ -213,7 +226,110 @@ const resources = {
 
       "learn_l9_title": "Lesson 9",
       "learn_l9_subtitle": "Card Counting Intro",
-      "learn_l9_desc": "Advanced techniques overview."
+      "learn_l9_desc": "Advanced techniques overview.",
+
+      /* --- Glossary.js --- */
+      "glossary_title": "Blackjack Glossary",
+      "glossary_subtitle": "Key terms and definitions.",
+      "glossary_term_blackjack_title": "Blackjack",
+      "glossary_term_blackjack_desc": "An initial hand of an Ace and a ten-value card, totaling 21. This typically pays 3:2.",
+      "glossary_term_hit_title": "Hit",
+      "glossary_term_hit_desc": "To request an additional card from the dealer.",
+      "glossary_term_stand_title": "Stand",
+      "glossary_term_stand_desc": "To refuse additional cards and keep the current hand total.",
+      "glossary_term_double_title": "Double Down",
+      "glossary_term_double_desc": "To double your initial bet and receive exactly one more card, after which you must stand.",
+      "glossary_term_split_title": "Split",
+      "glossary_term_split_desc": "To divide a pair of identical cards into two separate hands, placing a second bet equal to the first.",
+
+      /* --- HowToPlay.js --- */
+      "howtoplay_title": "How to play Blackjack",
+      "howtoplay_subtitle": "A step-by-step guide to the game.",
+      "howtoplay_section1_title": "The Goal",
+      "howtoplay_section1_desc": "The goal is to have a hand total closer to 21 than the dealer's hand, without going over 21 (Bust).",
+      "howtoplay_step1": "Place your bet.",
+      "howtoplay_step2": "The dealer deals two cards to you and two to themselves (one face up).",
+      "howtoplay_step3": "Decide whether to Hit, Stand, Double, or Split.",
+      "howtoplay_section2_title": "Card Values",
+      "howtoplay_section2_desc": "Cards 2-10 are worth their face value. Face cards (J, Q, K) are worth 10. Aces are worth 1 or 11.",
+      "howtoplay_section3_title": "Winning and Losing",
+      "howtoplay_section3_desc": "You win if your total is higher than the dealer's without busting, or if the dealer busts. If you tie, it's a Push.",
+
+      /* --- StrategyChart.js --- */
+      "strategychart_title": "Basic Strategy Chart",
+      "strategychart_subtitle": "The mathematically correct way to play every hand.",
+      "strategychart_intro_title": "Introduction to Basic Strategy",
+      "strategychart_intro_desc": "Basic Strategy is a set of rules defining the optimal action for every possible player hand against every possible dealer upcard. Following this strategy reduces the house edge to the minimum.",
+      "strategychart_placeholder_text": "Insert the Basic Strategy Table here.",
+      "strategychart_rules_title": "Key Rules",
+      "strategychart_rule1": "Always split Aces and 8s.",
+      "strategychart_rule2": "Never take Insurance.",
+      "strategychart_rule3": "Always hit a Hard 11 or less.",
+
+      /* --- ResponsibleGaming.js --- */
+      "rg_title": "Responsible Gaming",
+      "rg_subtitle": "Play smart, stay safe.",
+      "rg_section1_title": "Tips for Responsible Play",
+      "rg_section1_desc": "Blackjack is a game of skill and chance. Remember to treat it as entertainment, not a source of income.",
+      "rg_tip1": "Set limits before you start playing.",
+      "rg_tip2": "Never chase losses.",
+      "rg_tip3": "Do not play when stressed or under the influence.",
+      "rg_section2_title": "Need Help?",
+      "rg_section2_desc": "If you or someone you know has a gambling problem, confidential help is available.",
+      "rg_helpline_label": "Support Hotline",
+      "rg_website_label": "Website",
+      "rg_website_link": "GamblingSupport.org",
+
+      /* --- TermsOfService.js --- */
+      "tos_title": "Terms of Service",
+      "tos_subtitle": "Our rules and legal agreement.",
+      "tos_section1_title": "Acceptance of Terms",
+      "tos_section1_desc": "By accessing or using the Mathsino application, you agree to be bound by these Terms of Service.",
+      "tos_section2_title": "Virtual Currency",
+      "tos_section2_desc": "All coins and balances within this application are virtual and have no real-world monetary value. They cannot be withdrawn or exchanged for real currency.",
+      "tos_section3_title": "Account Termination",
+      "tos_section3_desc": "We reserve the right to suspend or terminate your account at our sole discretion, without prior notice, for conduct that we believe violates these Terms or is harmful to other users.",
+      "tos_last_updated": "Last updated: December 15, 2025",
+
+            /* --- PrivacyPolicy.js --- */
+      "pp_title": "Mathsino Privacy Policy",
+      "pp_effective_date": "Effective Date: November 21, 2025",
+
+      "pp_section1_title": "1. What Data Do We Collect?",
+      "pp_section1_desc": "When logging in via Google or Facebook, we collect the following personal data:",
+      "pp_data_email": "Email Address",
+      "pp_data_email_desc": "(for account identification purposes).",
+      "pp_data_name": "Name or Username",
+      "pp_data_name_desc": "(for account personalization).",
+      "pp_data_id": "Unique Provider ID",
+      "pp_data_id_desc": "(Google ID or Facebook ID).",
+
+      "pp_section2_title": "2. How Do We Use Your Data?",
+      "pp_section2_desc": "Data is used exclusively for the following purposes:",
+      "pp_use_auth": "Authenticating you within the Mathsino application.",
+      "pp_use_progress": "Maintaining your login status and saving progress.",
+      "pp_use_personalization": "Personalizing the in-app experience (e.g., displaying your name).",
+
+      "pp_section3_title": "3. Data Deletion",
+      "pp_section3_desc": "If you wish to delete your data, please follow the instructions available via the link below:",
+      "pp_data_deletion_link": "Data Deletion Instructions",
+
+
+      /* --- DataDeletion.js --- */
+      "dd_title": "Mathsino User Data Deletion Instructions",
+
+      "dd_section1_title": "Account Deletion Procedure",
+      "dd_section1_desc": "In compliance with Meta (Facebook) requirements, to permanently delete all data associated with your Mathsino account, please follow the instructions below:",
+      "dd_step1": "Log in to the Mathsino application (If you cannot log in, proceed to step 3).",
+      "dd_step2": "Go to the profile page and look for the 'Delete Account' option (not yet implemented).",
+      "dd_step3_title": "To request immediate deletion",
+      "dd_step3_desc": "Send an email to",
+
+      "dd_section2_title": "Required Information in the Email",
+      "dd_section2_desc": "In the email subject line, enter 'Data Deletion Request - [Your Email Address]'. In the body of the message, please provide:",
+      "dd_email_req1": "The email address used for Google/Facebook login.",
+      "dd_email_req2": "Confirmation of your intent to permanently delete the account.",
+      "dd_confirmation": "We confirm that upon receiving your request, all your personal data will be permanently deleted from our database within 7 business days."
     }
   },
   pl: {
@@ -259,6 +375,19 @@ const resources = {
       "home_learn_strategy_desc": "Opanuj podstawy i zaawansowane ruchy.",
       "home_focus_title": "Tryb Skupienia",
       "home_focus_desc": "Graj bez rozpraszaczy.",
+
+      /* --- SPINWHEELCARD.JS --- */
+      "spin_wheel_title": "Koło Fortuny",
+      "spin_wheel_desc": "Kręć, aby wygrać pieniądze!",
+      "spin_button": "Zakręć",
+      "cooldown_required": "Wymagana przerwa",
+      "cooldown_time_left": "Czas do kolejnego obrotu:",
+      "cooldown_hours_abbr": "g",
+      "cooldown_minutes_abbr": "m",
+      "cooldown_seconds_abbr": "s",
+      "spin_success_message": "Gratulacje! Wygrałeś: {{reward}} PLN!",
+      "spin_error_message": "Błąd zakręcenia kołem.",
+      "you_won": "Wygrałeś",
 
       /* --- PLAY.JS --- */
       "play_online_alt": "Graj Online",
@@ -426,7 +555,110 @@ const resources = {
 
       "learn_l9_title": "Lekcja 9",
       "learn_l9_subtitle": "Liczenie Kart - Wstęp",
-      "learn_l9_desc": "Przegląd technik zaawansowanych."
+      "learn_l9_desc": "Przegląd technik zaawansowanych.", 
+
+      /* --- Glossary.js --- */
+      "glossary_title": "Słownik Blackjacka",
+      "glossary_subtitle": "Kluczowe terminy i definicje.",
+      "glossary_term_blackjack_title": "Blackjack",
+      "glossary_term_blackjack_desc": "Początkowa ręka złożona z Asa i karty wartej dziesięć punktów, dająca w sumie 21. Zazwyczaj wypłacana w stosunku 3:2.",
+      "glossary_term_hit_title": "Hit (Dobierz)",
+      "glossary_term_hit_desc": "Poproszenie krupiera o dodatkową kartę.",
+      "glossary_term_stand_title": "Stand (Pasuj)",
+      "glossary_term_stand_desc": "Rezygnacja z dodatkowych kart i zatrzymanie obecnej sumy ręki.",
+      "glossary_term_double_title": "Double Down (Podwój)",
+      "glossary_term_double_desc": "Podwojenie początkowego zakładu i otrzymanie dokładnie jednej dodatkowej karty, po czym gracz musi spasować.",
+      "glossary_term_split_title": "Split (Rozdziel)",
+      "glossary_term_split_desc": "Podział pary identycznych kart na dwie oddzielne ręce, z postawieniem drugiego zakładu równego pierwszemu.",
+
+      /* --- HowToPlay.js --- */
+      "howtoplay_title": "Jak grać w Blackjacka",
+      "howtoplay_subtitle": "Instrukcja krok po kroku.",
+      "howtoplay_section1_title": "Cel Gry",
+      "howtoplay_section1_desc": "Celem jest uzyskanie sumy kart bliższej 21 niż krupier, ale bez przekroczenia 21 (Bust).",
+      "howtoplay_step1": "Postaw swój zakład.",
+      "howtoplay_step2": "Krupier rozdaje po dwie karty Tobie i sobie (jedna odkryta).",
+      "howtoplay_step3": "Zdecyduj, czy Dobrać, Spasować, Podwoić, czy Rozdzielić.",
+      "howtoplay_section2_title": "Wartości Kart",
+      "howtoplay_section2_desc": "Karty 2-10 mają wartość nominalną. Figury (J, Q, K) są warte 10. Asy są warte 1 lub 11.",
+      "howtoplay_section3_title": "Wygrana i Przegrana",
+      "howtoplay_section3_desc": "Wygrywasz, jeśli Twoja suma jest wyższa niż krupiera bez przekroczenia 21, lub jeśli krupier przekroczy 21. Remis to Push.",
+
+      /* --- StrategyChart.js --- */
+      "strategychart_title": "Tabela Strategii Podstawowej",
+      "strategychart_subtitle": "Matematycznie poprawny sposób na rozegranie każdego rozdania.",
+      "strategychart_intro_title": "Wprowadzenie do Strategii Podstawowej",
+      "strategychart_intro_desc": "Strategia Podstawowa to zestaw reguł określających optymalne działanie dla każdej możliwej ręki gracza wobec każdej odkrytej karty krupiera. Stosowanie jej minimalizuje przewagę kasyna.",
+      "strategychart_placeholder_text": "Tutaj wstaw Tabelę Strategii Podstawowej.",
+      "strategychart_rules_title": "Kluczowe Zasady",
+      "strategychart_rule1": "Zawsze rozdzielaj Asy i Ósemki.",
+      "strategychart_rule2": "Nigdy nie bierz ubezpieczenia (Insurance).",
+      "strategychart_rule3": "Zawsze dobieraj przy Hard 11 lub mniej.",
+
+      /* --- ResponsibleGaming.js --- */
+      "rg_title": "Odpowiedzialna Gra",
+      "rg_subtitle": "Graj mądrze, bądź bezpieczny.",
+      "rg_section1_title": "Wskazówki dot. Odpowiedzialnej Gry",
+      "rg_section1_desc": "Blackjack to gra umiejętności i przypadku. Pamiętaj, aby traktować ją jako rozrywkę, a nie źródło dochodu.",
+      "rg_tip1": "Ustal limity, zanim zaczniesz grać.",
+      "rg_tip2": "Nigdy nie próbuj odrabiać strat.",
+      "rg_tip3": "Nie graj, gdy jesteś zestresowany lub pod wpływem.",
+      "rg_section2_title": "Potrzebujesz Pomocy?",
+      "rg_section2_desc": "Jeśli Ty lub ktoś kogo znasz ma problem z hazardem, dostępna jest poufna pomoc.",
+      "rg_helpline_label": "Infolinia Wsparcia",
+      "rg_website_label": "Strona internetowa",
+      "rg_website_link": "WsparcieHazard.org",
+
+      /* --- TermsOfService.js --- */
+      "tos_title": "Regulamin Serwisu",
+      "tos_subtitle": "Nasze zasady i umowa prawna.",
+      "tos_section1_title": "Akceptacja Warunków",
+      "tos_section1_desc": "Korzystając z aplikacji Mathsino, wyrażasz zgodę na niniejszy Regulamin Serwisu.",
+      "tos_section2_title": "Wirtualna Waluta",
+      "tos_section2_desc": "Wszystkie monety i salda w tej aplikacji są wirtualne i nie mają realnej wartości pieniężnej. Nie mogą być wypłacone ani wymienione na prawdziwą walutę.",
+      "tos_section3_title": "Zamknięcie Konta",
+      "tos_section3_desc": "Zastrzegamy sobie prawo do zawieszenia lub zamknięcia Twojego konta według własnego uznania, bez wcześniejszego powiadomienia, za zachowanie, które narusza niniejszy Regulamin lub jest szkodliwe dla innych użytkowników.",
+      "tos_last_updated": "Ostatnia aktualizacja: 15 grudnia 2025",
+
+      /* --- PrivacyPolicy.js --- */
+      "pp_title": "Polityka Prywatności Mathsino",
+      "pp_effective_date": "Data wejścia w życie: 21 listopada 2025 r.",
+
+      "pp_section1_title": "1. Jakie dane zbieramy?",
+      "pp_section1_desc": "Korzystając z logowania przez Google lub Facebook, zbieramy następujące dane osobowe:",
+      "pp_data_email": "Adres e-mail",
+      "pp_data_email_desc": "(do celów identyfikacji konta).",
+      "pp_data_name": "Imię i nazwisko lub nazwa użytkownika",
+      "pp_data_name_desc": "(do personalizacji konta).",
+      "pp_data_id": "Unikalny identyfikator dostawcy",
+      "pp_data_id_desc": "(Google ID lub Facebook ID).",
+
+      "pp_section2_title": "2. Jak wykorzystujemy Twoje dane?",
+      "pp_section2_desc": "Dane są używane wyłącznie w celu:",
+      "pp_use_auth": "Uwierzytelnienia Cię w aplikacji Mathsino.",
+      "pp_use_progress": "Utrzymania Twojego stanu logowania i zapisywania postępów.",
+      "pp_use_personalization": "Personalizacji doświadczeń w aplikacji (np. wyświetlania Twojego imienia).",
+
+      "pp_section3_title": "3. Usunięcie Danych",
+      "pp_section3_desc": "Jeśli chcesz usunąć swoje dane, postępuj zgodnie z instrukcjami dostępnymi pod poniższym linkiem:",
+      "pp_data_deletion_link": "Instrukcje usunięcia danych",
+
+
+      /* --- DataDeletion.js --- */
+      "dd_title": "Instrukcje Usunięcia Danych Użytkownika Mathsino",
+
+      "dd_section1_title": "Procedura Usunięcia Konta",
+      "dd_section1_desc": "Zgodnie z wymogami Meta (Facebook), aby trwale usunąć wszystkie dane powiązane z Twoim kontem Mathsino, postępuj zgodnie z poniższymi instrukcjami:",
+      "dd_step1": "Zaloguj się do aplikacji Mathsino. (Jeśli nie możesz się zalogować, przejdź do kroku 3).",
+      "dd_step2": "Przejdź do strony profilu i poszukaj opcji 'Usuń Konto' (jeszcze niezaimplementowane).",
+      "dd_step3_title": "Aby zażądać usunięcia natychmiast",
+      "dd_step3_desc": "Wyślij wiadomość e-mail na adres",
+
+      "dd_section2_title": "Wymagane Informacje w E-mailu",
+      "dd_section2_desc": "W tytule wiadomości wpisz 'Prośba o usunięcie danych - [Twój Adres E-mail]'. W treści wiadomości, podaj:",
+      "dd_email_req1": "Adres e-mail użyty do logowania przez Google/Facebook.",
+      "dd_email_req2": "Potwierdzenie chęci trwałego usunięcia konta.",
+      "dd_confirmation": "Potwierdzamy, że po otrzymaniu Twojej prośby, wszystkie Twoje dane osobowe zostaną trwale usunięte z naszej bazy danych w ciągu 7 dni roboczych."
     }
   }
 };

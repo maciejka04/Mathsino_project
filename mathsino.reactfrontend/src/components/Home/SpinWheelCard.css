@@ -1,0 +1,158 @@
+/* Kontener główny karty na dashboardzie */
+.spin-wheel-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: rgba(40, 167, 69, 0.15);
+    border-radius: 10px;
+}
+
+/* Przyciski i timer */
+.spin-button {
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.spin-button.active {
+    background-color: #ffcc00;
+    color: #000;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.spin-button.inactive, 
+.spin-button:disabled {
+    background-color: #555;
+    color: #bbb;
+    cursor: not-allowed;
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+
+.cooldown-timer {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #fff;
+}
+
+/* Modal i tło */
+.wheel-modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.wheel-container {
+    position: relative;
+    background: #222;
+    padding: 60px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 450px;
+    height: 450px;
+    border: 2px solid #444;
+}
+
+/* Koło - kontener obracany */
+.wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    border: 8px solid #333;
+    overflow: hidden;
+    background: #111;
+    will-change: transform; /* Optymalizacja dla płynności animacji */
+}
+
+/* Segmenty koła */
+.wheel-segment {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0% 0%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Tworzy trójkątny wycinek - przy 7 segmentach to ok 51 stopni */
+    clip-path: polygon(0 0, 100% 0, 100% 100%); 
+}
+
+/* Tekst z nagrodą wewnątrz segmentu */
+.segment-value {
+    position: absolute;
+    font-weight: bold;
+    color: #fff;
+    /* Przy 7 segmentach (360/7 ≈ 51.4°), środek to ~25.7° */
+    /* Ustawiamy połowę kąta segmentu, aby tekst nie leżał na krawędzi linii */
+    transform: rotate(25.7deg) translate(40px, -40px); 
+    white-space: nowrap;
+}
+
+/* Strzałka wskazująca górę */
+.wheel-pointer {
+    position: absolute;
+    top: 40px; /* Dopasuj do paddingu container */
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 32px;
+    color: #ff0000;
+    z-index: 10;
+    filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));
+    pointer-events: none;
+}
+
+/* Zamknięcie modala */
+.wheel-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 32px;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.wheel-close:hover {
+    color: #fff;
+}
+
+/* Efekt wygranej */
+.wheel-win-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #ffcc00;
+    z-index: 20;
+    pointer-events: none;
+    background: rgba(0,0,0,0.7);
+    padding: 20px;
+    border-radius: 50%;
+    width: 80%;
+}
+
+.wheel-win-text .you-won {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+}
+
+.wheel-win-text .reward {
+    font-size: 2.5rem;
+    display: block;
+}

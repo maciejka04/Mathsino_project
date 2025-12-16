@@ -14,11 +14,16 @@ import Resources from './components/Resources/Resources';
 import Offline from './components/Offline/Offline';
 import Online from './components/Online/Online';
 import Login from './components/Login/Login';
-import PrivacyPolicy from './components/PrivacyPolicy';
-import DataDeletion from './components/DataDeletion';
+import PrivacyPolicy from './components/Resources/PrivacyPolicy';
+import DataDeletion from './components/Resources/DataDeletion';
 import ProtectedRoute from './components/ProtectedRoute';
 import LessonPage from './components/Lesson/LessonPage';
 import FriendProfile from './components/Friends/FriendProfile';
+import TermsOfService from './components/Resources/TermsOfService'; 
+import ResponsibleGaming from './components/Resources/ResponsibleGaming'; 
+import HowToPlay from './components/Resources/HowToPlay'; 
+import StrategyChart from './components/Resources/StrategyChart'; 
+import Glossary from './components/Resources/Glossary';
 
 
 function App() {
@@ -62,8 +67,13 @@ function App() {
         } />
 
         {/* Opcjonalne strony publiczne */}
-        <Route path="privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="data-deletion" element={<DataDeletion />} />
+        <Route path="resources/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="resources/data-deletion" element={<DataDeletion />} />
+        <Route path="resources/responsible-gaming" element={<ResponsibleGaming />} /> 
+        <Route path="resources/terms-of-service" element={<TermsOfService />} /> 
+        <Route path="resources/how-to-play" element={<HowToPlay />} /> 
+        <Route path="resources/strategy-chart" element={<StrategyChart />} />
+        <Route path="resources/glossary" element={<Glossary />} />
       </Route>
     </Routes>
   );

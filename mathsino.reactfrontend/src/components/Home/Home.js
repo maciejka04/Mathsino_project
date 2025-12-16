@@ -1,11 +1,16 @@
 // src/components/Home/Home.js (Wersja 'PRO')
 
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import './Home.css';
 import { useOutletContext } from "react-router-dom";
 import clickSound from '../../assets/mouse-click.mp3';
+import SpinWheelCard from './SpinWheelCard';
+
+const API_URL = "http://localhost:5126";
+const COOLDOWN_MINUTES = 2;
+
 
 const playClickSound = () => {
   const audio = new Audio(clickSound);
@@ -14,9 +19,11 @@ const playClickSound = () => {
 
 
 function Home() {
-  const { user } = useOutletContext();
+  const { user, refreshUser } = useOutletContext();
   const { t } = useTranslation();
-   const isLogged = user?.isAuthenticated;
+  const isLogged = user?.isAuthenticated;
+ 
+
   return (
     <>
       <header>
@@ -65,7 +72,8 @@ function Home() {
             </div>
           </div>
         </div>
-
+        {/*=== koło fortuny ===*/}
+        <SpinWheelCard user={user} refreshUser={refreshUser} />
         {/* === 2. GŁÓWNA AKCJA: Graj (Średnia) === */}
         <Link
           to="/play"

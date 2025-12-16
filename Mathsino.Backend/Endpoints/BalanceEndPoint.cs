@@ -83,7 +83,76 @@ public static class BalanceEndPoints
                 return Results.Ok(new { message = $"Przyznano nagrodę: {REWARD_AMOUNT} PLN", newBalance = user.Balance });
             }
         )
-        // Wymagaj, aby endpoint był wywoływany przez zalogowanego użytkownika
         .RequireAuthorization();
+        app.MapPost(
+            "user/{id}/spin-wheel",
+            async (int id, HttpContext context, MathsinoContext db) =>
+            {
+                var loggedInUserIdString = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (!int.TryParse(loggedInUserIdString, out var loggedInUserId) || loggedInUserId != id)
+                {
+                    return Results.Forbid();
+                }
+
+                var user = await db.Users.FindAsync(id);
+                if (user is null)
+                {
+                    return Results.NotFound();
+                }
+
+                const int COOLDOWN_MINUTES = 1; //docelowo zmienic na 24*60
+                var now = DateTime.UtcNow;
+
+                if (user.LastSpinTime.HasValue)
+                {
+                    var lastSpin = user.LastSpinTime.Value;
+
+                    if (lastSpin.Kind != DateTimeKind.Utc)
+                    {
+                        lastSpin = lastSpin.ToUniversalTime();
+                    }
+
+                    var nextSpinAvailableAt = lastSpin.AddMinutes(COOLDOWN_MINUTES);
+
+                    if (now < nextSpinAvailableAt)
+                    {
+                        var timeRemaining = nextSpinAvailableAt - now;
+
+                        return Results.BadRequest(new
+                        {
+                            message = "Wymagana jest przerwa.",
+                            cooldownHours = timeRemaining.Hours,
+                            cooldownMinutes = timeRemaining.Minutes,
+                            cooldownSeconds = timeRemaining.Seconds,
+                            nextSpinAvailable = nextSpinAvailableAt,
+                            lastSpin = lastSpin
+                        });
+                    }
+                }
+
+                
+                                
+                
+                var random = new Random();
+                int[] possibleRewards = { 100, 100, 100, 200, 200, 300, 500 }; 
+                int rewardIndex = random.Next(possibleRewards.Length);
+                int rewardAmount = possibleRewards[rewardIndex];
+
+                user.Balance += rewardAmount;
+                user.LastSpinTime = now;
+                await db.SaveChangesAsync();
+
+                return Results.Ok(new
+                {
+                    message = $"Wygrałeś: {rewardAmount} PLN!",
+                    reward = rewardAmount,
+                    rewardIndex = rewardIndex, 
+                    newBalance = user.Balance,
+                    lastSpinTime = user.LastSpinTime 
+                });
+            }
+        )
+        .RequireAuthorization();
+
     }
 }

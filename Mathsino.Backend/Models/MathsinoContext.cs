@@ -15,6 +15,8 @@ public class MathsinoContext : DbContext
 
     public DbSet<SingleGame> SingleGames => Set<SingleGame>();
 
+    private static readonly DateTime StaticPastSpinTime = new(2025, 1, 1, 10, 0, 0, DateTimeKind.Utc);
+
     [Obsolete]
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -47,6 +49,7 @@ public class MathsinoContext : DbContext
                     Balance = 5000,
                     AvatarPath = "snake.png",
                     Language = "en",
+                    LastSpinTime = StaticPastSpinTime,
                 },
                 new User
                 {
@@ -58,6 +61,7 @@ public class MathsinoContext : DbContext
                     Balance = 3000,
                     AvatarPath = "mouse.png",
                     Language = "en",
+                    LastSpinTime = StaticPastSpinTime,
                 }
             );
         modelBuilder

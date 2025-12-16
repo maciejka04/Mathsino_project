@@ -196,8 +196,10 @@ input:checked + .slider:before {
 }
 
 .about-links{
-    line-height: 1.5;
-    margin-left: 30px;
+    display: flex;
+    align-items: center; 
+    gap: 15px;
+    margin-left: 80px;
 }
 
 .fa-solid{

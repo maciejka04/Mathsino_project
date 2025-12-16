@@ -1,7 +1,7 @@
 // src/components/Resources/Resources.js
 
 import React, { useState, useEffect } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useTranslation as useI18n } from 'react-i18next';
 import audioService from '../../services/audioService';
@@ -227,7 +227,9 @@ function Resources() {
           </p>
           </div>
           <div className='about-links'>
-            <a href="#">{t('resources_responsible_gaming')}</a> &middot; <a href="#">{t('resources_privacy_policy')}</a> &middot; <a href="#">{t('resources_terms_of_service')}</a>
+            <Link to="/resources/responsible-gaming" onClick={playClickSound}>{t('resources_responsible_gaming')}</Link> 
+            <Link to="/resources/privacy-policy" onClick={playClickSound}>{t('resources_privacy_policy')}</Link>
+            <Link to="/resources/terms-of-service" onClick={playClickSound}>{t('resources_terms_of_service')}</Link>
           </div>
         </div>
 
@@ -237,18 +239,18 @@ function Resources() {
           <h4>{t('resources_resources')}</h4>
           <p>{t('resources_resources_desc')}</p>
           </div>
-          <a href="#" className="resource-link" onClick={playClickSound}>
-            <span>{t('resources_how_to_play_blackjack')}</span>
-            <i className="fa-solid fa-arrow-up-right-from-square"></i>
-          </a>
-          <a href="#" className="resource-link" onClick={playClickSound}>
-            <span>{t('resources_basic_strategy_chart')}</span>
-            <i className="fa-solid fa-arrow-up-right-from-square"></i>
-          </a>
-          <a href="#" className="resource-link" onClick={playClickSound}>
-            <span>{t('resources_glossary_of_terms')}</span>
-            <i className="fa-solid fa-arrow-up-right-from-square"></i>
-          </a>
+          <Link to="/resources/how-to-play" className="resource-link" onClick={playClickSound}>
+      <span>{t('resources_how_to_play_blackjack')}</span>
+      <i className="fa-solid fa-arrow-up-right-from-square"></i>
+     </Link>
+     <Link to="/resources/strategy-chart" className="resource-link" onClick={playClickSound}>
+      <span>{t('resources_basic_strategy_chart')}</span>
+      <i className="fa-solid fa-arrow-up-right-from-square"></i>
+     </Link>
+     <Link to="/resources/glossary" className="resource-link" onClick={playClickSound}>
+      <span>{t('resources_glossary_of_terms')}</span>
+      <i className="fa-solid fa-arrow-up-right-from-square"></i>
+     </Link>
         </div>
 
       </div>
