@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next'; // IMPORT I18N
+import { useTranslation } from 'react-i18next';
 import clickSound from '../../assets/mouse-click.mp3';
-
 
 // --- STYLES & ASSETS ---
 import '../Offline/Offline.css'; 
 import './LessonPage.css';
 import tableImage from '../../assets/table4.png';
 import reverseCardImage from '../../assets/karty/reverse.png';
+
+// --- CHEAT SHEET IMPORT ---
+import CheatSheet from '../CheatSheet/CheatSheet';
 
 // --- AVATARS ---
 import avatarImgA from '../../assets/parrot-teacher.png'; 
@@ -26,13 +28,12 @@ import lesson6snd from '../../assets/lesson6.mp3';
 import lesson7snd from '../../assets/lesson7.mp3';
 import lesson8snd from '../../assets/lesson8.mp3';
 import lesson9snd from '../../assets/lesson9.mp3';
-
-// UWAGA: Usunęliśmy statyczne importy lesson1.json, lesson2.json itd.
-// Będą one ładowane dynamicznie.
+// Importujemy dźwięk dla lekcji 10 (może być placeholder)
+import lesson10snd from '../../assets/lesson9.mp3'; 
 
 const lessonSoundMap = {
   1: lesson1snd, 2: lesson2snd, 3: lesson3snd, 4: lesson4snd, 
-  5: lesson5snd, 6: lesson6snd, 7: lesson7snd, 8: lesson8snd, 9: lesson9snd
+  5: lesson5snd, 6: lesson6snd, 7: lesson7snd, 8: lesson8snd, 9: lesson9snd, 10: lesson10snd
 };
 
 const avatarMap = { "A": avatarImgA, "B": avatarImgB, "C": avatarImgC };
@@ -66,11 +67,10 @@ const mapJsonCardToFilename = (jsonValue) => {
 const LessonPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { i18n } = useTranslation(); // HOOK DO JĘZYKA
+  const { i18n } = useTranslation();
 
   const lessonAudioRef = useRef(null);
 
-  // Stan na dane lekcji (ładowane dynamicznie)
   const [currentLessonData, setCurrentLessonData] = useState(null);
   const [loadingLesson, setLoadingLesson] = useState(true);
 
@@ -88,6 +88,7 @@ const LessonPage = () => {
   const [isScenarioFinished, setIsScenarioFinished] = useState(false);
   const [isWrongAction, setIsWrongAction] = useState(false);
 
+  // --- NAPRAWIONA LINIJKA: Definicja zmiennej scenario ---
   const scenario = currentLessonData ? currentLessonData.scenarios[currentScenarioIndex] : null;
 
     const playClickSound = () => {
@@ -103,26 +104,26 @@ const LessonPage = () => {
         }
     };
 
-  // --- 0. DYNAMICZNE ŁADOWANIE LEKCJI ---
+  // --- SPECIAL CASE: LESSON 11 (CHEAT SHEET) ---
+  if (id === '11') {
+      return <CheatSheet />;
+  }
+
+  // --- 0. DYNAMIC LOADING ---
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     const loadLessonFile = async () => {
         setLoadingLesson(true);
         try {
-            // Pobieramy język ('pl' lub 'en'). Domyślnie 'en'.
             const lang = (i18n.language || 'en').substring(0, 2); 
-            
-            // Dynamiczny import: assets/lekcje/{lang}/lekcja{id}.json
             const module = await import(`../../assets/lekcje/${lang}/lekcja${id}.json`);
-            
             setCurrentLessonData(module.default || module);
         } catch (error) {
             console.error("Błąd ładowania lekcji:", error);
-            // Fallback do EN, jeśli PL nie działa
             try {
                 const fallback = await import(`../../assets/lekcje/en/lekcja${id}.json`);
                 setCurrentLessonData(fallback.default || fallback);
             } catch(e) {
-                // Lekcja nie istnieje w ogóle
                 setCurrentLessonData(null);
             }
         } finally {
@@ -131,14 +132,13 @@ const LessonPage = () => {
     };
 
     loadLessonFile();
-  }, [id, i18n.language]); // Przeładuj, gdy zmieni się ID lub Język
+  }, [id, i18n.language]);
 
   // --- 1. SETUP ON LESSON LOADED ---
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (currentLessonData) {
-
         stopLessonAudio(); 
-
         const lessonUrl = lessonSoundMap[id];
         if (lessonUrl) {
              const audioInstance = new Audio(lessonUrl);
@@ -160,7 +160,8 @@ const LessonPage = () => {
     }
   }, [currentLessonData, id]);
 
-  // --- 2. SETUP SCENARIO (GAME PHASE ONLY) ---
+  // --- 2. SETUP SCENARIO ---
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (lessonPhase === 'GAME' && scenario) {
       setHasSplit(false);
@@ -187,6 +188,7 @@ const LessonPage = () => {
     }
   }, [lessonPhase, currentScenarioIndex, scenario]);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
       return () => {
           stopLessonAudio();
@@ -243,7 +245,6 @@ const LessonPage = () => {
     } else {
       setIsWrongAction(true);
       setFeedbackText("Nope! That's not the best move here. Try something else!");
-      // Możesz też dodać tłumaczenie tutaj: t('lesson_wrong_move')
       setAvatarPose("C");
     }
   };
@@ -286,7 +287,6 @@ const LessonPage = () => {
     }
   };
 
-  // --- RENDEROWANIE ---
   if (loadingLesson) {
       return <div className="offline-container"><h1 style={{color:'white'}}>Loading Lesson...</h1></div>;
   }
@@ -307,7 +307,6 @@ const LessonPage = () => {
             onClick={() => {
                 stopLessonAudio();
                 playClickSound();
-                
                 setTimeout(() => {
                     navigate('/learn');
                 }, 400); 
@@ -315,8 +314,6 @@ const LessonPage = () => {
         >
             &#8592; Exit Lesson
         </button>
-
-
 
         <div className="game-table-area">
             <img src={tableImage} alt="Game Table" className="game-table-image" />

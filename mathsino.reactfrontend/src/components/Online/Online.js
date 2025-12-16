@@ -18,65 +18,15 @@ import blackjackSound from "../../assets/blackjack.mp3";
 import fireworksSound from "../../assets/fireworks.mp3";
 import clickSound from '../../assets/mouse-click.mp3';
 
-
-
 import reverseCardImage from "../../assets/karty/reverse2.png";
 import defaultAvatar from "../../assets/profilepic/snake.png";
 const DECK_POSITION = { left: 15, top: 30 };
 
 const allCardFileNames = [
-  "2_of_hearts",
-  "3_of_hearts",
-  "4_of_hearts",
-  "5_of_hearts",
-  "6_of_hearts",
-  "7_of_hearts",
-  "8_of_hearts",
-  "9_of_hearts",
-  "10_of_hearts",
-  "jack_of_hearts",
-  "queen_of_hearts",
-  "king_of_hearts",
-  "ace_of_hearts",
-  "2_of_diamonds",
-  "3_of_diamonds",
-  "4_of_diamonds",
-  "5_of_diamonds",
-  "6_of_diamonds",
-  "7_of_diamonds",
-  "8_of_diamonds",
-  "9_of_diamonds",
-  "10_of_diamonds",
-  "jack_of_diamonds",
-  "queen_of_diamonds",
-  "king_of_diamonds",
-  "ace_of_diamonds",
-  "2_of_clubs",
-  "3_of_clubs",
-  "4_of_clubs",
-  "5_of_clubs",
-  "6_of_clubs",
-  "7_of_clubs",
-  "8_of_clubs",
-  "9_of_clubs",
-  "10_of_clubs",
-  "jack_of_clubs",
-  "queen_of_clubs",
-  "king_of_clubs",
-  "ace_of_clubs",
-  "2_of_spades",
-  "3_of_spades",
-  "4_of_spades",
-  "5_of_spades",
-  "6_of_spades",
-  "7_of_spades",
-  "8_of_spades",
-  "9_of_spades",
-  "10_of_spades",
-  "jack_of_spades",
-  "queen_of_spades",
-  "king_of_spades",
-  "ace_of_spades",
+  "2_of_hearts", "3_of_hearts", "4_of_hearts", "5_of_hearts", "6_of_hearts", "7_of_hearts", "8_of_hearts", "9_of_hearts", "10_of_hearts", "jack_of_hearts", "queen_of_hearts", "king_of_hearts", "ace_of_hearts",
+  "2_of_diamonds", "3_of_diamonds", "4_of_diamonds", "5_of_diamonds", "6_of_diamonds", "7_of_diamonds", "8_of_diamonds", "9_of_diamonds", "10_of_diamonds", "jack_of_diamonds", "queen_of_diamonds", "king_of_diamonds", "ace_of_diamonds",
+  "2_of_clubs", "3_of_clubs", "4_of_clubs", "5_of_clubs", "6_of_clubs", "7_of_clubs", "8_of_clubs", "9_of_clubs", "10_of_clubs", "jack_of_clubs", "queen_of_clubs", "king_of_clubs", "ace_of_clubs",
+  "2_of_spades", "3_of_spades", "4_of_spades", "5_of_spades", "6_of_spades", "7_of_spades", "8_of_spades", "9_of_spades", "10_of_spades", "jack_of_spades", "queen_of_spades", "king_of_spades", "ace_of_spades",
 ];
 
 const cardImagesMap = allCardFileNames.reduce((acc, cardName) => {
@@ -140,7 +90,6 @@ function Online() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user, refreshUser } = useOutletContext();
-  //const [currentBalance, setCurrentBalance] = useState(5000);
   const [currentBet, setCurrentBet] = useState(0);
 
   const [gameId, setGameId] = useState(null);
@@ -171,6 +120,10 @@ function Online() {
   const [splitDoubled, setSplitDoubled] = useState(false);
 
   const [strategyFeedback, setStrategyFeedback] = useState(null);
+
+  // --- NOWY STAN: Włącznik Trenera (Domyślnie włączony) ---
+  const [isTrainerEnabled, setIsTrainerEnabled] = useState(true);
+  
   const shuffleAudio = useRef(null);
   const winAudio = useRef(null);
   const loseAudio = useRef(null);
@@ -416,12 +369,6 @@ function Online() {
       audioService.playSoundEffect(fireworksSound);
     }
 
-    // Dźwięki dla splita (uproszczone, żeby nie grało 2x na raz)
-    if (hasSplit && splitRes && splitRes !== mainResult) {
-      // Odtwórz dźwięk dla drugiego wyniku tylko jeśli jest inny
-      // (Można tu dodać timeout, ale to detal)
-    }
-
     if (mainResult === "Blackjack" || splitRes === "Blackjack") {
       setShowFireworks(true);
       setTimeout(() => setShowFireworks(false), 8000);
@@ -455,7 +402,10 @@ function Online() {
 
   // --- ANALIZA RUCHU (TRENER) ---
   const analyzeMove = async (action) => {
-    // 1. Wybierz rękę, którą teraz gramy (split lub main)
+    // 1. Sprawdź, czy trener jest włączony
+    if (!isTrainerEnabled) return;
+
+    // 2. Wybierz rękę, którą teraz gramy (split lub main)
     const currentHand = isSplitActive ? splitCards : playerCards;
 
     const parseCardName = (filename) => {
@@ -485,7 +435,6 @@ function Online() {
           playerHandCards: handPayload,
           dealerCard: dealerPayload,
           action: action,
-          // Ważne: wysyłamy aktualne flagi, np. jeśli mam 3 karty to canDouble=false
           canSplit: canSplit,
           canDouble: canDouble,
         }),
@@ -738,10 +687,34 @@ function Online() {
           alt={t('online_avatar_alt')}
           className="user-avatar"
         />
-        <span className="user-name">{user?.name || t('online_guest')}</span>
+        <div style={{display: 'flex', flexDirection: 'column'}}>
+            <span className="user-name">{user?.name || t('online_guest')}</span>
+            
+            {/* --- PRZYCISK TRENERA (ON/OFF) --- */}
+            <div 
+                onClick={() => setIsTrainerEnabled(!isTrainerEnabled)}
+                style={{
+                    marginTop: '5px',
+                    padding: '4px 8px',
+                    borderRadius: '15px',
+                    background: isTrainerEnabled ? '#2ecc71' : '#e74c3c',
+                    color: 'white',
+                    fontSize: '0.8rem',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    textAlign: 'center',
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
+                    transition: 'all 0.3s'
+                }}
+            >
+                {t('trainer') || "Trener"}: {isTrainerEnabled ? "ON" : "OFF"}
+            </div>
+            {/* ---------------------------------- */}
+        </div>
       </div>
-      {/* FEEDBACK TRENERA */}
-      {strategyFeedback && (
+      
+      {/* FEEDBACK TRENERA (Wyświetl tylko jeśli włączony) */}
+      {strategyFeedback && isTrainerEnabled && (
         <div
           style={{
             position: "absolute",
@@ -1077,9 +1050,6 @@ function Online() {
           </button>
         </div>
       </div>
-
-      {/* Żetony */}
-
 
       {/* Przyciski Akcji */}
       <div className="game-actions">

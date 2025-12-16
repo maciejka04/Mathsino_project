@@ -92,6 +92,24 @@ const cardData = [
     subtitle: 'learn_l9_subtitle',
     description: 'learn_l9_desc'
   },
+   { 
+    id: 10,
+    topic: 'desert', 
+    alt: 'desert', 
+    image: lekcja1, 
+    title: 'learn_l10_title',
+    subtitle: 'learn_l9_subtitle',
+    description: 'learn_l9_desc'
+  },
+     { 
+    id: 11,
+    topic: 'desert', 
+    alt: 'desert', 
+    image: lekcja1, 
+    title: 'learn_l11_title',
+    subtitle: 'learn_l9_subtitle',
+    description: 'learn_l9_desc'
+  },
 ];
 
 function Learn({ image, alt, isShowing, zIndex, onClick, title, subtitle, description, onReadMore }) {

@@ -1,0 +1,165 @@
+{
+  "lesson_id": 10,
+  "lesson_title": "Card Counting: The Hi-Lo System",
+  "introduction": {
+    "avatar_pose": "A",
+    "text": "Welcome to the Master Class. Basic Strategy makes you play even with the casino. To WIN, you need to know what cards are left in the deck. We use the 'Hi-Lo' system. It tracks the ratio of High Cards vs Low Cards. It's easier than you think. Let's start."
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "title": "Low Cards (+1)",
+      "goal": "Explain that 2, 3, 4, 5, 6 add +1 to the count.",
+      "setup": {
+        "player_hand": ["2_of_diamonds", "5_of_clubs"],
+        "dealer_up_card": "4_of_hearts",
+        "dealer_hidden_card": "6_of_spades"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "B",
+          "text": "Cards 2, 3, 4, 5, 6 are 'Low Cards'. When they are gone, it's GOOD for you. So, we assign them a value of +1. Look at the table: 2, 5, 4. That is +1, +1, +1. The Count is +3. Click HIT to see more.",
+          "required_action": "HIT",
+          "cards_added": ["3_of_spades"],
+          "player_score_after": 10
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 10,
+        "avatar_pose": "B",
+        "text": "You drew a 3. That is another Low Card (+1). The total count is now +4. A high positive count means big cards are coming!",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 2,
+      "title": "High Cards (-1)",
+      "goal": "Explain that 10, J, Q, K, A subtract -1 from the count.",
+      "setup": {
+        "player_hand": ["king_of_hearts", "jack_of_spades"],
+        "dealer_up_card": "ace_of_diamonds",
+        "dealer_hidden_card": "10_of_clubs"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "C",
+          "text": "Cards 10, J, Q, K, and Ace are 'High Cards'. We WANT them in the deck. When they appear on the table, it's BAD. We assign them -1. Look: King (-1), Jack (-1), Ace (-1). The Count is -3. Click STAND.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 21,
+        "avatar_pose": "C",
+        "text": "I had a 10 hidden. That's another -1. The count is -4. A negative count means the deck is empty of good cards. Bet minimum.",
+        "result_status": "LOSE_CORRECTLY"
+      }
+    },
+    {
+      "id": 3,
+      "title": "The Neutral Ones (0)",
+      "goal": "Explain that 7, 8, 9 are neutral.",
+      "setup": {
+        "player_hand": ["7_of_clubs", "9_of_hearts"],
+        "dealer_up_card": "8_of_diamonds",
+        "dealer_hidden_card": "7_of_spades"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "A",
+          "text": "Cards 7, 8, 9 are 'Neutral'. They don't change the odds much. Value is 0. Ignore them. Look at the table: 7, 9, 8. The Count is 0. Just play Basic Strategy. Click HIT.",
+          "required_action": "HIT",
+          "cards_added": ["8_of_clubs"],
+          "player_score_after": 24
+        }
+      ],
+      "finish": {
+        "dealer_draws": [],
+        "dealer_final_score": 15,
+        "avatar_pose": "A",
+        "text": "You drew an 8. Still 0. You busted with 24, but in card counting, we focus on the long game.",
+        "result_status": "LESSON_PASSED"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Running Count Practice",
+      "goal": "Practice updating the count card by card (without busting).",
+      "setup": {
+        "player_hand": ["2_of_hearts", "3_of_clubs"],
+        "dealer_up_card": "5_of_diamonds",
+        "dealer_hidden_card": "jack_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "B",
+          "text": "Let's count! You have 2 (+1) and 3 (+1). Dealer has 5 (+1). Total is +3. You have only 5 points, so you must Hit. Click HIT.",
+          "required_action": "HIT",
+          "cards_added": ["5_of_spades"],
+          "player_score_after": 10
+        },
+        {
+          "step_order": 2,
+          "avatar_pose": "B",
+          "text": "You got a 5 (+1). Previous count was +3. Now it is +4. You have 10 points. HIT again!",
+          "required_action": "HIT",
+          "cards_added": ["king_of_spades"],
+          "player_score_after": 20
+        },
+        {
+          "step_order": 3,
+          "avatar_pose": "A",
+          "text": "You got a King (-1). Previous count was +4. Now it is +3. You have 20 points. Great hand. STAND.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["queen_of_diamonds"],
+        "dealer_final_score": 25,
+        "avatar_pose": "B",
+        "text": "Dealer drew a Queen and busted! The count ended at +3. Good job.",
+        "result_status": "WIN"
+      }
+    },
+    {
+      "id": 5,
+      "title": "Why It Matters?",
+      "goal": "Explain Betting Strategy based on Count.",
+      "setup": {
+        "player_hand": ["king_of_clubs", "queen_of_diamonds"],
+        "dealer_up_card": "6_of_clubs",
+        "dealer_hidden_card": "5_of_hearts"
+      },
+      "sequence": [
+        {
+          "step_order": 1,
+          "avatar_pose": "B",
+          "text": "The count is very high (+10). The deck is full of Tens. Look! You got two Faces (20). Dealer has 6. High chance the dealer will draw a 10 and bust. Don't risk it. STAND.",
+          "required_action": "STAND",
+          "cards_added": [],
+          "player_score_after": 20
+        }
+      ],
+      "finish": {
+        "dealer_draws": ["king_of_hearts"],
+        "dealer_final_score": 21,
+        "avatar_pose": "B",
+        "text": "Dealer drew a King and got 21 (6+5+K). Lucky for me, but math was on your side. High Count = Bet Big!",
+        "result_status": "WIN"
+      }
+    }
+  ],
+  "conclusion": {
+    "avatar_pose": "B",
+    "text": "You have completed the entire course! You know Basic Strategy, and now you understand Card Counting. The road to becoming a pro is long, but you have the map. Good luck at the tables!"
+  }
+}
