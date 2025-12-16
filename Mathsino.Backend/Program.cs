@@ -97,7 +97,9 @@ builder.Services.AddDbContextPool<MathsinoContext>(options =>
 
 builder.Services.AddScoped<UsersService>();
 builder.Services.AddScoped<FriendService>();
-builder.Services.AddSingleton<GameService>();
+builder.Services.AddScoped<UserNameService>();
+builder.Services.AddScoped<BalanceService>();
+builder.Services.AddScoped<GameService>();
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -198,6 +200,7 @@ app.MapGet(
                             Email = email,
                             AvatarPath = user.AvatarPath,
                             Balance = user.Balance,
+                            UserNameTag = user.UserName,
                             Message = "Zalogowano pomyślnie!",
                         }
                     );
@@ -235,7 +238,6 @@ app.MapPut(
 
 app.MapUserEndPoints();
 app.MapGameEndPoints();
-
 app.MapBalanceEndPoints();
 app.MapFriendEndPoints();
 
@@ -255,6 +257,7 @@ static async Task OnCreatingTicketHandler(
     // Pobieramy Service Provider
     using var scope = services.BuildServiceProvider().CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<MathsinoContext>();
+    var userNameService = scope.ServiceProvider.GetRequiredService<UserNameService>();
 
     var providerId = context.Principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     var email = context.Principal?.FindFirst(ClaimTypes.Email)?.Value;
@@ -288,10 +291,14 @@ static async Task OnCreatingTicketHandler(
             ?? "Użytkownik";
         var lastName = context.Principal?.FindFirst(ClaimTypes.Surname)?.Value ?? "";
 
+        var userName = await userNameService.GenerateUniqueUserNameAsync(firstName, lastName);
+        var balanceService = scope.ServiceProvider.GetRequiredService<BalanceService>();
+
         user = new User
         {
             FirstName = firstName,
             LastName = lastName,
+            UserName = userName,
             Email = email,
             Provider = provider,
             ProviderId = providerId,
@@ -300,6 +307,8 @@ static async Task OnCreatingTicketHandler(
         };
         dbContext.Users.Add(user);
         await dbContext.SaveChangesAsync();
+
+        await balanceService.SaveBalanceSnapshot(user.Id);
     }
 
     // 3. Utwórz ClaimsPrincipal z użyciem wewnętrznego ID użytkownika z bazy

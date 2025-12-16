@@ -1,0 +1,166 @@
+:root {
+  --accent-pink: #D83A7A;
+  --accent-pink-hover: #b02e62;
+  --accent-green: #28a745;
+  --accent-red: #e74c3c;
+  --accent-red-hover: #c0392b;
+}
+
+.profile-container {
+    padding: 20px;
+    max-width: 900px;
+    margin: 20px auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: #e0e0e0; 
+}
+
+.profile-container.card-style {
+    background: rgba(255, 255, 255, 0.1); 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    
+    padding: 25px;
+}
+
+.back-button {
+    background-color: var(--accent-pink); 
+    border: none;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 10px 15px;
+    border-radius: 8px;
+    
+    margin-bottom: 5px; 
+    
+    display: inline-block; 
+    transition: background-color 0.2s ease;
+    text-decoration: none;
+}
+
+.back-button:hover {
+    background-color: var(--accent-pink-hover); 
+}
+
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    
+    margin-top: 50px; 
+
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.large-avatar {
+    width: 100px; 
+    height: 100px;
+    border-radius: 50%;
+    margin-right: 20px; 
+    object-fit: cover;
+    border: 3px solid var(--accent-pink); 
+    box-shadow: 0 0 15px rgba(216, 58, 122, 0.5);
+}
+
+.profile-header > div {
+    flex-grow: 1; 
+}
+
+.profile-name {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #ffffff;
+    font-weight: 700;
+    line-height: 1.2; 
+}
+
+.profile-username {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #bdbdbd; 
+    font-weight: 400;
+}
+
+.profile-details {
+    padding-top: 0;
+    margin-top: 0;
+}
+
+
+
+.friend-statistics-section {
+    padding-top: 0;
+}
+
+.stats-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)); 
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.dashboard-card {
+    background: rgba(255, 255, 255, 0.1); 
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    
+    width: 100%; 
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+}
+
+.stat-card {
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px 24px; 
+}
+
+.stat-card-label {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #e0e0e0;
+}
+
+.stat-card-value {
+  font-size: 28px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.stat-card-value.rank-gold {
+  color: #ffc107;
+}
+.stat-card-value.lessons-green {
+  color: #28a745;
+}
+
+.chart-container {
+  padding: 24px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-container h3 {
+  margin-bottom: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+@media (max-width: 1024px) {
+  .stats-overview-grid {
+    grid-template-columns: 1fr;
+  }
+}

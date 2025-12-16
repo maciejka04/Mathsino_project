@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mathsino.Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateFriendshipRelations : Migration
+    public partial class migrationDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,6 +22,7 @@ namespace Mathsino.Backend.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     FirstName = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     LastName = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    UserName = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     Email = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Provider = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     ProviderId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
@@ -45,6 +46,7 @@ namespace Mathsino.Backend.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     GameId = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false),
+                    BetAmount = table.Column<int>(type: "integer", nullable: false),
                     PlayerId = table.Column<Guid>(type: "uuid", nullable: false),
                     StartTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     EndTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -90,11 +92,11 @@ namespace Mathsino.Backend.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "AvatarPath", "Balance", "Email", "FirstName", "Language", "LastName", "MusicEnabled", "MusicId", "Provider", "ProviderId", "SoundEffectsEnabled" },
+                columns: new[] { "Id", "AvatarPath", "Balance", "Email", "FirstName", "Language", "LastName", "MusicEnabled", "MusicId", "Provider", "ProviderId", "SoundEffectsEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, "snake.png", 5000, "alice.smith@example.com", "Alice", "en", "Smith", true, 1, "", "", true },
-                    { 2, "mouse.png", 3000, "bob.johnson@example.com", "Bob", "en", "Johnson", true, 1, "", "", true }
+                    { 1, "snake.png", 5000, "alice.smith@example.com", "Alice", "en", "Smith", true, 1, "", "", true, "alismi" },
+                    { 2, "mouse.png", 3000, "bob.johnson@example.com", "Bob", "en", "Johnson", true, 1, "", "", true, "bobjoh" }
                 });
 
             migrationBuilder.InsertData(

@@ -1,4 +1,6 @@
+using System.Security.Claims;
 using Mathsino.Backend.Models;
+using Mathsino.Backend.Services;
 using Microsoft.EntityFrameworkCore;
 
 public static class BalanceEndPoints
@@ -43,13 +45,37 @@ public static class BalanceEndPoints
                     return Results.NotFound();
                 }
 
-                if (user.Balance <= amount)
+                if (user.Balance < amount)
                 {
                     return Results.BadRequest("Insufficient balance");
                 }
                 user.Balance -= amount;
                 await db.SaveChangesAsync();
                 return Results.Ok(user.Balance);
+            }
+        );
+        app.MapPost(
+            "user/{id}/claim-ad-reward",
+            async (int id, BalanceService balanceService) =>
+            {
+                try
+                {
+                    // Dodaj nagrodę
+                    await balanceService.AddBalance(id, 50);
+
+                    await balanceService.SaveBalanceSnapshot(id);
+
+                    int newBalance = await balanceService.GetBalance(id);
+                    return Results.Ok(new { balance = newBalance });
+                }
+                catch (KeyNotFoundException ex)
+                {
+                    return Results.NotFound(new { message = ex.Message });
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem(ex.Message);
+                }
             }
         );
     }

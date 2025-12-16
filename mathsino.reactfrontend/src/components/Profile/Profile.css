@@ -4,7 +4,7 @@
   display: grid;
   grid-template-columns: 1fr 2fr;
   gap: 24px;
-  align-items: flex-start; 
+  align-items: flex-start;
 }
 
 .profile-info-card {
@@ -21,7 +21,7 @@
   border: 3px solid rgba(255, 255, 255, 0.5);
   margin-bottom: 16px;
   object-fit: cover;
- 
+
 }
 
 .profile-info-card h3 {
@@ -29,6 +29,7 @@
   font-weight: 600;
   margin: 0;
 }
+
 .profile-info-card p {
   opacity: 0.7;
   font-size: 14px;
@@ -37,6 +38,7 @@
 .profile-avatar-card {
   flex-direction: column;
 }
+
 .profile-avatar-card p {
   font-size: 14px;
   opacity: 0.8;
@@ -55,14 +57,14 @@
 
 .avatar-option {
   width: 100%;
-  aspect-ratio: 1 / 1; 
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid rgba(150, 150, 150, 0.5); 
+  border: 3px solid rgba(150, 150, 150, 0.5);
   cursor: pointer;
   transition: all 0.2s ease;
   opacity: 0.7;
-  
+
 }
 
 .avatar-option:hover {
@@ -72,7 +74,7 @@
 
 .avatar-option.active {
   opacity: 1;
-  border-color: var(--primary-color, #0066ff); 
+  border-color: var(--primary-color, #0066ff);
   box-shadow: 0 0 15px rgba(0, 102, 255, 0.5);
 }
 
@@ -105,6 +107,7 @@
   color: white;
   margin-top: 15px;
 }
+
 .logout-button:hover {
   background-color: #0056d6;
 }
@@ -114,6 +117,7 @@
   padding-top: 24px;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
+
 .danger-zone h4 {
   margin-bottom: 12px;
   color: #ff4d4d;
@@ -124,49 +128,205 @@
   color: #ff4d4d;
   border: 1px solid #ff4d4d;
 }
+
 .danger-button:hover {
   background-color: rgba(255, 77, 77, 0.1);
 }
 
 .save-avatar-button {
-    /* Stylizacja podstawowa */
-    padding: 12px 20px;
-    margin-top: 20px;
-    font-size: 16px;
-    font-weight: 600;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    background-color: var(--primary-color, #0066ff); 
-    color: white;
-    width: 100%;
+  /* Stylizacja podstawowa */
+  padding: 12px 20px;
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  background-color: var(--primary-color, #0066ff);
+  color: white;
+  width: 100%;
 }
 
 .save-avatar-button:hover:not(:disabled) {
-    background-color: #0056d6;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(0, 102, 255, 0.4);
+  background-color: #0056d6;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 102, 255, 0.4);
 }
 
 .save-avatar-button:disabled {
-    background-color: #4a4a4a; 
-    color: #b0b0b0;
-    cursor: not-allowed;
-    box-shadow: none;
+  background-color: #4a4a4a;
+  color: #b0b0b0;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 .save-status {
-    margin-top: 10px;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    text-align: center;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
 }
 
 @media (max-width: 1024px) {
   .profile-grid {
-    grid-template-columns: 1fr; 
+    grid-template-columns: 1fr;
   }
+}
+
+.username-display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.username-display h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.edit-username-btn-text {
+  background-color: var(--primary-color, #0066ff);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 10px;
+}
+
+.edit-username-btn-text:hover {
+  background-color: #0056d6;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 102, 255, 0.4);
+}
+
+/* Username edit (tryb edycji) */
+.username-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 15px 0;
+  width: 100%;
+  max-width: 300px;
+}
+
+.username-input {
+  padding: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  font-size: 1rem;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  transition: all 0.3s;
+}
+
+.username-input:focus {
+  outline: none;
+  border-color: var(--primary-color, #0066ff);
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.username-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Wskaźnik dostępności username */
+.availability-indicator {
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: center;
+  padding: 5px;
+}
+
+.availability-indicator.available {
+  color: #27ae60;
+}
+
+.availability-indicator.taken {
+  color: #e74c3c;
+}
+
+/* Przyciski edycji username */
+.username-edit-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.save-username-btn,
+.cancel-username-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 14px;
+}
+
+.save-username-btn {
+  background-color: #27ae60;
+  color: white;
+}
+
+.save-username-btn:hover:not(:disabled) {
+  background-color: #229954;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(39, 174, 96, 0.4);
+}
+
+.save-username-btn:disabled {
+  background-color: #4a4a4a;
+  color: #b0b0b0;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.cancel-username-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.cancel-username-btn:hover {
+  background-color: #c0392b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(231, 76, 60, 0.4);
+}
+
+/* Status zmiany username */
+.username-status {
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 5px;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 5px;
+}
+
+/* Email użytkownika */
+.user-email {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  margin-top: 8px;
+}
+
+.profile-large-avatar {
+  width: 150px;
+  height: 150px;
+  margin-top: 10px;
+  margin-bottom: 16px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--accent-pink);
+  box-shadow: 0 0 15px rgba(216, 58, 122, 0.5);
 }

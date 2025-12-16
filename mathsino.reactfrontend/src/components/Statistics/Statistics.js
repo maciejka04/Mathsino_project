@@ -141,71 +141,69 @@ function Statistics() {
   // Timer logic
   useEffect(() => {
     if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
 
-    if (showAd && timeLeft > 0 && !isPaused) { 
-        const id = setInterval(() => {
-            setTimeLeft(prevTime => prevTime - 1);
-        }, 1000);
-        intervalRef.current = id;
+    if (showAd && timeLeft > 0 && !isPaused) {
+      const id = setInterval(() => {
+        setTimeLeft(prevTime => prevTime - 1);
+      }, 1000);
+      intervalRef.current = id;
     }
 
     return () => {
-        if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
-        }
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
     };
   }, [showAd, timeLeft, isPaused]);
 
   // Reward logic
   useEffect(() => {
     if (showAd && timeLeft === 0 && user?.id) {
-        const USER_ID = user.id;
+      const USER_ID = user.id;
 
-        const giveReward = async () => {
-              try {
-                  // Pamiętaj o naszym bezpiecznym endpoincie z poprzednich kroków!
-                  // Używam bezpieczniejszego 'claim-ad-reward' zamiast 'add?amount=...'
-                  const response = await fetch(`${API_URL}/user/${USER_ID}/claim-ad-reward`, {
-                      method: 'POST',
-                      credentials: 'include',
-                      headers: { 'Content-Type': 'application/json' },
-                  });
-                  if (response.ok) {
-                      if (refreshUser) {
-                          refreshUser(); 
-                      }
-                  } else {
-                      alert(t('ad_error_reward')); // Tłumaczenie błędu
-                  }
-              } catch (error) {
-                  console.error("Network error:", error);
-                  alert(t('ad_error_network')); // Tłumaczenie błędu
-              }
-        
-            setShowAd(false);
-            setTimeout(() => setIsDisabled(false), 60000); 
-        };
-        
-        giveReward();
+      const giveReward = async () => {
+        try {
+          const response = await fetch(`${API_URL}/user/${USER_ID}/claim-ad-reward`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+          });
+          if (response.ok) {
+            if (refreshUser) {
+              refreshUser();
+            }
+          } else {
+            alert(t('ad_error_reward')); // Tłumaczenie błędu
+          }
+        } catch (error) {
+          console.error("Network error:", error);
+          alert(t('ad_error_network')); // Tłumaczenie błędu
+        }
+
+        setShowAd(false);
+        setTimeout(() => setIsDisabled(false), 60000);
+      };
+
+      giveReward();
     }
   }, [showAd, timeLeft, user, rewardAmount, refreshUser, t]);
- 
+
   const handleWatchAd = () => {
     if (isDisabled || showAd || !user?.id) return;
-    
+
     // Kwota jest teraz ustalana przez serwer, ale do wyświetlania w modalu 
     // możemy ustawić lokalnie (tylko informacyjnie).
-    const fixedRewardAmount = 50; 
+    const fixedRewardAmount = 50;
 
-    setTimeLeft(20);           
-    setRewardAmount(fixedRewardAmount); 
-    setShowAd(true);          
-    setIsDisabled(true);        
-    setIsPaused(false);         
+    setTimeLeft(20);
+    setRewardAmount(fixedRewardAmount);
+    setShowAd(true);
+    setIsDisabled(true);
+    setIsPaused(false);
   };
 
   const handleCloseAd = () => {
@@ -215,17 +213,17 @@ function Statistics() {
 
   const confirmCloseAd = () => {
     setShowConfirmModal(false);
-    setShowAd(false); 
-    setTimeLeft(0);   
-    setIsPaused(false); 
-    setIsDisabled(false); 
+    setShowAd(false);
+    setTimeLeft(0);
+    setIsPaused(false);
+    setIsDisabled(false);
   };
 
   const cancelCloseAd = () => {
     setShowConfirmModal(false);
     setIsPaused(false);
   };
-  
+
   if (loading) {
     return (
       <div className="statistics-container">
@@ -241,51 +239,51 @@ function Statistics() {
     <>
       {/* MODAL POTWIERDZENIA ZAMKNIĘCIA REKLAMY */}
       {showConfirmModal && (
-          <div className="modal-overlay">
-              <div className="modal-content" onClick={e => e.stopPropagation()}>
-                  <h2 style={{ color: '#ff4d4d' }}>{t('ad_warning_title')}</h2>
-                  <p style={{ color: '#DDD', fontSize: '1.1rem' }}>
-                      {t('ad_warning_desc', { amount: rewardAmount })} {/* Interpolacja kwoty */}
-                      <br />
-                      {t('ad_warning_question')}
-                  </p>
-                  <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
-                      <button 
-                          className="danger-button" 
-                          onClick={confirmCloseAd}
-                          style={{ border: 'none' }}
-                      >
-                          {t('ad_exit_button')}
-                      </button>
-                      <button 
-                          className="logout-button" 
-                          onClick={cancelCloseAd}
-                          style={{ marginLeft: '10px' }}
-                      >
-                          {t('ad_continue_button')}
-                      </button>
-                  </div>
-              </div>
+        <div className="modal-overlay">
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <h2 style={{ color: '#ff4d4d' }}>{t('ad_warning_title')}</h2>
+            <p style={{ color: '#DDD', fontSize: '1.1rem' }}>
+              {t('ad_warning_desc', { amount: rewardAmount })} {/* Interpolacja kwoty */}
+              <br />
+              {t('ad_warning_question')}
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: '20px' }}>
+              <button
+                className="danger-button"
+                onClick={confirmCloseAd}
+                style={{ border: 'none' }}
+              >
+                {t('ad_exit_button')}
+              </button>
+              <button
+                className="logout-button"
+                onClick={cancelCloseAd}
+                style={{ marginLeft: '10px' }}
+              >
+                {t('ad_continue_button')}
+              </button>
+            </div>
           </div>
+        </div>
       )}
 
       {/* OKNO REKLAMY */}
       {showAd && !showConfirmModal && (
-          <div className="ad-overlay">
-              <div className="ad-content">
-                <button className="ad-close-button" onClick={handleCloseAd}>
-                    x
-                </button>
-                  <p>{t('ad_reward_info', { amount: rewardAmount })}</p> {/* "Bądź gotowy na 50 PLN!" */}
-                  <p>{t('ad_timer', { seconds: timeLeft })}</p> {/* "Reklama zniknie za X sekund" */}
-                  
-                  <div className="fake-ad-box">
-                      <i className="fa-solid fa-gem" style={{ fontSize: '3rem', color: '#ffd700' }} />
-                      <h2>{t('ad_promo_title')}</h2>
-                      <p>{t('ad_promo_desc')}</p>
-                  </div>
-              </div>
+        <div className="ad-overlay">
+          <div className="ad-content">
+            <button className="ad-close-button" onClick={handleCloseAd}>
+              x
+            </button>
+            <p>{t('ad_reward_info', { amount: rewardAmount })}</p> {/* "Bądź gotowy na 50 PLN!" */}
+            <p>{t('ad_timer', { seconds: timeLeft })}</p> {/* "Reklama zniknie za X sekund" */}
+
+            <div className="fake-ad-box">
+              <i className="fa-solid fa-gem" style={{ fontSize: '3rem', color: '#ffd700' }} />
+              <h2>{t('ad_promo_title')}</h2>
+              <p>{t('ad_promo_desc')}</p>
+            </div>
           </div>
+        </div>
       )}
 
       <div className="statistics-container">
@@ -294,16 +292,16 @@ function Statistics() {
           <p>{t('stats_subtitle')}</p>
         </header>
 
-        <button 
+        <button
           className={`ad-reward-button ${isDisabled ? 'disabled' : ''}`}
-          disabled={isDisabled} 
+          disabled={isDisabled}
           onClick={() => {
-              playClickSound();
-              handleWatchAd();
+            playClickSound();
+            handleWatchAd();
           }}
-      >
+        >
           {t('stats_watch_ad')} <i className="fa-solid fa-clapperboard" />
-      </button>
+        </button>
 
 
         {/* Grid statystyk */}
@@ -326,9 +324,7 @@ function Statistics() {
               {t('stats_peak_balance')}
             </span>
             <span className="stat-card-value">
-              {games.length > 0
-                ? Math.max(...games.map(g => g.balanceAfterGame)).toLocaleString()
-                : '5,000'} PLN
+              {stats?.peakBalance?.toLocaleString() || '5,000'} PLN
             </span>
           </div>
 

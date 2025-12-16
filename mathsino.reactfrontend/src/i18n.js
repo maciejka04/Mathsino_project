@@ -92,10 +92,17 @@ const resources = {
       "ad_error_reward": "Error granting reward.",
       "ad_error_network": "Server connection error.",
 
+      "stats_friend_balance": "Friend's Balance", 
+      "stats_my_balance": "Your Balance",
+      "stats_friend_summary": "Summary",
+      "stats_friend": "Friend",
+      "stats_game": "Game",
+      "stats_error_fetching": "Failed to fetch statistics",
+      "loading_profile": "Loading profile...",
+
       /* --- FRIENDS.JS --- */
       "friends_title": "Friends",
       "friends_add_friend": "Add Friend",
-      "friends_placeholder": "Enter user ID...",
       "friends_add": "Add",
       "friends_sent_requests": "Sent Requests ({{count}})",
       "friends_no_sent_requests": "You haven't sent any requests",
@@ -114,8 +121,6 @@ const resources = {
       "friends_check": "Check Profile",
       "friends_delete": "Delete",
       "friends_enter_valid_id": "Please enter a valid user ID",
-      "friends_cant_add_yourself": "You cannot add yourself!",
-      "friends_request_sent": "Friend request sent!",
       "friends_remove_error": "Failed to remove friend",
       "friends_remove_confirm": "Remove {{name}} from friends?",
       "friends_accept_error": "Failed to accept friend request",
@@ -123,6 +128,18 @@ const resources = {
       "loading": "Loading...",
       "error": "Error",
       "retry": "Retry",
+      "friends_placeholder": "Enter @username",
+      "friends_enter_username": "Please enter a username",
+      "friends_user_not_found": "User not found",
+      "friends_already_friends": "You are already friends",
+      "friends_already_requested": "Friend request already sent",
+      "friends_cant_add_yourself": "You cannot add yourself as a friend",
+      "friends_request_sent": "Friend request sent successfully!",
+      "friends_request_failed": "Failed to send friend request",
+      "friends_error": "An error occurred",
+
+      "friends_error": "An error occurred",
+      "back_to_friends": "Back to Friends",
 
       /* --- PROFILE.JS --- */
       "profile_title": "Profile",
@@ -135,6 +152,9 @@ const resources = {
       "profile_logout": "Log Out",
       "profile_danger_zone": "Danger Zone",
       "profile_reset_progress": "Reset Progress",
+      "profile_edit_username": "Edit",
+
+      "profile_not_found": "Profile not found",
 
       /* --- RESOURCES.JS --- */
       "resources_title": "Settings & Resources",
@@ -286,10 +306,17 @@ const resources = {
       "ad_error_reward": "Błąd podczas przyznawania nagrody.",
       "ad_error_network": "Błąd połączenia z serwerem.",
 
+      "stats_friend_balance": "Saldo Znajomego", 
+      "stats_my_balance": "Twoje Saldo",
+      "stats_friend_summary": "Podsumowanie",
+      "stats_friend": "Znajomy",
+      "stats_game": "Gra",
+      "stats_error_fetching": "Błąd pobierania statystyk",
+      "loading_profile": "Ładowanie profilu...",
+
       /* --- FRIENDS.JS --- */
       "friends_title": "Znajomi",
       "friends_add_friend": "Dodaj znajomego",
-      "friends_placeholder": "Wpisz ID użytkownika...",
       "friends_add": "Dodaj",
       "friends_sent_requests": "Wysłane zaproszenia ({{count}})",
       "friends_no_sent_requests": "Nie wysłałeś żadnych zaproszeń",
@@ -308,8 +335,6 @@ const resources = {
       "friends_check": "Profil",
       "friends_delete": "Usuń",
       "friends_enter_valid_id": "Wpisz prawidłowe ID użytkownika",
-      "friends_cant_add_yourself": "Nie możesz dodać samego siebie!",
-      "friends_request_sent": "Zaproszenie wysłane!",
       "friends_remove_error": "Nie udało się usunąć znajomego",
       "friends_remove_confirm": "Usunąć {{name}} ze znajomych?",
       "friends_accept_error": "Nie udało się zaakceptować zaproszenia",
@@ -317,6 +342,17 @@ const resources = {
       "loading": "Ładowanie...",
       "error": "Błąd",
       "retry": "Spróbuj ponownie",
+      "friends_placeholder": "Wpisz @nazwęużytkownika",
+      "friends_enter_username": "Proszę wpisać nazwę użytkownika",
+      "friends_user_not_found": "Nie znaleziono użytkownika",
+      "friends_already_friends": "Już jesteście znajomymi",
+      "friends_already_requested": "Zaproszenie już wysłane",
+      "friends_cant_add_yourself": "Nie możesz dodać samego siebie",
+      "friends_request_sent": "Zaproszenie wysłane pomyślnie!",
+      "friends_request_failed": "Nie udało się wysłać zaproszenia",
+      "friends_error": "Wystąpił błąd",
+      "friends_error": "Wystąpił błąd",
+      "back_to_friends": "Wróć do Znajomych",
 
       /* --- PROFILE.JS --- */
       "profile_title": "Profil",
@@ -329,6 +365,9 @@ const resources = {
       "profile_logout": "Wyloguj się",
       "profile_danger_zone": "Strefa niebezpieczna",
       "profile_reset_progress": "Zresetuj postępy",
+      "profile_edit_username": "Edytuj",
+
+      "profile_not_found": "Profil nie został znaleziony",
 
       /* --- RESOURCES.JS --- */
       "resources_title": "Ustawienia i Zasoby",
