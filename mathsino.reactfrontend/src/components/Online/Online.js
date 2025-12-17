@@ -123,7 +123,7 @@ function Online() {
 
   // --- NOWY STAN: Włącznik Trenera (Domyślnie włączony) ---
   const [isTrainerEnabled, setIsTrainerEnabled] = useState(true);
-  
+
   const shuffleAudio = useRef(null);
   const winAudio = useRef(null);
   const loseAudio = useRef(null);
@@ -687,32 +687,32 @@ function Online() {
           alt={t('online_avatar_alt')}
           className="user-avatar"
         />
-        <div style={{display: 'flex', flexDirection: 'column'}}>
-            <span className="user-name">{user?.name || t('online_guest')}</span>
-            
-            {/* --- PRZYCISK TRENERA (ON/OFF) --- */}
-            <div 
-                onClick={() => setIsTrainerEnabled(!isTrainerEnabled)}
-                style={{
-                    marginTop: '5px',
-                    padding: '4px 8px',
-                    borderRadius: '15px',
-                    background: isTrainerEnabled ? '#2ecc71' : '#e74c3c',
-                    color: 'white',
-                    fontSize: '0.8rem',
-                    fontWeight: 'bold',
-                    cursor: 'pointer',
-                    textAlign: 'center',
-                    boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
-                    transition: 'all 0.3s'
-                }}
-            >
-                {t('trainer') || "Trener"}: {isTrainerEnabled ? "ON" : "OFF"}
-            </div>
-            {/* ---------------------------------- */}
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <span className="user-name">{user?.name || t('online_guest')}</span>
+
+          {/* --- PRZYCISK TRENERA (ON/OFF) --- */}
+          <div
+            onClick={() => setIsTrainerEnabled(!isTrainerEnabled)}
+            style={{
+              marginTop: '5px',
+              padding: '4px 8px',
+              borderRadius: '15px',
+              background: isTrainerEnabled ? '#2ecc71' : '#e74c3c',
+              color: 'white',
+              fontSize: '0.8rem',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              textAlign: 'center',
+              boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
+              transition: 'all 0.3s'
+            }}
+          >
+            {t('trainer') || "Trener"}: {isTrainerEnabled ? "ON" : "OFF"}
+          </div>
+          {/* ---------------------------------- */}
         </div>
       </div>
-      
+
       {/* FEEDBACK TRENERA (Wyświetl tylko jeśli włączony) */}
       {strategyFeedback && isTrainerEnabled && (
         <div
@@ -1022,7 +1022,10 @@ function Online() {
         <span className="balance-label">
           {t('online_balance')}:{" "}
           <span className="balance-amount">
-            {user.balance?.toLocaleString("pl-PL") || 0} PLN
+            {(gameStatus === "Waiting"
+              ? (user.balance - currentBet)
+              : user.balance
+            )?.toLocaleString("pl-PL") || 0} PLN
           </span>
         </span>
         <span className="balance-sublabel">
