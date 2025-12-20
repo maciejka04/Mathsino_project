@@ -143,6 +143,39 @@ public class UsersService(ILogger<UsersService>? logger, MathsinoContext dbConte
         return ranking.OrderByDescending(r => r.PeakBalance).Take(10).ToList();
     }
 
+    public async Task<List<UserRankingDto>> GetFriendsRankingByPeriodAsync(int userId, DateTime startDate)
+    {
+        var friendIds = await dbContext.UserFriends
+            .Where(f => f.UserId == userId)
+            .Select(f => f.FriendId)
+            .ToListAsync();
+
+        friendIds.Add(userId);
+
+        var ranking = new List<UserRankingDto>();
+
+        foreach (var id in friendIds)
+        {
+            var user = await dbContext.Users.FindAsync(id);
+            if (user == null) continue;
+
+            var peak = await dbContext.SingleGames
+                .Where(sg => sg.UserId == id && sg.StartTime >= startDate)
+                .Select(sg => (int?)sg.BalanceAfterGame)
+                .MaxAsync() ?? 0;
+
+            if (peak > 0)
+            {
+                ranking.Add(new UserRankingDto(user.Id, user.UserName, user.AvatarPath, peak));
+            }
+        }
+
+        return ranking
+            .OrderByDescending(r => r.PeakBalance)
+            .Take(10)
+            .ToList();
+    }
+
     public async Task<List<UserRankingDto>> GetGlobalRankingAsync()
     {
         logger?.LogInformation("Pobieranie ogólnego rankingu Top 10");
@@ -162,6 +195,34 @@ public class UsersService(ILogger<UsersService>? logger, MathsinoContext dbConte
         }
 
         return ranking.OrderByDescending(r => r.PeakBalance).Take(10).ToList();
+    }
+
+    public async Task<List<UserRankingDto>> GetGlobalRankingByPeriodAsync(DateTime startDate)
+    {
+        logger?.LogInformation("Pobieranie rankingu globalnego od {startDate}", startDate);
+
+        var users = await dbContext.Users.ToListAsync();
+        var ranking = new List<UserRankingDto>();
+
+        foreach (var u in users)
+        {
+            // Filtrujemy gry tylko z danego okresu
+            var peak = await dbContext.SingleGames
+                .Where(sg => sg.UserId == u.Id && sg.StartTime >= startDate)
+                .Select(sg => (int?)sg.BalanceAfterGame)
+                .MaxAsync() ?? 0; // Jeśli nie grał w tym tygodniu, dajemy 0
+
+            // Dodajemy do rankingu tylko osoby, które zagrały chociaż raz w tym okresie
+            if (peak > 0)
+            {
+                ranking.Add(new UserRankingDto(u.Id, u.UserName, u.AvatarPath, peak));
+            }
+        }
+
+        return ranking
+            .OrderByDescending(r => r.PeakBalance)
+            .Take(10)
+            .ToList();
     }
 }
 

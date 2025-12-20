@@ -83,6 +83,4 @@ public record UserDto(
     DateTime? LastSpinTime
 );
 
-
-
 public record UpdateAvatarRequest(string AvatarPath);

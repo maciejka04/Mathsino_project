@@ -355,3 +355,49 @@
   padding: 20px;
 }
 
+/* Układ nagłówka z tytułem i zakładkami */
+.header-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+/* Styl przycisków (Tabs) */
+.ranking-tabs {
+  display: flex;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 4px;
+  border-radius: 10px;
+  width: fit-content;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: #aaa;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tab-btn.active {
+  background: #4bc0c0; 
+  color: #000;
+}
+
+.ranking-loader-small {
+  text-align: center;
+  padding: 40px;
+  color: #4bc0c0;
+  font-weight: bold;
+}

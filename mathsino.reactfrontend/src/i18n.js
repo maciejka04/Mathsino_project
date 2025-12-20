@@ -343,7 +343,12 @@ const resources = {
       "global_ranking_title": "Global Top 10",
       "friends_ranking_title": "Friends Top 10",
       "no_friends_data": "No friends in ranking yet",
-      "loading": "Loading data"
+      "loading": "Loading data", 
+      "ranking_period_all": "All Time",
+      "ranking_period_weekly": "Weekly",
+      "ranking_period_monthly": "Monthly",
+      "peak_label": "Peak",
+      "no_ranking_data": "No ranking data for this period"
     }
   },
   pl: {
@@ -686,7 +691,12 @@ const resources = {
       "global_ranking_title": "Top 10 Świata",
       "friends_ranking_title": "Top 10 Znajomych",
       "no_friends_data": "Brak danych o znajomych",
-      "loading": "Ładowanie danych"
+      "loading": "Ładowanie danych",
+      "ranking_period_all": "Ogólny",
+      "ranking_period_weekly": "Tygodniowy",
+      "ranking_period_monthly": "Miesięczny",
+      "peak_label": "Rekord",
+      "no_ranking_data": "Brak wyników w tym okresie"
     }
   }
 };

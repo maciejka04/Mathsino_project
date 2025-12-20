@@ -171,10 +171,50 @@ public static class UserEndPoints
         );
 
         app.MapGet(
-            "/users/ranking/global", 
+            "/users/{userId}/friends/ranking/weekly",
+            async (int userId, UsersService usersService) =>
+            {
+                var lastWeek = DateTime.UtcNow.AddDays(-7);
+                var ranking = await usersService.GetFriendsRankingByPeriodAsync(userId, lastWeek);
+                return Results.Ok(ranking);
+            }
+        );
+
+        app.MapGet(
+            "/users/{userId}/friends/ranking/monthly",
+            async (int userId, UsersService usersService) =>
+            {
+                var lastMonth = DateTime.UtcNow.AddDays(-30);
+                var ranking = await usersService.GetFriendsRankingByPeriodAsync(userId, lastMonth);
+                return Results.Ok(ranking);
+            }
+        );
+
+        app.MapGet(
+            "/users/ranking/global",
             async (UsersService usersService) =>
             {
                 var ranking = await usersService.GetGlobalRankingAsync();
+                return Results.Ok(ranking);
+            }
+        );
+
+        app.MapGet(
+            "/users/ranking/weekly",
+            async (UsersService usersService) =>
+            {
+                var lastWeek = DateTime.Now.AddDays(-7);
+                var ranking = await usersService.GetGlobalRankingByPeriodAsync(lastWeek);
+                return Results.Ok(ranking);
+            }
+        );
+
+        app.MapGet(
+            "/users/ranking/monthly",
+            async (UsersService usersService) =>
+            {
+                var lastMonth = DateTime.Now.AddDays(-30);
+                var ranking = await usersService.GetGlobalRankingByPeriodAsync(lastMonth);
                 return Results.Ok(ranking);
             }
         );
