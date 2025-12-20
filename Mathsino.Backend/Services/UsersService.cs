@@ -110,6 +110,59 @@ public class UsersService(ILogger<UsersService>? logger, MathsinoContext dbConte
             PeakBalance = peakBalance,
         };
     }
+
+    public async Task<List<UserRankingDto>> GetFriendsRankingAsync(int userId)
+    {
+        var friendIds = await dbContext
+            .UserFriends.Where(f =>
+                (f.UserId == userId || f.FriendId == userId) && f.Status == FriendStatus.Accepted
+            )
+            .Select(f => f.UserId == userId ? f.FriendId : f.UserId)
+            .ToListAsync();
+
+        if (!friendIds.Contains(userId))
+        {
+            friendIds.Add(userId);
+        }
+
+        var users = await dbContext.Users.Where(u => friendIds.Contains(u.Id)).ToListAsync();
+
+        var ranking = new List<UserRankingDto>();
+
+        foreach (var u in users)
+        {
+            var peak =
+                await dbContext
+                    .SingleGames.Where(sg => sg.UserId == u.Id)
+                    .Select(sg => (int?)sg.BalanceAfterGame)
+                    .MaxAsync() ?? 5000;
+
+            ranking.Add(new UserRankingDto(u.Id, u.UserName, u.AvatarPath, peak));
+        }
+
+        return ranking.OrderByDescending(r => r.PeakBalance).Take(10).ToList();
+    }
+
+    public async Task<List<UserRankingDto>> GetGlobalRankingAsync()
+    {
+        logger?.LogInformation("Pobieranie ogólnego rankingu Top 10");
+
+        var users = await dbContext.Users.ToListAsync();
+        var ranking = new List<UserRankingDto>();
+
+        foreach (var u in users)
+        {
+            var peak =
+                await dbContext
+                    .SingleGames.Where(sg => sg.UserId == u.Id)
+                    .Select(sg => (int?)sg.BalanceAfterGame)
+                    .MaxAsync() ?? 5000;
+
+            ranking.Add(new UserRankingDto(u.Id, u.UserName, u.AvatarPath, peak));
+        }
+
+        return ranking.OrderByDescending(r => r.PeakBalance).Take(10).ToList();
+    }
 }
 
 public record UserStatsDto
@@ -123,3 +176,5 @@ public record UserStatsDto
 
     public int PeakBalance { get; init; } = 5000;
 }
+
+public record UserRankingDto(int Id, string UserName, string AvatarPath, int PeakBalance);

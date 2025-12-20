@@ -7,6 +7,8 @@ import './Home.css';
 import { useOutletContext } from "react-router-dom";
 import clickSound from '../../assets/mouse-click.mp3';
 import SpinWheelCard from './SpinWheelCard';
+import FriendsRanking from '../Friends/FriendsRanking'; 
+import GlobalRanking from '../GlobalRanking/GlobalRanking';
 
 const API_URL = "http://localhost:5126";
 const COOLDOWN_MINUTES = 2;
@@ -108,6 +110,10 @@ function Home() {
             <p>{t('home_focus_desc')}</p>
           </div>
         </div>
+
+        {/* === 5. RANKINGI === */}
+        <GlobalRanking />
+        <FriendsRanking userId={user?.id} />
       </>
     )}
   </div>

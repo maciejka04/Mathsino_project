@@ -337,7 +337,13 @@ const resources = {
       "dd_section2_desc": "In the email subject line, enter 'Data Deletion Request - [Your Email Address]'. In the body of the message, please provide:",
       "dd_email_req1": "The email address used for Google/Facebook login.",
       "dd_email_req2": "Confirmation of your intent to permanently delete the account.",
-      "dd_confirmation": "We confirm that upon receiving your request, all your personal data will be permanently deleted from our database within 7 business days."
+      "dd_confirmation": "We confirm that upon receiving your request, all your personal data will be permanently deleted from our database within 7 business days.",
+    
+      /* --- Ranking --- */
+      "global_ranking_title": "Global Top 10",
+      "friends_ranking_title": "Friends Top 10",
+      "no_friends_data": "No friends in ranking yet",
+      "loading": "Loading data"
     }
   },
   pl: {
@@ -674,7 +680,13 @@ const resources = {
       "dd_section2_desc": "W tytule wiadomości wpisz 'Prośba o usunięcie danych - [Twój Adres E-mail]'. W treści wiadomości, podaj:",
       "dd_email_req1": "Adres e-mail użyty do logowania przez Google/Facebook.",
       "dd_email_req2": "Potwierdzenie chęci trwałego usunięcia konta.",
-      "dd_confirmation": "Potwierdzamy, że po otrzymaniu Twojej prośby, wszystkie Twoje dane osobowe zostaną trwale usunięte z naszej bazy danych w ciągu 7 dni roboczych."
+      "dd_confirmation": "Potwierdzamy, że po otrzymaniu Twojej prośby, wszystkie Twoje dane osobowe zostaną trwale usunięte z naszej bazy danych w ciągu 7 dni roboczych.",
+    
+      /* --- Ranking --- */
+      "global_ranking_title": "Top 10 Świata",
+      "friends_ranking_title": "Top 10 Znajomych",
+      "no_friends_data": "Brak danych o znajomych",
+      "loading": "Ładowanie danych"
     }
   }
 };

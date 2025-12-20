@@ -153,5 +153,30 @@ public static class UserEndPoints
                 }
             }
         );
+
+        app.MapGet(
+            "/users/{userId}/friends/ranking",
+            async (int userId, UsersService usersService) =>
+            {
+                try
+                {
+                    var ranking = await usersService.GetFriendsRankingAsync(userId);
+                    return Results.Ok(ranking);
+                }
+                catch (Exception ex)
+                {
+                    return Results.BadRequest(new { message = ex.Message });
+                }
+            }
+        );
+
+        app.MapGet(
+            "/users/ranking/global", 
+            async (UsersService usersService) =>
+            {
+                var ranking = await usersService.GetGlobalRankingAsync();
+                return Results.Ok(ranking);
+            }
+        );
     }
 }
