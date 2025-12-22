@@ -1,95 +1,31 @@
-import React, { useState, useRef } from "react";
+// src/pages/Offline/Offline.js
+import React, { useState, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useOutletContext } from "react-router-dom";
 import "./Offline.css";
-import audioService from "../../services/audioService";
 import tableImage from "../../assets/table4.png";
-import dziesiecImage from "../../assets/zetony/dziesiec.png";
-import piecdziesiatImage from "../../assets/zetony/piecdziesiat.png";
-import stoImage from "../../assets/zetony/sto.png";
-import piecsetImage from "../../assets/zetony/piecset.png";
-import { motion } from "framer-motion";
-import Fireworks from 'fireworks-js';
-import shuffleSound from "../../assets/shuffling-cards.mp3";
-import winSound from "../../assets/win.mp3";
-import loseSound from "../../assets/lose.mp3";
-import pushSound from "../../assets/push.mp3";
-import blackjackSound from "../../assets/blackjack.mp3";
-import fireworksSound from "../../assets/fireworks.mp3";
-import clickSound from '../../assets/mouse-click.mp3';
 
-import reverseCardImage from "../../assets/karty/reverse2.png";
-import defaultAvatar from "../../assets/profilepic/snake.png";
+// Utils & Hooks
+import { mapBackendCardToFilename, cardImagesMap, getCardProp } from "./utils/CardUtils";
+import { useGameAudio } from "./hooks/useGameAudio";
+
+// Components
+import UserPanel from "./components/UserPanel";
+import Deck from "./components/Deck";
+import Hand from "./components/Hand";
+import Chips from "./components/Chips";
+import PlayerControls from "./components/PlayerControls";
+import GameActions from "./components/GameActions";
+import GameOverlays from "./components/GameOverlays";
+
 const DECK_POSITION = { left: 15, top: 30 };
-
-const allCardFileNames = [
-  "2_of_hearts", "3_of_hearts", "4_of_hearts", "5_of_hearts", "6_of_hearts", "7_of_hearts", "8_of_hearts", "9_of_hearts", "10_of_hearts", "jack_of_hearts", "queen_of_hearts", "king_of_hearts", "ace_of_hearts",
-  "2_of_diamonds", "3_of_diamonds", "4_of_diamonds", "5_of_diamonds", "6_of_diamonds", "7_of_diamonds", "8_of_diamonds", "9_of_diamonds", "10_of_diamonds", "jack_of_diamonds", "queen_of_diamonds", "king_of_diamonds", "ace_of_diamonds",
-  "2_of_clubs", "3_of_clubs", "4_of_clubs", "5_of_clubs", "6_of_clubs", "7_of_clubs", "8_of_clubs", "9_of_clubs", "10_of_clubs", "jack_of_clubs", "queen_of_clubs", "king_of_clubs", "ace_of_clubs",
-  "2_of_spades", "3_of_spades", "4_of_spades", "5_of_spades", "6_of_spades", "7_of_spades", "8_of_spades", "9_of_spades", "10_of_spades", "jack_of_spades", "queen_of_spades", "king_of_spades", "ace_of_spades",
-];
-
-const cardImagesMap = allCardFileNames.reduce((acc, cardName) => {
-  try {
-    acc[cardName] = require(`../../assets/karty/${cardName}.png`);
-  } catch (e) { }
-  return acc;
-}, {});
-
-const getCardProp = (card, prop) => {
-  if (!card) return null;
-  return (
-    card[prop.toLowerCase()] ||
-    card[prop.charAt(0).toUpperCase() + prop.slice(1)]
-  );
-};
-
-const mapBackendCardToFilename = (card) => {
-  if (!card) return null;
-  let rankName = (getCardProp(card, "rank") || "").toLowerCase();
-  if (rankName === "a") rankName = "ace";
-  else if (rankName === "k") rankName = "king";
-  else if (rankName === "q") rankName = "queen";
-  else if (rankName === "j") rankName = "jack";
-  const suitName = (getCardProp(card, "suit") || "").toLowerCase();
-  return `${rankName}_of_${suitName}`;
-};
-
-const calculateHandValue = (hand) => {
-  let sum = 0;
-  let numAces = 0;
-
-  for (const card of hand) {
-    if (!card || !card.name) continue;
-
-    const rank = card.name.split('_of_')[0].toLowerCase();
-
-    if (rank === 'ace') {
-      numAces += 1;
-      sum += 11;
-    } else if (['king', 'queen', 'jack', '10'].includes(rank)) {
-      sum += 10;
-    } else {
-      const numericalRank = parseInt(rank, 10);
-      if (!isNaN(numericalRank)) {
-        sum += numericalRank;
-      }
-    }
-  }
-
-  // Korekta dla Asów
-  while (sum > 21 && numAces > 0) {
-    sum -= 10;
-    numAces -= 1;
-  }
-
-  return sum;
-};
 
 function Offline() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { user, refreshUser } = useOutletContext();
+  const audio = useGameAudio();
+
   const [currentBet, setCurrentBet] = useState(0);
 
   const [gameId, setGameId] = useState(null);
@@ -109,7 +45,6 @@ function Offline() {
   const [isShuffling, setIsShuffling] = useState(false);
 
   const [showFireworks, setShowFireworks] = useState(false);
-  const fireworksContainerRef = useRef(null);
 
   const [canSplit, setCanSplit] = useState(false);
   const [canDouble, setCanDouble] = useState(false);
@@ -120,75 +55,12 @@ function Offline() {
   const [splitDoubled, setSplitDoubled] = useState(false);
 
   const [strategyFeedback, setStrategyFeedback] = useState(null);
-
-  // --- NOWY STAN: Włącznik Trenera (Domyślnie włączony) ---
   const [isTrainerEnabled, setIsTrainerEnabled] = useState(true);
-
-  const shuffleAudio = useRef(null);
-  const winAudio = useRef(null);
-  const loseAudio = useRef(null);
-  const pushAudio = useRef(null);
-  const blackjackAudio = useRef(null);
-  const fireworksAudio = useRef(null);
 
   const API_URL = "http://localhost:5126";
   const USER_ID = user?.id || 1;
 
   console.log("OFFLINE USER ID:", USER_ID);
-
-
-  React.useEffect(() => {
-    let fireworks;
-    if (showFireworks && fireworksContainerRef.current) {
-      fireworks = new Fireworks(fireworksContainerRef.current, {
-        autoresize: true,
-        opacity: 0.9,
-        acceleration: 1.05,
-        friction: 0.97,
-        particles: 50,
-        gravity: 1.5,
-        traceSpeed: 0.5,
-        delay: { min: 15, max: 30 },
-        mouse: { click: false, move: false },
-        boundaries: {
-          x: 50,
-          y: 50,
-          width: fireworksContainerRef.current.clientWidth - 100,
-          height: fireworksContainerRef.current.clientHeight * 0.7,
-        },
-      });
-
-      fireworks.start();
-    }
-
-    return () => {
-      if (fireworks) {
-        fireworks.stop();
-      }
-    };
-  }, [showFireworks]);
-
-  React.useEffect(() => {
-    shuffleAudio.current = new Audio(shuffleSound);
-    shuffleAudio.current.volume = 0.8;
-  }, []);
-
-  React.useEffect(() => {
-    shuffleAudio.current = new Audio(shuffleSound);
-
-    winAudio.current = new Audio(winSound);
-    loseAudio.current = new Audio(loseSound);
-    pushAudio.current = new Audio(pushSound);
-    blackjackAudio.current = new Audio(blackjackSound);
-    fireworksAudio.current = new Audio(fireworksSound);
-
-    winAudio.current.volume = 1.0;
-    loseAudio.current.volume = 0.6;
-    pushAudio.current.volume = 0.9;
-    blackjackAudio.current.volume = 1.0;
-    fireworksAudio.current.volume = 0.7;
-  }, []);
-
 
   const resetGameFlags = () => {
     setMainDoubled(false);
@@ -218,8 +90,7 @@ function Offline() {
     resetGameFlags();
 
     setIsShuffling(true);
-
-    audioService.playSoundEffect(shuffleSound);
+    audio.playShuffle();
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -360,13 +231,11 @@ function Offline() {
     setResultProcessed(true);
     resultProcessedRef.current = true;
 
-    // --- DŹWIĘKI ---
-    if (mainResult === "Win") audioService.playSoundEffect(winSound);
-    if (mainResult === "Lose") audioService.playSoundEffect(loseSound);
-    if (mainResult === "Push") audioService.playSoundEffect(pushSound);
+    if (mainResult === "Win") audio.playWin();
+    if (mainResult === "Lose") audio.playLose();
+    if (mainResult === "Push") audio.playPush();
     if (mainResult === "Blackjack") {
-      audioService.playSoundEffect(blackjackSound);
-      audioService.playSoundEffect(fireworksSound);
+        audio.playBlackjack();
     }
 
     if (mainResult === "Blackjack" || splitRes === "Blackjack") {
@@ -391,21 +260,16 @@ function Offline() {
     return data;
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (gameStatus === "Completed" && !resultProcessed && gameId && playerId) {
       fetch(`${API_URL}/games/${gameId}/check-results/${playerId}`)
         .then(() => fetchGameStatus(gameId));
     }
   }, [gameStatus, playerId]);
 
-
-
-  // --- ANALIZA RUCHU (TRENER) ---
   const analyzeMove = async (action) => {
-    // 1. Sprawdź, czy trener jest włączony
     if (!isTrainerEnabled) return;
 
-    // 2. Wybierz rękę, którą teraz gramy (split lub main)
     const currentHand = isSplitActive ? splitCards : playerCards;
 
     const parseCardName = (filename) => {
@@ -415,7 +279,7 @@ function Offline() {
       if (rank === "ace") rank = "A";
       else if (rank === "king") rank = "K";
       else if (rank === "queen") rank = "Q";
-      else if (rank === "j") rank = "J"; // małe j w nazwie pliku
+      else if (rank === "j") rank = "J";
       else if (rank === "jack") rank = "J";
       else rank = rank.toUpperCase();
       return { Rank: rank, Suit: suit };
@@ -453,7 +317,10 @@ function Offline() {
   };
 
   const handleGoBack = () => {
-    navigate("/play");
+    audio.playClick();
+    setTimeout(() => {
+        navigate("/play");
+    }, 400);
   };
 
   const handleHit = async () => {
@@ -530,6 +397,7 @@ function Offline() {
       alert("Błąd połączenia z serwerem.");
     }
   };
+
   const handleDouble = async () => {
     analyzeMove("Double");
     if (!canDouble) return;
@@ -581,6 +449,7 @@ function Offline() {
       alert("Błąd połączenia z serwerem.");
     }
   };
+
   const handleChipSelect = (value) => {
     if (gameStatus === "InProgress" || isShuffling) return;
 
@@ -593,7 +462,6 @@ function Offline() {
 
   const clearBet = () => {
     if (gameStatus === "InProgress" || isShuffling) return;
-    //setCurrentBalance((prev) => prev + currentBet);
     setCurrentBet(0);
     resetGameFlags();
   };
@@ -643,12 +511,6 @@ function Offline() {
     };
   };
 
-  const getResultClass = (result) => {
-    if (result === "Win" || result === "Blackjack") return "result-win";
-    if (result === "Push") return "result-push";
-    return "result-lose";
-  };
-
   const displayedBetOnTable = () => {
     if (gameStatus === "Waiting") return currentBet;
     let total = currentBet;
@@ -662,434 +524,102 @@ function Offline() {
 
   return (
     <div className="offline-container">
-      {showFireworks && (
-        <div
-          className="fireworks-container"
-          ref={fireworksContainerRef}
-        />
-      )}
-      <button
-        className="back-button"
-        onClick={() => {
-          audioService.playSoundEffect(clickSound);
-          setTimeout(() => {
-            handleGoBack();
-          }, 400);
+      
+      <UserPanel 
+        user={user} 
+        t={t} 
+        isTrainerEnabled={isTrainerEnabled} 
+        setIsTrainerEnabled={setIsTrainerEnabled} 
+        onExit={handleGoBack}
+      />
+
+      <GameOverlays
+        showFireworks={showFireworks}
+        showModal={showModal}
+        gameResult={gameResult}
+        splitResult={splitResult}
+        finalMessage={getFinalMessage()}
+        hasSplit={hasSplit}
+        strategyFeedback={strategyFeedback}
+        isTrainerEnabled={isTrainerEnabled}
+        onModalClose={() => {
+            setShowModal(false);
+            setCurrentBet(0);
+            setGameStatus("Waiting");
+            resetGameFlags();
         }}
-      >
-        &#8592; {t('exit')}
-      </button>
+      />
 
-
-      <div className="user-info-panel">
-        <img
-          src={user.avatarUrl || defaultAvatar}
-          alt={t('offline_avatar_alt')}
-          className="user-avatar"
-        />
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span className="user-name">{user?.name || t('offline_guest')}</span>
-
-          {/* --- PRZYCISK TRENERA (ON/OFF) --- */}
-          <div
-            onClick={() => setIsTrainerEnabled(!isTrainerEnabled)}
-            style={{
-              marginTop: '5px',
-              padding: '4px 8px',
-              borderRadius: '15px',
-              background: isTrainerEnabled ? '#2ecc71' : '#e74c3c',
-              color: 'white',
-              fontSize: '0.8rem',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              textAlign: 'center',
-              boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
-              transition: 'all 0.3s'
-            }}
-          >
-            {t('trainer') || "Trener"}: {isTrainerEnabled ? "ON" : "OFF"}
-          </div>
-          {/* ---------------------------------- */}
-        </div>
-      </div>
-
-      {/* FEEDBACK TRENERA (Wyświetl tylko jeśli włączony) */}
-      {strategyFeedback && isTrainerEnabled && (
-        <div
-          style={{
-            position: "absolute",
-            top: "20px",
-            right: "20px",
-            zIndex: 2000,
-            padding: "20px",
-            background: strategyFeedback.isCorrect ? "#28a745" : "#dc3545",
-            color: "white",
-            borderRadius: "10px",
-            boxShadow: "0 5px 15px rgba(0,0,0,0.5)",
-            fontFamily: "Arial, sans-serif",
-            fontSize: "1.1rem",
-            maxWidth: "300px",
-          }}
-        >
-          <div
-            style={{
-              fontWeight: "bold",
-              marginBottom: "5px",
-              fontSize: "1.3rem",
-            }}
-          >
-            {strategyFeedback.isCorrect ? "DOBRY RUCH!" : "ZŁY RUCH!"}
-          </div>
-          <div>{strategyFeedback.message}</div>
-        </div>
-      )}
-
-      {/* Modal */}
-      {showModal && (gameResult || splitResult) && (
-        <div className="modal-overlay">
-          <h2
-            className="modal-title"
-            style={{ fontSize: hasSplit ? "1.5rem" : "2.5rem" }}
-          >
-            {getFinalMessage().title}
-          </h2>
-          <p className="modal-text" style={{ color: "white" }}>
-            {getFinalMessage().desc}
-          </p>
-          <button
-            className="modal-button"
-            onClick={() => {
-              setShowModal(false);
-              setCurrentBet(0);
-              setGameStatus("Waiting");
-              resetGameFlags();
-            }}
-          >
-            OK
-          </button>
-        </div>
-      )}
-
+      {/* STÓŁ GRY */}
       <div className="game-table-area">
         <img src={tableImage} alt="Stół do gry" className="game-table-image" />
-        {/* WARTOSC REKI KRUPIERA */}
-        {dealerCards.length > 0 && (
-          <div className="hand-value dealer-value">
-            {`${t('dealer')}:`}{" "}
-            <span style={{ fontWeight: "bold" }}>
-              {gameStatus === "InProgress" && dealerCards.length === 2
-                ? calculateHandValue(dealerCards.slice(0, 1))
-                : calculateHandValue(dealerCards)}
-            </span>
-          </div>
+
+        {/* Dealer Hand */}
+        <Hand 
+            cards={dealerCards} 
+            deckPosition={DECK_POSITION} 
+            title={`${t('dealer')}:`} 
+            gameStatus={gameStatus} 
+            isDealer={true}
+        />
+
+        {/* Player Hand (Main) */}
+        <Hand 
+            cards={playerCards} 
+            deckPosition={DECK_POSITION} 
+            title={hasSplit ? `${t('hand')} 1` : "Ty"} 
+            gameStatus={gameStatus} 
+            isDealer={false}
+            hasSplit={hasSplit}
+            isActive={hasSplit && !isSplitActive}
+        />
+
+        {/* Player Hand (Split) */}
+        {hasSplit && (
+             <Hand 
+                cards={splitCards} 
+                deckPosition={DECK_POSITION} 
+                title={`${t('hand')} 2:`} 
+                gameStatus={gameStatus} 
+                isDealer={false}
+                hasSplit={hasSplit}
+                isActive={isSplitActive}
+                leftPositionBase={56}
+            />
         )}
 
-        {/* WARTOSC REKI GRACZA (MAIN) */}
-        {playerCards.length > 0 && (
-          <div
-            className="hand-value player-main-value"
-            style={{
-              left: hasSplit ? "40%" : "50%",
-            }}
-          >
-            {hasSplit ? `${t('hand')} 1` : "Ty"}:{" "}
-            <span style={{ fontWeight: "bold" }}>
-              {calculateHandValue(playerCards)}
-            </span>
-          </div>
-        )}
-
-        {/* WARTOSC REKI GRACZA (SPLIT) */}
-        {hasSplit && splitCards.length > 0 && (
-          <div
-            className="hand-value player-split-value"
-            style={{
-              left: "60%",
-            }}
-          >
-            {`${t('hand')} 2:`}{" "}
-            <span style={{ fontWeight: "bold" }}>
-              {calculateHandValue(splitCards)}
-            </span>
-          </div>
-        )}
         {/* TASOWARKA */}
-        <div
-          style={{
-            position: "absolute",
-            left: `${DECK_POSITION.left}%`,
-            top: `${DECK_POSITION.top}%`,
-            zIndex: 5,
-          }}
-        >
-          <img
-            src={reverseCardImage}
-            alt="Deck Base"
-            style={{
-              position: "absolute",
-              width: "5vw",
-              borderRadius: "4px",
-              left: "0px",
-              top: "0px",
-            }}
-          />
-          <img
-            src={reverseCardImage}
-            alt="Deck Base"
-            style={{
-              position: "absolute",
-              width: "5vw",
-              borderRadius: "4px",
-              left: "2px",
-              top: "-2px",
-            }}
-          />
-          <motion.img
-            src={reverseCardImage}
-            alt="Shuffling Card"
-            style={{
-              width: "5vw",
-              borderRadius: "4px",
-              position: "relative",
-              left: "4px",
-              top: "-4px",
-            }}
-            animate={
-              isShuffling
-                ? {
-                  x: [0, -20, 20, -20, 20, 0],
-                  y: [0, -5, 5, -5, 5, 0],
-                  rotateZ: [0, -10, 10, -10, 10, 0],
-                }
-                : { x: 0, y: 0, rotateZ: 0 }
-            }
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-          />
-        </div>
+        <Deck position={DECK_POSITION} isShuffling={isShuffling} />
 
-        {/* DEALER CARDS */}
-        {dealerCards.map((card, index) => {
-          const isFaceDown = index === 1 && gameStatus === "InProgress";
-          const finalLeft = 46 + index * 3;
-          const startX = `${DECK_POSITION.left - finalLeft}vw`;
-          const startY = `${DECK_POSITION.top - 10}vh`;
-          const cardZIndex = index === 0 ? 51 : 49;
-
-          return (
-            <motion.div
-              key={`dealer-${index}`}
-              className="card-image dealer-card"
-              style={{ left: `${finalLeft}%` }}
-              initial={{
-                x: startX,
-                y: startY,
-                opacity: 0,
-                scale: 0.5,
-                rotate: 180,
-              }}
-              animate={{
-                x: 0,
-                y: 0,
-                opacity: 1,
-                scale: 1,
-                rotate: 0,
-                rotateY: isFaceDown ? 180 : 0,
-              }}
-              transition={{
-                duration: 0.6,
-                delay: index * 0.2,
-                type: "spring",
-                stiffness: 80,
-              }}
-            >
-              <img
-                src={isFaceDown ? reverseCardImage : card.src}
-                alt={isFaceDown ? "Zakryta karta" : card.name}
-                style={{ width: "100%", height: "100%", borderRadius: "4px" }}
-              />
-            </motion.div>
-          );
-        })}
-
-        {/* PLAYER CARDS (MAIN) */}
-        {playerCards.map((card, index) => {
-          const offset = hasSplit ? -10 : 0;
-          const finalLeft = 46 + index * 3 + offset;
-          const startX = `${DECK_POSITION.left - finalLeft}vw`;
-          const startY = `${DECK_POSITION.top - 40}vh`;
-
-          return (
-            <motion.img
-              key={`player-${index}`}
-              src={card.src}
-              alt={card.name}
-              className="card-image player-card"
-              style={{
-                left: `${finalLeft}%`,
-                border:
-                  hasSplit && !isSplitActive && gameStatus === "InProgress"
-                    ? "2px solid gold"
-                    : "none",
-              }}
-              initial={{
-                x: startX,
-                y: startY,
-                opacity: 0,
-                scale: 0.5,
-                rotate: -180,
-              }}
-              animate={{ x: 0, y: 0, opacity: 1, scale: 1, rotate: 0 }}
-              transition={{
-                duration: 0.7,
-                delay: index * 0.2 + 0.1,
-                type: "spring",
-                stiffness: 80,
-              }}
-            />
-          );
-        })}
-
-        {/* PLAYER CARDS (SPLIT) */}
-        {hasSplit &&
-          splitCards.map((card, index) => {
-            const finalLeft = 46 + index * 3 + 10;
-            const startX = `${DECK_POSITION.left - finalLeft}vw`;
-            const startY = `${DECK_POSITION.top - 40}vh`;
-
-            return (
-              <motion.img
-                key={`split-${index}`}
-                src={card.src}
-                alt={card.name}
-                className="card-image player-card"
-                style={{
-                  left: `${finalLeft}%`,
-                  border:
-                    isSplitActive && gameStatus === "InProgress"
-                      ? "2px solid gold"
-                      : "none",
-                }}
-                initial={{
-                  x: startX,
-                  y: startY,
-                  opacity: 0,
-                  scale: 0.5,
-                  rotate: -180,
-                }}
-                animate={{ x: 0, y: 0, opacity: 1, scale: 1, rotate: 0 }}
-                transition={{
-                  duration: 0.7,
-                  delay: index * 0.2 + 0.1,
-                  type: "spring",
-                  stiffness: 80,
-                }}
-              />
-            );
-          })}
-
-        <div className="betting-ui">
-          <div className="chip-selection">
-            <img
-              src={dziesiecImage}
-              alt="10"
-              className="chip-image chip-z4"
-              onClick={() => handleChipSelect(10)}
-            />
-            <img
-              src={piecdziesiatImage}
-              alt="50"
-              className="chip-image chip-z3"
-              onClick={() => handleChipSelect(50)}
-            />
-            <img
-              src={stoImage}
-              alt="100"
-              className="chip-image chip-z2"
-              onClick={() => handleChipSelect(100)}
-            />
-            <img
-              src={piecsetImage}
-              alt="500"
-              className="chip-image chip-z1"
-              onClick={() => handleChipSelect(500)}
-            />
-          </div>
-        </div>
+        {/* ŻETONY - Wewnątrz stołu, aby leżały "na stole" */}
+        <Chips 
+            onChipSelect={handleChipSelect} 
+        />
       </div>
 
-      {/* PANEL LEWY DOLNY */}
-      <div className="left-bottom-panel">
-        <span className="balance-label">
-          {t('offline_balance')}:{" "}
-          <span className="balance-amount">
-            {(gameStatus === "Waiting"
-              ? (user.balance - currentBet)
-              : user.balance
-            )?.toLocaleString("pl-PL") || 0} PLN
-          </span>
-        </span>
-        <span className="balance-sublabel">
-          {t('offline_on_table')}: {displayedBetOnTable()} PLN
-        </span>
+      {/* PANEL STEROWANIA I BALANS - Poza stołem, aby uniknąć ucięcia tekstu */}
+      <PlayerControls 
+          t={t}
+          gameStatus={gameStatus}
+          isShuffling={isShuffling}
+          userBalance={user.balance}
+          currentBet={currentBet}
+          onClearBet={clearBet}
+          onStartGame={startNewGame}
+          displayedBetOnTable={displayedBetOnTable()}
+      />
 
-        <div className="controls-wrapper">
-          <button
-            onClick={clearBet}
-            className="btn-clear"
-            disabled={
-              gameStatus === "InProgress" || isShuffling || currentBet === 0
-            }
-          >
-            {t('offline_clear')}
-          </button>
-          <button
-            onClick={startNewGame}
-            className="btn-deal"
-            disabled={
-              gameStatus === "InProgress" || isShuffling || currentBet === 0
-            }
-          >
-            {t('offline_deal_cards')}
-          </button>
-        </div>
-      </div>
-
-      {/* Przyciski Akcji */}
-      <div className="game-actions">
-        <button
-          className="action-button stand"
-          onClick={handleStand}
-          disabled={gameStatus !== "InProgress" || isShuffling}
-        >
-          {t('offline_stand')}
-        </button>
-
-        <button
-          className={`action-button split ${!canSplit ? "disabled-action" : ""
-            }`}
-          onClick={handleSplitAction}
-          disabled={!canSplit || gameStatus !== "InProgress"}
-        >
-          {t('offline_split')}
-        </button>
-
-        <button
-          className="action-button hit"
-          onClick={handleHit}
-          disabled={gameStatus !== "InProgress" || isShuffling}
-        >
-          {t('offline_hit')}
-        </button>
-
-        <button
-          className={`action-button double ${!canDouble ? "disabled-action" : ""
-            }`}
-          onClick={handleDouble}
-          disabled={!canDouble || gameStatus !== "InProgress"}
-        >
-          {t('offline_double')}
-        </button>
-      </div>
+      <GameActions 
+        t={t}
+        gameStatus={gameStatus}
+        isShuffling={isShuffling}
+        canSplit={canSplit}
+        canDouble={canDouble}
+        onHit={handleHit}
+        onStand={handleStand}
+        onSplit={handleSplitAction}
+        onDouble={handleDouble}
+      />
     </div>
   );
 }

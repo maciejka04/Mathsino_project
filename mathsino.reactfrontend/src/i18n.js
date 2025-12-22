@@ -235,7 +235,13 @@ const resources = {
       "learn_l11_title": "Lesson 11",
       "learn_l11_subtitle": "Advanced Betting",
       "learn_l11_desc": "Systems and patterns.",
-
+      /* --- LESSON PAGE --- */
+      "lesson_wrong_action": "Nope! That's not the best move here. Try something else!",
+      "lesson_intro_title": "Introduction", 
+      "lesson_conclusion_title": "Conclusion",
+      "lesson_start_button": "Start Lesson",
+      "lesson_next_button": "Next",
+      "lesson_back_to_menu": "Back to Menu",
       /* --- Glossary.js --- */
       "glossary_title": "Blackjack Glossary",
       "glossary_subtitle": "Key terms and definitions.",
@@ -583,7 +589,13 @@ const resources = {
       "learn_l11_title": "Lekcja 11",
       "learn_l11_subtitle": "Zaawansowane zakłady",
       "learn_l11_desc": "Systemy i schematy obstawiania.",
-
+      /* --- LESSON PAGE --- */
+      "lesson_intro_title": "Wprowadzenie", 
+      "lesson_wrong_action": "Nie! To nie jest najlepszy ruch. Spróbuj czegoś innego!",
+      "lesson_start_button": "Rozpocznij lekcję",
+      "lesson_conclusion_title": "Zakończenie",
+      "lesson_back_to_menu": "Powrót do menu",
+      "lesson_next_button": "Dalej",
       /* --- Glossary.js --- */
       "glossary_title": "Słownik Blackjacka",
       "glossary_subtitle": "Kluczowe terminy i definicje.",

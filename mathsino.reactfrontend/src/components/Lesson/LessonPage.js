@@ -28,7 +28,6 @@ import lesson6snd from '../../assets/lesson6.mp3';
 import lesson7snd from '../../assets/lesson7.mp3';
 import lesson8snd from '../../assets/lesson8.mp3';
 import lesson9snd from '../../assets/lesson9.mp3';
-// Importujemy dźwięk dla lekcji 10 (może być placeholder)
 import lesson10snd from '../../assets/lesson9.mp3'; 
 
 const lessonSoundMap = {
@@ -67,7 +66,7 @@ const mapJsonCardToFilename = (jsonValue) => {
 const LessonPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const lessonAudioRef = useRef(null);
 
@@ -244,7 +243,7 @@ const LessonPage = () => {
 
     } else {
       setIsWrongAction(true);
-      setFeedbackText("Nope! That's not the best move here. Try something else!");
+      setFeedbackText(t('lesson_wrong_action') || "Nope! That's not the best move here. Try something else!");
       setAvatarPose("C");
     }
   };
@@ -370,28 +369,28 @@ const LessonPage = () => {
         <div className="instructor-wrapper">
             <div className="speech-bubble">
                 <h3 className="bubble-title">
-                    {lessonPhase === 'INTRO' && "Introduction"}
+                    {lessonPhase === 'INTRO' && t('lesson_intro_title')}
                     {lessonPhase === 'GAME' && scenario && scenario.title}
-                    {lessonPhase === 'CONCLUSION' && "Conclusion"}
+                    {lessonPhase === 'CONCLUSION' && t('lesson_conclusion_title')}
                 </h3>
                 
                 <p className="bubble-text">{feedbackText}</p>
 
                 {lessonPhase === 'INTRO' && (
                     <button onClick={startLesson} className="bubble-btn">
-                        START LESSON
+                        {t('lesson_start_button') || "START LESSON"}
                     </button>
                 )}
 
                 {lessonPhase === 'GAME' && isScenarioFinished && (
                     <button onClick={nextStep} className="bubble-btn">
-                        NEXT CHALLENGE
+                        {t('lesson_next_button') || "NEXT CHALLENGE"}
                     </button>
                 )}
 
                 {lessonPhase === 'CONCLUSION' && (
                     <button onClick={() => navigate('/learn')} className="bubble-btn menu">
-                        BACK TO MENU
+                        {t('lesson_back_to_menu') || "BACK TO MENU"}
                     </button>
                 )}
             </div>

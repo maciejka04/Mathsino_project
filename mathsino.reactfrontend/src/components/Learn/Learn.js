@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next'; 
-//import lekcja1 from '../../assets/lekcja1.jpg';
+import { useTranslation } from 'react-i18next';
 import lekcja1 from '../../assets/lessonpic/lesson1.png';
 import lekcja2 from '../../assets/lessonpic/lesson2.png';
 import lekcja3 from '../../assets/lessonpic/lesson3.png';
@@ -98,8 +97,8 @@ const cardData = [
   },
  { 
     id: 9,
-    topic: 'desert', 
-    alt: 'desert', 
+    topic: 'deserts', 
+    alt: 'deserts', 
     image: lekcja9, 
     title: 'learn_l9_title',
     subtitle: 'learn_l9_subtitle',
@@ -116,8 +115,8 @@ const cardData = [
   },
      { 
     id: 11,
-    topic: 'desert', 
-    alt: 'desert', 
+    topic: 'desertt', 
+    alt: 'desertt', 
     image: lekcja11, 
     title: 'learn_l11_title',
     subtitle: 'learn_l11_subtitle',
@@ -209,7 +208,7 @@ function CardGrid() {
     <div className={`${styles.cards} ${isShowing ? styles.showing : ''}`}>
       {cardData.map((card, index) => (
         <Learn
-          key={card.topic} 
+          key={card.id} 
           image={card.image}
           alt={card.alt}
           
