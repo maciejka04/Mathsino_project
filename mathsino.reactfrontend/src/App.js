@@ -12,7 +12,6 @@ import Friends from './components/Friends/Friends';
 import Statistics from './components/Statistics/Statistics';
 import Resources from './components/Resources/Resources';
 import Offline from './components/Offline/Offline';
-import Online from './components/Online/Online';
 import Login from './components/Login/Login';
 import PrivacyPolicy from './components/Resources/PrivacyPolicy';
 import DataDeletion from './components/Resources/DataDeletion';
@@ -62,9 +61,7 @@ function App() {
         <Route path="offline" element={
           <ProtectedRoute><Offline /></ProtectedRoute>
         } />
-        <Route path="online" element={
-          <ProtectedRoute><Online /></ProtectedRoute>
-        } />
+        
 
         {/* Opcjonalne strony publiczne */}
         <Route path="resources/privacy-policy" element={<PrivacyPolicy />} />

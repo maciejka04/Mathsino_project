@@ -161,7 +161,7 @@ function Layout() {
     };
   }, []);
 
-  const hideMenu = location.pathname === '/online' || location.pathname === '/offline';
+  const hideMenu = location.pathname === '/offline';
 
   return (
     <>

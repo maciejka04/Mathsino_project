@@ -11,7 +11,7 @@ const resources = {
       "nav_friends": "Friends",
       "nav_resources": "Resources",
 
-      /* --- Online.js --- */
+      /* --- Offline.js --- */
       "exit": "Exit",
       "hand": "Hand",
       "dealer": "Dealer",
@@ -60,21 +60,21 @@ const resources = {
       "you_won": "You won",
 
       /* --- PLAY.JS --- */
-      "play_online_alt": "Play Online",
+      "play_offline_alt": "Play Offline",
 
-      /* --- ONLINE.JS --- */
+      /* --- OFFLINE.JS --- */
       "bet_must_place": "You must place a bet to play!",
       "not_enough_funds": "Insufficient funds!",
-      "online_avatar_alt": "User Avatar",
-      "online_guest": "Guest",
-      "online_balance": "Balance",
-      "online_on_table": "On table",
-      "online_clear": "CLEAR",
-      "online_deal_cards": "DEAL",
-      "online_stand": "STAND",
-      "online_split": "SPLIT",
-      "online_hit": "HIT",
-      "online_double": "DOUBLE",
+      "offline_guest": "Guest",
+      "offline_avatar_alt": "User Avatar",
+      "offline_balance": "Balance",
+      "offline_on_table": "On table",
+      "offline_clear": "CLEAR",
+      "offline_deal_cards": "DEAL",
+      "offline_stand": "STAND",
+      "offline_split": "SPLIT",
+      "offline_hit": "HIT",
+      "offline_double": "DOUBLE",
 
       /* --- STATISTICS.JS --- */
       "stats_title": "Statistics",
@@ -360,7 +360,7 @@ const resources = {
       "nav_friends": "Znajomi",
       "nav_resources": "Zasoby",
 
-      /* --- Online.js --- */
+      /* --- Offline.js --- */
       "exit": "Wyjdź",
       "hand": "Ręka",
       "dealer": "Krupier",
@@ -409,21 +409,21 @@ const resources = {
       "you_won": "Wygrałeś",
 
       /* --- PLAY.JS --- */
-      "play_online_alt": "Graj Online",
+      "play_offline_alt": "Graj Offline",
 
-      /* --- ONLINE.JS --- */
+      /* --- OFFLINE.JS --- */
       "bet_must_place": "Musisz postawić zakład, aby zagrać!",
       "not_enough_funds": "Nie masz wystarczająco środków!",
-      "online_avatar_alt": "Awatar użytkownika",
-      "online_guest": "Gość",
-      "online_balance": "Saldo",
-      "online_on_table": "Na stole",
-      "online_clear": "CZYŚĆ",
-      "online_deal_cards": "ROZDAJ",
-      "online_stand": "CKECK",
-      "online_split": "SPLIT",
-      "online_hit": "HIT",
-      "online_double": "DOUBLE",
+      "offline_avatar_alt": "Awatar użytkownika",
+      "offline_guest": "Gość",
+      "offline_balance": "Saldo",
+      "offline_on_table": "Na stole",
+      "offline_clear": "CZYŚĆ",
+      "offline_deal_cards": "ROZDAJ",
+      "offline_stand": "CKECK",
+      "offline_split": "SPLIT",
+      "offline_hit": "HIT",
+      "offline_double": "DOUBLE",
 
       /* --- STATISTICS.JS --- */
       "stats_title": "Statystyki",

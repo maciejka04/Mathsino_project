@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import './Play.css';
-import online from '../../assets/singleplayer.png';
+import offline from '../../assets/singleplayer.png';
 import { Link } from 'react-router-dom';
 import audioService from '../../services/audioService';
 import clickSound from '../../assets/mouse-click.mp3';
@@ -52,13 +52,13 @@ function Play() {
   return (
     <div className="card-container" ref={cardContainerRef}>
       <Link 
-        to="/online" 
+        to="/offline" 
         className="card-link"
         onClick={playClickSound}
       >
         <div className="card">
           <div className="card-info">
-            <img src={online} alt={t('play_online_alt')} />
+            <img src={offline} alt={t('play_offline_alt')} />
           </div>
         </div>
       </Link>
