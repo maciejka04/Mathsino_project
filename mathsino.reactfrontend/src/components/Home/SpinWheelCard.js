@@ -14,7 +14,7 @@ const playClickSound = () => {
 export default function SpinWheelCard({ user, refreshUser }) {
   const { t } = useTranslation();
   
-  const [segments] = useState([10, 20, 25, 30, 40, 50, 100]);
+  const [segments] = useState([100, 200, 400, 1000, 200, 400, 2000]);
   
   const [cooldown, setCooldown] = useState(null);
   const [isLoading, setIsLoading] = useState(false);

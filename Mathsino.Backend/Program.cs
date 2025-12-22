@@ -302,7 +302,7 @@ static async Task OnCreatingTicketHandler(
             Provider = provider,
             ProviderId = providerId,
             AvatarPath = "snake.png",
-            Balance = 5000,
+            Balance = 2000,
             LastSpinTime = NewUserPastSpinTime,
         };
         dbContext.Users.Add(user);

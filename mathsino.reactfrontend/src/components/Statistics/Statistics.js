@@ -197,7 +197,7 @@ function Statistics() {
 
     // Kwota jest teraz ustalana przez serwer, ale do wyświetlania w modalu 
     // możemy ustawić lokalnie (tylko informacyjnie).
-    const fixedRewardAmount = 50;
+    const fixedRewardAmount = 100;
 
     setTimeLeft(20);
     setRewardAmount(fixedRewardAmount);

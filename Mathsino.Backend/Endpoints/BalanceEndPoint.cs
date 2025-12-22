@@ -61,7 +61,7 @@ public static class BalanceEndPoints
                 try
                 {
                     // Dodaj nagrodę
-                    await balanceService.AddBalance(id, 50);
+                    await balanceService.AddBalance(id, 100);
 
                     await balanceService.SaveBalanceSnapshot(id);
 
@@ -129,7 +129,7 @@ public static class BalanceEndPoints
                                 
                 
                 var random = new Random();
-                int[] possibleRewards = { 10, 20, 25, 30, 40, 50, 100 }; 
+                int[] possibleRewards = { 100, 200, 400, 1000, 200, 400, 2000 }; 
                 int rewardIndex = random.Next(possibleRewards.Length);
                 int rewardAmount = possibleRewards[rewardIndex];
 
