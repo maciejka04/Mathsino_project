@@ -95,7 +95,7 @@ public static class BalanceEndPoints
                     return Results.NotFound();
                 }
 
-                const int COOLDOWN_MINUTES = 1; //docelowo zmienic na 24*60
+                const int COOLDOWN_MINUTES = 24*60; 
                 var now = DateTime.UtcNow;
 
                 if (user.LastSpinTime.HasValue)

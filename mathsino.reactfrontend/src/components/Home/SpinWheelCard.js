@@ -4,7 +4,7 @@ import clickSound from '../../assets/mouse-click.mp3';
 import { useTranslation } from 'react-i18next';
 
 const API_URL = "http://localhost:5126";
-const COOLDOWN_MINUTES = 1;
+const COOLDOWN_MINUTES = 24*60;
 
 const playClickSound = () => {
   const audio = new Audio(clickSound);
