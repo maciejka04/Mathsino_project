@@ -1,9 +1,10 @@
 using Mathsino.Backend.Game;
+using Mathsino.Backend.Interfaces;
 using Mathsino.Backend.Models;
 
 namespace Mathsino.Backend.Services;
 
-public class BalanceService
+public class BalanceService : IBalanceService
 {
     private readonly ILogger<BalanceService>? logger;
     private readonly MathsinoContext dbContext;

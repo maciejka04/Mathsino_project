@@ -1,9 +1,11 @@
+using Mathsino.Backend.Interfaces;
 using Mathsino.Backend.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Mathsino.Backend.Services
 {
     public class FriendService(ILogger<FriendService>? logger, MathsinoContext dbContext)
+        : IFriendService
     {
         private readonly ILogger<FriendService>? _logger = logger;
         private readonly MathsinoContext _dbContext = dbContext;

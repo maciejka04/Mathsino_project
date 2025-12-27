@@ -1,3 +1,4 @@
+using Mathsino.Backend.Interfaces;
 using Mathsino.Backend.Services;
 using Npgsql.Replication;
 
@@ -7,7 +8,7 @@ public static class FriendEndPoints
     {
         app.MapGet(
             "/friends/{userId}",
-            async (FriendService friendService, int userId) =>
+            async (IFriendService friendService, int userId) =>
             {
                 var friends = await friendService.GetFriendsByUserIdAsync(userId);
                 return Results.Ok(friends);
@@ -15,7 +16,7 @@ public static class FriendEndPoints
         );
         app.MapGet(
             "/friends/{userId}/requests",
-            async (FriendService friendService, int userId) =>
+            async (IFriendService friendService, int userId) =>
             {
                 var friends = await friendService.GetFriendsRequestsByUserIdAsync(userId);
                 return Results.Ok(friends);
@@ -23,7 +24,7 @@ public static class FriendEndPoints
         );
         app.MapGet(
             "/friends/{userId}/sent",
-            async (FriendService friendService, int userId) =>
+            async (IFriendService friendService, int userId) =>
             {
                 var friends = await friendService.GetFriendsSentedRequestsByUserIdAsync(userId);
                 return Results.Ok(friends);
@@ -32,7 +33,7 @@ public static class FriendEndPoints
 
         app.MapPost(
             "/friends/{userId}/add/{friendId}",
-            async (FriendService friendService, int userId, int friendId) =>
+            async (IFriendService friendService, int userId, int friendId) =>
             {
                 var friends = await friendService.SendFriendRequestAsync(userId, friendId);
                 return Results.Ok(friends);
@@ -41,7 +42,7 @@ public static class FriendEndPoints
 
         app.MapPost(
             "/friends/{userId}/add-by-username/{friendUserName}",
-            async (FriendService friendService, int userId, string friendUserName) =>
+            async (IFriendService friendService, int userId, string friendUserName) =>
             {
                 try
                 {
@@ -66,7 +67,7 @@ public static class FriendEndPoints
 
         app.MapPost(
             "/friends/{userId}/accept/{senderId}",
-            async (FriendService friendService, int userId, int senderId) =>
+            async (IFriendService friendService, int userId, int senderId) =>
             {
                 var friends = await friendService.AcceptFriendRequestAsync(userId, senderId);
                 return Results.Ok(friends);
@@ -74,7 +75,7 @@ public static class FriendEndPoints
         );
         app.MapDelete(
             "/friends/{userId}/decline/{senderId}",
-            async (FriendService friendService, int userId, int senderId) =>
+            async (IFriendService friendService, int userId, int senderId) =>
             {
                 var friends = await friendService.DeclineFriendRequestAsync(userId, senderId);
                 return Results.Ok(friends);
@@ -82,7 +83,7 @@ public static class FriendEndPoints
         );
         app.MapDelete(
             "/friends/{userId}/remove/{friendId}",
-            async (FriendService friendService, int userId, int friendId) =>
+            async (IFriendService friendService, int userId, int friendId) =>
             {
                 var friends = await friendService.RemoveFriendAsync(userId, friendId);
                 return Results.Ok(friends);
@@ -90,7 +91,7 @@ public static class FriendEndPoints
         );
         app.MapDelete(
             "/friends/{userId}/cancel/{receiverId}",
-            async (FriendService friendService, int userId, int receiverId) =>
+            async (IFriendService friendService, int userId, int receiverId) =>
             {
                 var success = await friendService.CancelSentFriendRequestAsync(userId, receiverId);
                 return success

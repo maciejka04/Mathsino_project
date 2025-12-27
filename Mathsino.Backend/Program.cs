@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Mathsino.Backend.Interfaces;
 using Mathsino.Backend.Models;
 using Mathsino.Backend.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -96,9 +97,12 @@ builder.Services.AddDbContextPool<MathsinoContext>(options =>
 );
 
 builder.Services.AddScoped<UsersService>();
-builder.Services.AddScoped<FriendService>();
+
+builder.Services.AddScoped<IBalanceService, BalanceService>();
+builder.Services.AddScoped<IFriendService, FriendService>();
+
 builder.Services.AddScoped<UserNameService>();
-builder.Services.AddScoped<BalanceService>();
+
 builder.Services.AddScoped<GameService>();
 builder.Services.AddAuthorization();
 

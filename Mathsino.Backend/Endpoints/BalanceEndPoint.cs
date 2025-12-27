@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Mathsino.Backend.Interfaces;
 using Mathsino.Backend.Models;
 using Mathsino.Backend.Services;
 using Microsoft.EntityFrameworkCore;
@@ -9,146 +10,131 @@ public static class BalanceEndPoints
     {
         app.MapGet(
             "user/{id}/balance",
-            async (int id, MathsinoContext db) =>
+            async (int id, IBalanceService balanceService) =>
             {
-                var user = await db.Users.FindAsync(id);
-                if (user is null)
-                {
-                    return Results.NotFound();
-                }
-                return Results.Ok(user.Balance);
+                var balance = await balanceService.GetBalance(id);
+                return Results.Ok(balance);
             }
         );
 
         app.MapPost(
             "user/{id}/balance/add",
-            async (int id, int amount, MathsinoContext db) =>
+            async (int id, int amount, IBalanceService balanceService) =>
             {
-                var user = await db.Users.FindAsync(id);
-                if (user is null)
-                {
-                    return Results.NotFound();
-                }
-                user.Balance += amount;
-                await db.SaveChangesAsync();
-                return Results.Ok(user.Balance);
+                await balanceService.AddBalance(id, amount);
+                var newBalance = await balanceService.GetBalance(id);
+                return Results.Ok(newBalance);
             }
         );
 
         app.MapPost(
             "user/{id}/balance/deduct",
-            async (int id, int amount, MathsinoContext db) =>
+            async (int id, int amount, IBalanceService balanceService) =>
             {
-                var user = await db.Users.FindAsync(id);
-                if (user is null)
-                {
-                    return Results.NotFound();
-                }
-
-                if (user.Balance < amount)
-                {
-                    return Results.BadRequest("Insufficient balance");
-                }
-                user.Balance -= amount;
-                await db.SaveChangesAsync();
-                return Results.Ok(user.Balance);
+                await balanceService.DeductBalance(id, amount);
+                var newBalance = await balanceService.GetBalance(id);
+                return Results.Ok(newBalance);
             }
         );
         app.MapPost(
-            "user/{id}/claim-ad-reward",
-            async (int id, BalanceService balanceService) =>
-            {
-                try
+                "user/{id}/claim-ad-reward",
+                async (int id, IBalanceService balanceService) =>
                 {
-                    // Dodaj nagrodę
-                    await balanceService.AddBalance(id, 100);
+                    try
+                    {
+                        // Dodaj nagrodę
+                        await balanceService.AddBalance(id, 100);
 
-                    await balanceService.SaveBalanceSnapshot(id);
+                        await balanceService.SaveBalanceSnapshot(id);
 
-                    int newBalance = await balanceService.GetBalance(id);
-                    return Results.Ok(new { balance = newBalance });
+                        int newBalance = await balanceService.GetBalance(id);
+                        return Results.Ok(new { balance = newBalance });
+                    }
+                    catch (KeyNotFoundException ex)
+                    {
+                        return Results.NotFound(new { message = ex.Message });
+                    }
+                    catch (Exception ex)
+                    {
+                        return Results.Problem(ex.Message);
+                    }
                 }
-                catch (KeyNotFoundException ex)
-                {
-                    return Results.NotFound(new { message = ex.Message });
-                }
-                catch (Exception ex)
-                {
-                    return Results.Problem(ex.Message);
-                }
-            }
-        )
-        .RequireAuthorization();
+            )
+            .RequireAuthorization();
         app.MapPost(
-            "user/{id}/spin-wheel",
-            async (int id, HttpContext context, MathsinoContext db) =>
-            {
-                var loggedInUserIdString = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (!int.TryParse(loggedInUserIdString, out var loggedInUserId) || loggedInUserId != id)
+                "user/{id}/spin-wheel",
+                async (int id, HttpContext context, MathsinoContext db) =>
                 {
-                    return Results.Forbid();
-                }
-
-                var user = await db.Users.FindAsync(id);
-                if (user is null)
-                {
-                    return Results.NotFound();
-                }
-
-                const int COOLDOWN_MINUTES = 24*60; 
-                var now = DateTime.UtcNow;
-
-                if (user.LastSpinTime.HasValue)
-                {
-                    var lastSpin = user.LastSpinTime.Value;
-
-                    if (lastSpin.Kind != DateTimeKind.Utc)
+                    var loggedInUserIdString = context
+                        .User.FindFirst(ClaimTypes.NameIdentifier)
+                        ?.Value;
+                    if (
+                        !int.TryParse(loggedInUserIdString, out var loggedInUserId)
+                        || loggedInUserId != id
+                    )
                     {
-                        lastSpin = lastSpin.ToUniversalTime();
+                        return Results.Forbid();
                     }
 
-                    var nextSpinAvailableAt = lastSpin.AddMinutes(COOLDOWN_MINUTES);
-
-                    if (now < nextSpinAvailableAt)
+                    var user = await db.Users.FindAsync(id);
+                    if (user is null)
                     {
-                        var timeRemaining = nextSpinAvailableAt - now;
+                        return Results.NotFound();
+                    }
 
-                        return Results.BadRequest(new
+                    const int COOLDOWN_MINUTES = 24 * 60;
+                    var now = DateTime.UtcNow;
+
+                    if (user.LastSpinTime.HasValue)
+                    {
+                        var lastSpin = user.LastSpinTime.Value;
+
+                        if (lastSpin.Kind != DateTimeKind.Utc)
                         {
-                            message = "Wymagana jest przerwa.",
-                            cooldownHours = timeRemaining.Hours,
-                            cooldownMinutes = timeRemaining.Minutes,
-                            cooldownSeconds = timeRemaining.Seconds,
-                            nextSpinAvailable = nextSpinAvailableAt,
-                            lastSpin = lastSpin
-                        });
+                            lastSpin = lastSpin.ToUniversalTime();
+                        }
+
+                        var nextSpinAvailableAt = lastSpin.AddMinutes(COOLDOWN_MINUTES);
+
+                        if (now < nextSpinAvailableAt)
+                        {
+                            var timeRemaining = nextSpinAvailableAt - now;
+
+                            return Results.BadRequest(
+                                new
+                                {
+                                    message = "Wymagana jest przerwa.",
+                                    cooldownHours = timeRemaining.Hours,
+                                    cooldownMinutes = timeRemaining.Minutes,
+                                    cooldownSeconds = timeRemaining.Seconds,
+                                    nextSpinAvailable = nextSpinAvailableAt,
+                                    lastSpin = lastSpin,
+                                }
+                            );
+                        }
                     }
+
+                    var random = new Random();
+                    int[] possibleRewards = { 100, 200, 400, 1000, 200, 400, 2000 };
+                    int rewardIndex = random.Next(possibleRewards.Length);
+                    int rewardAmount = possibleRewards[rewardIndex];
+
+                    user.Balance += rewardAmount;
+                    user.LastSpinTime = now;
+                    await db.SaveChangesAsync();
+
+                    return Results.Ok(
+                        new
+                        {
+                            message = $"Wygrałeś: {rewardAmount} PLN!",
+                            reward = rewardAmount,
+                            rewardIndex = rewardIndex,
+                            newBalance = user.Balance,
+                            lastSpinTime = user.LastSpinTime,
+                        }
+                    );
                 }
-
-                
-                                
-                
-                var random = new Random();
-                int[] possibleRewards = { 100, 200, 400, 1000, 200, 400, 2000 }; 
-                int rewardIndex = random.Next(possibleRewards.Length);
-                int rewardAmount = possibleRewards[rewardIndex];
-
-                user.Balance += rewardAmount;
-                user.LastSpinTime = now;
-                await db.SaveChangesAsync();
-
-                return Results.Ok(new
-                {
-                    message = $"Wygrałeś: {rewardAmount} PLN!",
-                    reward = rewardAmount,
-                    rewardIndex = rewardIndex, 
-                    newBalance = user.Balance,
-                    lastSpinTime = user.LastSpinTime 
-                });
-            }
-        )
-        .RequireAuthorization();
-
-        
+            )
+            .RequireAuthorization();
     }
 }
