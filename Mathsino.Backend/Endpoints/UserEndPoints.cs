@@ -1,7 +1,6 @@
-using Mathsino.Backend.Game;
+using Mathsino.Backend.Interfaces;
 using Mathsino.Backend.Models;
 using Mathsino.Backend.Services;
-using Microsoft.EntityFrameworkCore;
 
 public record UserLanguageDto(string Language);
 
@@ -15,7 +14,7 @@ public static class UserEndPoints
     {
         app.MapGet(
             "/users",
-            async (UsersService usersService) =>
+            async (IUsersService usersService) =>
             {
                 var users = await usersService.GetUsersAsync();
                 return Results.Ok(users);
@@ -24,7 +23,7 @@ public static class UserEndPoints
 
         app.MapGet(
             "/users/{id}",
-            async (int id, UsersService usersService) =>
+            async (int id, IUsersService usersService) =>
             {
                 var users = await usersService.GetUserByIdAsync(id);
                 return Results.Ok(users);
@@ -32,7 +31,7 @@ public static class UserEndPoints
         );
         app.MapGet(
             "/users/user-name/{userName}",
-            async (string userName, UsersService usersService) =>
+            async (string userName, IUsersService usersService) =>
             {
                 var user = await usersService.GetUserByUserNameAsync(userName);
                 return Results.Ok(user);
@@ -41,7 +40,7 @@ public static class UserEndPoints
 
         app.MapPut(
             "/users/{userId}/user-name/{newUserName}",
-            async (int userId, string newUserName, UserNameService userNameService) =>
+            async (int userId, string newUserName, IUserNameService userNameService) =>
             {
                 try
                 {
@@ -65,7 +64,7 @@ public static class UserEndPoints
         );
         app.MapGet(
             "/users/{userId}/games",
-            async (int userId, UsersService usersService) =>
+            async (int userId, IUsersService usersService) =>
             {
                 try
                 {
@@ -124,7 +123,7 @@ public static class UserEndPoints
 
         app.MapGet(
             "/users/{userId}/games/{gameId}",
-            async (int userId, Guid gameId, UsersService usersService) =>
+            async (int userId, Guid gameId, IUsersService usersService) =>
             {
                 try
                 {
@@ -140,7 +139,7 @@ public static class UserEndPoints
 
         app.MapGet(
             "users/{userId}/stats",
-            async (int userId, UsersService usersService) =>
+            async (int userId, IUsersService usersService) =>
             {
                 try
                 {
@@ -156,7 +155,7 @@ public static class UserEndPoints
 
         app.MapGet(
             "/users/{userId}/friends/ranking",
-            async (int userId, UsersService usersService) =>
+            async (int userId, IUsersService usersService) =>
             {
                 try
                 {
@@ -172,7 +171,7 @@ public static class UserEndPoints
 
         app.MapGet(
             "/users/{userId}/friends/ranking/weekly",
-            async (int userId, UsersService usersService) =>
+            async (int userId, IUsersService usersService) =>
             {
                 var lastWeek = DateTime.UtcNow.AddDays(-7);
                 var ranking = await usersService.GetFriendsRankingByPeriodAsync(userId, lastWeek);
@@ -182,7 +181,7 @@ public static class UserEndPoints
 
         app.MapGet(
             "/users/{userId}/friends/ranking/monthly",
-            async (int userId, UsersService usersService) =>
+            async (int userId, IUsersService usersService) =>
             {
                 var lastMonth = DateTime.UtcNow.AddDays(-30);
                 var ranking = await usersService.GetFriendsRankingByPeriodAsync(userId, lastMonth);
@@ -192,7 +191,7 @@ public static class UserEndPoints
 
         app.MapGet(
             "/users/ranking/global",
-            async (UsersService usersService) =>
+            async (IUsersService usersService) =>
             {
                 var ranking = await usersService.GetGlobalRankingAsync();
                 return Results.Ok(ranking);
@@ -201,7 +200,7 @@ public static class UserEndPoints
 
         app.MapGet(
             "/users/ranking/weekly",
-            async (UsersService usersService) =>
+            async (IUsersService usersService) =>
             {
                 var lastWeek = DateTime.Now.AddDays(-7);
                 var ranking = await usersService.GetGlobalRankingByPeriodAsync(lastWeek);
@@ -211,7 +210,7 @@ public static class UserEndPoints
 
         app.MapGet(
             "/users/ranking/monthly",
-            async (UsersService usersService) =>
+            async (IUsersService usersService) =>
             {
                 var lastMonth = DateTime.Now.AddDays(-30);
                 var ranking = await usersService.GetGlobalRankingByPeriodAsync(lastMonth);

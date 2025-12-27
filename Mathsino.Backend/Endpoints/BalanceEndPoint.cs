@@ -1,8 +1,6 @@
 using System.Security.Claims;
 using Mathsino.Backend.Interfaces;
 using Mathsino.Backend.Models;
-using Mathsino.Backend.Services;
-using Microsoft.EntityFrameworkCore;
 
 public static class BalanceEndPoints
 {

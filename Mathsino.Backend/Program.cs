@@ -96,14 +96,12 @@ builder.Services.AddDbContextPool<MathsinoContext>(options =>
     )
 );
 
-builder.Services.AddScoped<UsersService>();
-
 builder.Services.AddScoped<IBalanceService, BalanceService>();
 builder.Services.AddScoped<IFriendService, FriendService>();
+builder.Services.AddScoped<IGameService, GameService>();
+builder.Services.AddScoped<IUserNameService, UserNameService>();
+builder.Services.AddScoped<IUsersService, UsersService>();
 
-builder.Services.AddScoped<UserNameService>();
-
-builder.Services.AddScoped<GameService>();
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -260,7 +258,7 @@ static async Task OnCreatingTicketHandler(
     // Pobieramy Service Provider
     using var scope = services.BuildServiceProvider().CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<MathsinoContext>();
-    var userNameService = scope.ServiceProvider.GetRequiredService<UserNameService>();
+    var userNameService = scope.ServiceProvider.GetRequiredService<IUserNameService>();
 
     var providerId = context.Principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     var email = context.Principal?.FindFirst(ClaimTypes.Email)?.Value;
