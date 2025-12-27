@@ -18,12 +18,16 @@ public static class AuthEndPoints
         // Endpoint do inicjacji logowania Google
         app.MapGet(
             "/api/auth/google",
-            (HttpContext context) =>
+            (HttpContext context, IConfiguration configuration) =>
             {
                 return Results.Challenge(
                     properties: new AuthenticationProperties
                     {
-                        RedirectUri = "http://localhost:3000/",
+                        RedirectUri =
+                            configuration["LogInRedirectUri"]
+                            ?? throw new InvalidOperationException(
+                                "LogInRedirectUri is not configured."
+                            ),
                     }, // Przekierowanie do root po sukcesie
                     authenticationSchemes: new[] { GoogleDefaults.AuthenticationScheme }
                 );
@@ -33,12 +37,16 @@ public static class AuthEndPoints
         // Endpoint do inicjacji logowania Facebook
         app.MapGet(
             "/api/auth/facebook",
-            (HttpContext context) =>
+            (HttpContext context, IConfiguration configuration) =>
             {
                 return Results.Challenge(
                     properties: new AuthenticationProperties
                     {
-                        RedirectUri = "http://localhost:3000/",
+                        RedirectUri =
+                            configuration["LogInRedirectUri"]
+                            ?? throw new InvalidOperationException(
+                                "LogInRedirectUri is not configured."
+                            ),
                     }, // Przekierowanie do root po sukcesie
                     authenticationSchemes: new[] { FacebookDefaults.AuthenticationScheme }
                 );
