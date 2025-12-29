@@ -29,6 +29,23 @@ public static class UserEndPoints
                 return Results.Ok(users);
             }
         );
+
+        app.MapGet(
+            "userinfo",
+            async (HttpContext context, IBalanceService balanceService) =>
+            {
+                return context
+                    .User.Identities.First()
+                    .Claims.Select(c => new
+                    {
+                        Type = c.Type.ToString(),
+                        Value = c.Value.ToString(),
+                        Subject = c.Subject?.ToString(),
+                    })
+                    .ToList();
+            }
+        );
+
         app.MapGet(
             "/users/user-name/{userName}",
             async (string userName, IUsersService usersService) =>

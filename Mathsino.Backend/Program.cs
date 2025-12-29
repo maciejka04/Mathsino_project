@@ -44,6 +44,7 @@ builder.Services.AddScoped<IFriendService, FriendService>();
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IUserNameService, UserNameService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddScoped<IAdRewardService, AdRewardService>();
 
 var app = builder.Build();
 
@@ -59,5 +60,6 @@ app.MapUserEndPoints();
 app.MapGameEndPoints();
 app.MapBalanceEndPoints();
 app.MapFriendEndPoints();
+app.MapAdRewardEndpoints();
 
 await app.RunAsync();

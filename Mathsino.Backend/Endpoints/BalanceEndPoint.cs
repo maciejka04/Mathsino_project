@@ -15,50 +15,25 @@ public static class BalanceEndPoints
             }
         );
 
-        app.MapPost(
-            "user/{id}/balance/add",
-            async (int id, int amount, IBalanceService balanceService) =>
-            {
-                await balanceService.AddBalance(id, amount);
-                var newBalance = await balanceService.GetBalance(id);
-                return Results.Ok(newBalance);
-            }
-        );
+        // app.MapPost(
+        //     "user/{id}/balance/add",
+        //     async (int id, int amount, IBalanceService balanceService) =>
+        //     {
+        //         await balanceService.AddBalance(id, amount);
+        //         var newBalance = await balanceService.GetBalance(id);
+        //         return Results.Ok(newBalance);
+        //     }
+        // );
 
-        app.MapPost(
-            "user/{id}/balance/deduct",
-            async (int id, int amount, IBalanceService balanceService) =>
-            {
-                await balanceService.DeductBalance(id, amount);
-                var newBalance = await balanceService.GetBalance(id);
-                return Results.Ok(newBalance);
-            }
-        );
-        app.MapPost(
-                "user/{id}/claim-ad-reward",
-                async (int id, IBalanceService balanceService) =>
-                {
-                    try
-                    {
-                        // Dodaj nagrodę
-                        await balanceService.AddBalance(id, 100);
-
-                        await balanceService.SaveBalanceSnapshot(id);
-
-                        int newBalance = await balanceService.GetBalance(id);
-                        return Results.Ok(new { balance = newBalance });
-                    }
-                    catch (KeyNotFoundException ex)
-                    {
-                        return Results.NotFound(new { message = ex.Message });
-                    }
-                    catch (Exception ex)
-                    {
-                        return Results.Problem(ex.Message);
-                    }
-                }
-            )
-            .RequireAuthorization();
+        // app.MapPost(
+        //     "user/{id}/balance/deduct",
+        //     async (int id, int amount, IBalanceService balanceService) =>
+        //     {
+        //         await balanceService.DeductBalance(id, amount);
+        //         var newBalance = await balanceService.GetBalance(id);
+        //         return Results.Ok(newBalance);
+        //     }
+        // );
         app.MapPost(
                 "user/{id}/spin-wheel",
                 async (int id, HttpContext context, MathsinoContext db) =>

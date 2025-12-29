@@ -15,7 +15,17 @@ public class MathsinoContext : DbContext
 
     public DbSet<SingleGame> SingleGames => Set<SingleGame>();
 
-    private static readonly DateTime StaticPastSpinTime = new(2025, 1, 1, 10, 0, 0, DateTimeKind.Utc);
+    public DbSet<AdView> AdViews { get; set; }
+
+    private static readonly DateTime StaticPastSpinTime = new(
+        2025,
+        1,
+        1,
+        10,
+        0,
+        0,
+        DateTimeKind.Utc
+    );
 
     [Obsolete]
     protected override void OnModelCreating(ModelBuilder modelBuilder)

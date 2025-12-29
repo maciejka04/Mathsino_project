@@ -1,0 +1,23 @@
+POST http://localhost:5126/user/3/balance/add?amount=50
+Content-Type: application/json
+
+###
+GET http://localhost:5126/user/3/balance
+Content-Type: application/json
+
+@baseUrl = http://localhost:5126
+@userId = 3
+@authCookie = CfDJ8NMJWbf_erhLsiWN3cFDaYjXbstF05zsAA3bdGzIyBqeZpPBvm74QxzmnuzikDwr43-rWi9TjQBEpQVRXMQESUEdY0WO78gRw0JEeQmj0gHO7NkAySzt1uWuJjRAlQciHlCLbtj6unZEbP4ETBkH4eQzX-3_hwst9735Mn1tEpLQWE4Y6-evwJVJB22l27IO7SIuZGPlD2d4VRdPEt6FvgUHrDsWsCJMvptrtNMpL7DqVaUSwBXN9LRToiI06I0uSyVxkvd7RAbo30V8sSHIilYWC4QPIOz44BSbEs_GeKSjo2EaZQarnxPphhzux0MVy5aL9TxfiK94lqeitrQ_sDcdRDFrr8gkjRa_-DnaaYpvt9Vx9g63atGBHS0H2ttlr4qgQYx_agw6wP0vkoXsksPymLZgv11KwUh5K66vgNlUynVwAk2SkFr3hFpHB7XNt3Q8W0g01zsl0yV_9_kQ7VdO33LxMSfVUsiFQ31pU_fZ-QjIfC6oHpi8qmlzK5i7b1mQHSbv11FlCoACRqCXKf2VkdyWmHc6Ir5r3MtvkJZUmFiURw3uJfhIq467CmmdxQ
+###
+POST {{baseUrl}}/user/{{userId}}/start-ad-view
+Content-Type: application/json
+Cookie: MathsinoAuth={{authCookie}}
+
+### 
+POST {{baseUrl}}/user/{{userId}}/claim-ad-reward
+Content-Type: application/json
+Cookie: MathsinoAuth={{authCookie}}
+
+{
+  "token": "R4vFNWBkdPjXAKXXBbiZQw"
+}
