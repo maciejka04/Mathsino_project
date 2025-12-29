@@ -1,60 +1,42 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Mathsino.Backend.Game;
+using Mathsino.Backend.Interfaces;
 using Mathsino.Backend.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace Mathsino.Backend.Services
 {
-    public class GameService
+    public class GameService(
+        ILogger<GameService>? logger,
+        IServiceScopeFactory scopeFactory,
+        IBalanceService balanceService
+    ) : IGameService
     {
-        private readonly ILogger<GameService>? logger;
-        private readonly IServiceScopeFactory scopeFactory;
-        private readonly BalanceService balanceService;
-        private static readonly Dictionary<Guid, Mathsino.Backend.Game.Game> _games = new();
+        private readonly ILogger<GameService>? _logger = logger;
+        private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
+        private readonly IBalanceService _balanceService = balanceService;
+        private static readonly Dictionary<Guid, Game.Game> _games = new();
         private static readonly object _gamesLock = new object();
 
-        public GameService(
-            ILogger<GameService>? logger,
-            IServiceScopeFactory scopeFactory,
-            BalanceService balanceService
-        )
+        public async Task<Game.Game> CreateSinglePlayerGame(int userId, int betAmount)
         {
-            this.logger = logger;
-            this.scopeFactory = scopeFactory;
-            this.balanceService = balanceService;
-        }
+            _logger?.LogInformation("Creating single-player game for user ID {UserId}", userId);
 
-        public async Task<Mathsino.Backend.Game.Game> CreateSinglePlayerGame(
-            int userId,
-            int betAmount
-        )
-        {
-            logger?.LogInformation("Creating single-player game for user ID {UserId}", userId);
-
-            if (!await balanceService.DeductBalance(userId, betAmount))
+            if (!await _balanceService.DeductBalance(userId, betAmount))
             {
                 throw new InvalidOperationException("Insufficient balance");
             }
 
-            using var scope = scopeFactory.CreateScope();
-            var usersService = scope.ServiceProvider.GetRequiredService<UsersService>();
+            using var scope = _scopeFactory.CreateScope();
+            var usersService = scope.ServiceProvider.GetRequiredService<IUsersService>();
             var user = await usersService.GetUserByIdAsync(userId);
 
-            var player = new Mathsino.Backend.Game.Player { User = user, BetAmount = betAmount };
-            var game = new Mathsino.Backend.Game.Game
-            {
-                Type = Mathsino.Backend.Game.GameType.SinglePlayer,
-            };
+            var player = new Player { User = user, BetAmount = betAmount };
+            var game = new Game.Game { Type = GameType.SinglePlayer };
             game.AddPlayer(player);
             lock (_gamesLock)
             {
                 _games[game.Id] = game;
-                logger?.LogInformation(
+                _logger?.LogInformation(
                     "[CreateGame] Game {GameId} added to dictionary. Total games: {Count}",
                     game.Id,
                     _games.Count
@@ -64,24 +46,21 @@ namespace Mathsino.Backend.Services
             return game;
         }
 
-        public async Task<Mathsino.Backend.Game.Game> CreateMultiPlayerGame(int userId)
+        public async Task<Game.Game> CreateMultiPlayerGame(int userId)
         {
-            logger?.LogInformation("Creating multi-player game for user ID {UserId}", userId);
+            _logger?.LogInformation("Creating multi-player game for user ID {UserId}", userId);
 
-            using var scope = scopeFactory.CreateScope();
-            var usersService = scope.ServiceProvider.GetRequiredService<UsersService>();
+            using var scope = _scopeFactory.CreateScope();
+            var usersService = scope.ServiceProvider.GetRequiredService<IUsersService>();
             var user = await usersService.GetUserByIdAsync(userId);
 
-            var player = new Mathsino.Backend.Game.Player { User = user };
-            var game = new Mathsino.Backend.Game.Game
-            {
-                Type = Mathsino.Backend.Game.GameType.MultiPlayer,
-            };
+            var player = new Player { User = user };
+            var game = new Game.Game { Type = GameType.MultiPlayer };
             game.AddPlayer(player);
             lock (_gamesLock)
             {
                 _games[game.Id] = game;
-                logger?.LogInformation(
+                _logger?.LogInformation(
                     "[CreateGame] Game {GameId} added to dictionary. Total games: {Count}",
                     game.Id,
                     _games.Count
@@ -90,9 +69,9 @@ namespace Mathsino.Backend.Services
             return game;
         }
 
-        public Mathsino.Backend.Game.Game GetGameById(Guid gameId)
+        public Game.Game GetGameById(Guid gameId)
         {
-            logger?.LogInformation("Fetching game with ID {GameId}", gameId);
+            _logger?.LogInformation("Fetching game with ID {GameId}", gameId);
 
             lock (_gamesLock)
             {
@@ -102,32 +81,32 @@ namespace Mathsino.Backend.Services
             throw new KeyNotFoundException($"Game with ID {gameId} not found.");
         }
 
-        public Mathsino.Backend.Game.Game PlayerHit(Guid gameId, Guid playerId)
+        public Game.Game PlayerHit(Guid gameId, Guid playerId)
         {
-            logger?.LogInformation("Player {PlayerId} hits in game {GameId}", playerId, gameId);
+            _logger?.LogInformation("Player {PlayerId} hits in game {GameId}", playerId, gameId);
             var game = GetGameById(gameId);
             game.PlayerHit(playerId);
             return game;
         }
 
-        public Mathsino.Backend.Game.Game PlayerPass(Guid gameId, Guid playerId)
+        public Game.Game PlayerPass(Guid gameId, Guid playerId)
         {
-            logger?.LogInformation("Player {PlayerId} passes in game {GameId}", playerId, gameId);
+            _logger?.LogInformation("Player {PlayerId} passes in game {GameId}", playerId, gameId);
             var game = GetGameById(gameId);
             game.PlayerPass(playerId);
             return game;
         }
 
-        public async Task<Mathsino.Backend.Game.Game> PlayerDouble(Guid gameId, Guid playerId)
+        public async Task<Game.Game> PlayerDouble(Guid gameId, Guid playerId)
         {
-            logger?.LogInformation("Player {PlayerId} doubles in game {GameId}", playerId, gameId);
+            _logger?.LogInformation("Player {PlayerId} doubles in game {GameId}", playerId, gameId);
             var game = GetGameById(gameId);
             var player = game.Players.FirstOrDefault(p => p.PlayerId == playerId);
 
             if (player == null)
                 throw new KeyNotFoundException("Player not found");
 
-            if (!await balanceService.DeductBalance(player.User.Id, player.BetAmount))
+            if (!await _balanceService.DeductBalance(player.User.Id, player.BetAmount))
             {
                 throw new InvalidOperationException("Insufficient balance for double");
             }
@@ -136,16 +115,16 @@ namespace Mathsino.Backend.Services
             return game;
         }
 
-        public async Task<Mathsino.Backend.Game.Game> PlayerSplit(Guid gameId, Guid playerId)
+        public async Task<Game.Game> PlayerSplit(Guid gameId, Guid playerId)
         {
-            logger?.LogInformation("Player {PlayerId} splits in game {GameId}", playerId, gameId);
+            _logger?.LogInformation("Player {PlayerId} splits in game {GameId}", playerId, gameId);
             var game = GetGameById(gameId);
             var player = game.Players.FirstOrDefault(p => p.PlayerId == playerId);
 
             if (player == null)
                 throw new KeyNotFoundException("Player not found");
 
-            if (!await balanceService.DeductBalance(player.User.Id, player.BetAmount))
+            if (!await _balanceService.DeductBalance(player.User.Id, player.BetAmount))
             {
                 throw new InvalidOperationException("Insufficient balance for split");
             }
@@ -154,9 +133,9 @@ namespace Mathsino.Backend.Services
             return game;
         }
 
-        public Mathsino.Backend.Game.Game PlayerHitSplit(Guid gameId, Guid playerId)
+        public Game.Game PlayerHitSplit(Guid gameId, Guid playerId)
         {
-            logger?.LogInformation(
+            _logger?.LogInformation(
                 "Player {PlayerId} hits split in game {GameId}",
                 playerId,
                 gameId
@@ -166,9 +145,9 @@ namespace Mathsino.Backend.Services
             return game;
         }
 
-        public async Task<Mathsino.Backend.Game.Game> PlayerDoubleSplit(Guid gameId, Guid playerId)
+        public async Task<Game.Game> PlayerDoubleSplit(Guid gameId, Guid playerId)
         {
-            logger?.LogInformation(
+            _logger?.LogInformation(
                 "Player {PlayerId} doubles split in game {GameId}",
                 playerId,
                 gameId
@@ -181,7 +160,7 @@ namespace Mathsino.Backend.Services
             {
                 throw new KeyNotFoundException($"Player {playerId} not found in game {gameId}");
             }
-            if (!await balanceService.DeductBalance(player.User.Id, player.BetAmount))
+            if (!await _balanceService.DeductBalance(player.User.Id, player.BetAmount))
             {
                 throw new InvalidOperationException("Insufficient balance for double split");
             }
@@ -190,9 +169,9 @@ namespace Mathsino.Backend.Services
             return game;
         }
 
-        public async Task<Mathsino.Backend.Game.Game> CheckResults(Guid gameId, Guid playerId)
+        public async Task<Game.Game> CheckResults(Guid gameId, Guid playerId)
         {
-            logger?.LogInformation(
+            _logger?.LogInformation(
                 "Checking results for player {PlayerId} in game {GameId}",
                 playerId,
                 gameId
@@ -205,8 +184,11 @@ namespace Mathsino.Backend.Services
 
         private async Task SaveResultsInDB(Game.Game game)
         {
-            logger?.LogInformation("Saving game results to database for game ID {GameId}", game.Id);
-            using var scope = scopeFactory.CreateScope();
+            _logger?.LogInformation(
+                "Saving game results to database for game ID {GameId}",
+                game.Id
+            );
+            using var scope = _scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MathsinoContext>();
 
             foreach (var player in game.Players)
@@ -217,7 +199,7 @@ namespace Mathsino.Backend.Services
 
                 if (existingRecord != null)
                 {
-                    logger?.LogWarning(
+                    _logger?.LogWarning(
                         "Game result already exists for player {PlayerId} in game {GameId}. Skipping.",
                         player.PlayerId,
                         game.Id
@@ -225,7 +207,7 @@ namespace Mathsino.Backend.Services
                     continue;
                 }
 
-                logger?.LogInformation(
+                _logger?.LogInformation(
                     "Saving result for player ID {PlayerId} in game ID {GameId}",
                     player.PlayerId,
                     game.Id
@@ -235,10 +217,10 @@ namespace Mathsino.Backend.Services
 
                 if (totalPayout > 0)
                 {
-                    await balanceService.AddBalance(player.User.Id, totalPayout);
+                    await _balanceService.AddBalance(player.User.Id, totalPayout);
                 }
 
-                logger?.LogInformation(
+                _logger?.LogInformation(
                     "Saving result for player ID {PlayerId} in game ID {GameId}, payout: {Payout}",
                     player.PlayerId,
                     game.Id,
@@ -254,12 +236,15 @@ namespace Mathsino.Backend.Services
                     EndTime = DateTime.Now,
                     SingleGameResult = player.Result,
                     SingleGameSplitResult = player.SplitResult,
-                    BalanceAfterGame = await balanceService.GetBalance(player.User.Id),
+                    BalanceAfterGame = await _balanceService.GetBalance(player.User.Id),
                 };
                 dbContext.SingleGames.Add(singleGameRecord);
             }
             await dbContext.SaveChangesAsync();
-            logger?.LogInformation("Game results saved successfully for game ID {GameId}", game.Id);
+            _logger?.LogInformation(
+                "Game results saved successfully for game ID {GameId}",
+                game.Id
+            );
         }
 
         private int CalculatePayout(Player player)

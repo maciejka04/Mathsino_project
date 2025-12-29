@@ -1,10 +1,11 @@
 using System.Text.RegularExpressions;
+using Mathsino.Backend.Interfaces;
 using Mathsino.Backend.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Mathsino.Backend.Services
 {
-    public class UserNameService
+    public class UserNameService : IUserNameService
     {
         private readonly MathsinoContext _dbContext;
         private readonly ILogger<UserNameService>? _logger;
