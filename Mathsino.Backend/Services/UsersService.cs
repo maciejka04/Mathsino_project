@@ -87,6 +87,28 @@ public class UsersService(ILogger<UsersService>? logger, MathsinoContext dbConte
         {
             peakBalance = allGames.Max(g => g.BalanceAfterGame);
         }
+        var daysStreak = 0;
+        var datesWithGames = new List<DateTime>();
+        if (allGames.Count > 0)
+        {
+            datesWithGames = allGames
+                .Select(g => g.StartTime.Date)
+                .Distinct()
+                .OrderByDescending(d => d)
+                .ToList();
+
+            foreach (var day in datesWithGames)
+            {
+                if (day == DateTime.UtcNow.Date.AddDays(-daysStreak))
+                {
+                    daysStreak++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
 
         return new UserStatsDto
         {
@@ -109,6 +131,7 @@ public class UsersService(ILogger<UsersService>? logger, MathsinoContext dbConte
                     : 0,
             BlackJacks = realGames.Count(g => g.SingleGameResult == GameResult.Blackjack),
             PeakBalance = peakBalance,
+            DaysStreak = daysStreak,
         };
     }
 
@@ -237,6 +260,8 @@ public record UserStatsDto
     public int BlackJacks { get; init; } = 0;
 
     public int PeakBalance { get; init; } = 5000;
+
+    public int DaysStreak { get; init; } = 0;
 }
 
 public record UserRankingDto(int Id, string UserName, string AvatarPath, int PeakBalance);

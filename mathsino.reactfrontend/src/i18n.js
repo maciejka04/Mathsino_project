@@ -35,18 +35,19 @@ const resources = {
       "login_prompt": "Log in to save progress and unlock full statistics.",
       "login_button": "Log in",
       "your_progress": "Your progress",
-      "weeks_performance": "Here's how you're doing this week.",
+      "weeks_performance": "Here's how you're doing",
       "hands_played": "Hands",
       "accuracy": "Accuracy",
+      "win_rate": "Win rate",
       "days_streak": "Days streak",
       "start_game": "Start Game",
-      "choose_mode": "Choose game mode",
+      "start_game_desc": "Start a new game of Blackjack",
       "home_learn_strategy": "Learn Strategy",
       "home_learn_strategy_desc": "Master the basics and advanced moves.",
       "home_focus_title": "Focus Mode",
       "home_focus_desc": "Play without distractions.",
 
-       /* --- SPINWHEELCARD.JS --- */
+      /* --- SPINWHEELCARD.JS --- */
       "spin_wheel_title": "Spin the Wheel",
       "spin_wheel_desc": "Spin for a chance to win money!",
       "spin_button": "Spin",
@@ -105,7 +106,7 @@ const resources = {
       "ad_error_reward": "Error granting reward.",
       "ad_error_network": "Server connection error.",
 
-      "stats_friend_balance": "Friend's Balance", 
+      "stats_friend_balance": "Friend's Balance",
       "stats_my_balance": "Your Balance",
       "stats_friend_summary": "Summary",
       "stats_friend": "Friend",
@@ -237,7 +238,7 @@ const resources = {
       "learn_l11_desc": "Systems and patterns.",
       /* --- LESSON PAGE --- */
       "lesson_wrong_action": "Nope! That's not the best move here. Try something else!",
-      "lesson_intro_title": "Introduction", 
+      "lesson_intro_title": "Introduction",
       "lesson_conclusion_title": "Conclusion",
       "lesson_start_button": "Start Lesson",
       "lesson_next_button": "Next",
@@ -305,7 +306,7 @@ const resources = {
       "tos_section3_desc": "We reserve the right to suspend or terminate your account at our sole discretion, without prior notice, for conduct that we believe violates these Terms or is harmful to other users.",
       "tos_last_updated": "Last updated: December 15, 2025",
 
-            /* --- PrivacyPolicy.js --- */
+      /* --- PrivacyPolicy.js --- */
       "pp_title": "Mathsino Privacy Policy",
       "pp_effective_date": "Effective Date: November 21, 2025",
 
@@ -344,12 +345,12 @@ const resources = {
       "dd_email_req1": "The email address used for Google/Facebook login.",
       "dd_email_req2": "Confirmation of your intent to permanently delete the account.",
       "dd_confirmation": "We confirm that upon receiving your request, all your personal data will be permanently deleted from our database within 7 business days.",
-    
+
       /* --- Ranking --- */
       "global_ranking_title": "Global Top 10",
       "friends_ranking_title": "Friends Top 10",
       "no_friends_data": "No friends in ranking yet",
-      "loading": "Loading data", 
+      "loading": "Loading data",
       "ranking_period_all": "All Time",
       "ranking_period_weekly": "Weekly",
       "ranking_period_monthly": "Monthly",
@@ -390,12 +391,13 @@ const resources = {
       "login_prompt": "Zaloguj się, aby zapisywać progres i odblokować pełne statystyki.",
       "login_button": "Zaloguj się",
       "your_progress": "Twoje postępy",
-      "weeks_performance": "Oto jak Ci idzie w tym tygodniu.",
+      "weeks_performance": "Oto jak Ci idzie",
       "hands_played": "Rozdania",
       "accuracy": "Trafność",
+      "win_rate": "Win rate",
       "days_streak": "Dni z rzędu",
       "start_game": "Zacznij Grę",
-      "choose_mode": "Wybierz tryb gry",
+      "start_game_desc": "Rozpocznij nową grę Blackjack",
       "home_learn_strategy": "Nauka Strategii",
       "home_learn_strategy_desc": "Opanuj podstawy i zaawansowane ruchy.",
       "home_focus_title": "Tryb Skupienia",
@@ -460,7 +462,7 @@ const resources = {
       "ad_error_reward": "Błąd podczas przyznawania nagrody.",
       "ad_error_network": "Błąd połączenia z serwerem.",
 
-      "stats_friend_balance": "Saldo Znajomego", 
+      "stats_friend_balance": "Saldo Znajomego",
       "stats_my_balance": "Twoje Saldo",
       "stats_friend_summary": "Podsumowanie",
       "stats_friend": "Znajomy",
@@ -580,7 +582,7 @@ const resources = {
 
       "learn_l9_title": "Lekcja 9",
       "learn_l9_subtitle": "Liczenie Kart - Wstęp",
-      "learn_l9_desc": "Przegląd technik zaawansowanych.", 
+      "learn_l9_desc": "Przegląd technik zaawansowanych.",
 
       "learn_l10_title": "Lekcja 10",
       "learn_l10_subtitle": "Zarządzanie kapitałem",
@@ -590,7 +592,7 @@ const resources = {
       "learn_l11_subtitle": "Zaawansowane zakłady",
       "learn_l11_desc": "Systemy i schematy obstawiania.",
       /* --- LESSON PAGE --- */
-      "lesson_intro_title": "Wprowadzenie", 
+      "lesson_intro_title": "Wprowadzenie",
       "lesson_wrong_action": "Nie! To nie jest najlepszy ruch. Spróbuj czegoś innego!",
       "lesson_start_button": "Rozpocznij lekcję",
       "lesson_conclusion_title": "Zakończenie",
@@ -698,7 +700,7 @@ const resources = {
       "dd_email_req1": "Adres e-mail użyty do logowania przez Google/Facebook.",
       "dd_email_req2": "Potwierdzenie chęci trwałego usunięcia konta.",
       "dd_confirmation": "Potwierdzamy, że po otrzymaniu Twojej prośby, wszystkie Twoje dane osobowe zostaną trwale usunięte z naszej bazy danych w ciągu 7 dni roboczych.",
-    
+
       /* --- Ranking --- */
       "global_ranking_title": "Top 10 Świata",
       "friends_ranking_title": "Top 10 Znajomych",

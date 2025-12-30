@@ -7,7 +7,7 @@ import './Home.css';
 import { useOutletContext } from "react-router-dom";
 import clickSound from '../../assets/mouse-click.mp3';
 import SpinWheelCard from './SpinWheelCard';
-import FriendsRanking from '../Friends/FriendsRanking'; 
+import FriendsRanking from '../Friends/FriendsRanking';
 import GlobalRanking from '../GlobalRanking/GlobalRanking';
 
 const API_URL = "http://localhost:5126";
@@ -24,7 +24,26 @@ function Home() {
   const { user, refreshUser } = useOutletContext();
   const { t } = useTranslation();
   const isLogged = user?.isAuthenticated;
- 
+
+
+  const [stats, setStats] = useState(null);
+
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const fetchStats = async () => {
+      try {
+        const response = await fetch(`${API_URL}/users/${user.id}/stats`);
+        const data = await response.json();
+        setStats(data);
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+      }
+    };
+
+    fetchStats();
+  }, [user?.id]);
+
 
   return (
     <>
@@ -49,74 +68,78 @@ function Home() {
           </>
         )}
       </header>
-      
+
       <div className="dashboard-grid">
-    {isLogged && (
-      <>
-        {/* === 1. KARTA POWITALNA ZE STATYSTYKAMI (Szeroka) === */}
-        <div className="dashboard-card welcome-stats-card">
-          <div className="dashboard-card-text">
-            <h4>{t('your_progress')}</h4>
-            <p>{t('weeks_performance')}</p>
-          </div>
-          <div className="stats-grid">
-            <div className="stat-item">
-              <span className="stat-value">1,204</span>
-              <span className="stat-label">{t('hands_played')}</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-value">87%</span>
-              <span className="stat-label">{t('accuracy')}</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-value">3</span>
-              <span className="stat-label">{t('days_streak')}</span>
-            </div>
-          </div>
-        </div>
-        {/*=== koło fortuny ===*/}
-        <SpinWheelCard user={user} refreshUser={refreshUser} />
-        {/* === 2. GŁÓWNA AKCJA: Graj (Średnia) === */}
-        <Link
-          to="/play"
-          className="dashboard-card primary-card"
-          onClick={playClickSound}
-        >
-          <i className="fa-solid fa-spade"></i>
-          <div className="dashboard-card-text">
-            <h3>{t('start_game')}</h3>
-            <p>{t('choose_mode')}</p>
-          </div>
-        </Link>
+        {isLogged && (
+          <>
+            {/* === 1. KARTA POWITALNA ZE STATYSTYKAMI (Szeroka) === */}
+            <Link
+              to="/statistics"
+              className="dashboard-card welcome-stats-card"
+              onClick={playClickSound}
+            >
+              <div className="dashboard-card-text">
+                <h4>{t('your_progress')}</h4>
+                <p>{t('weeks_performance')}</p>
+              </div>
+              <div className="stats-grid">
+                <div className="stat-item">
+                  <span className="stat-value">{stats?.totalGames ?? 0}</span>
+                  <span className="stat-label">{t('hands_played')}</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-value">{stats?.winRate ? (stats.winRate * 100).toFixed(1) : 0}%</span>
+                  <span className="stat-label">{t('win_rate')}</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-value">{stats?.daysStreak ?? 0}</span>
+                  <span className="stat-label">{t('days_streak')}</span>
+                </div>
+              </div>
+            </Link>
+            {/*=== koło fortuny ===*/}
+            <SpinWheelCard user={user} refreshUser={refreshUser} />
+            {/* === 2. GŁÓWNA AKCJA: Graj (Średnia) === */}
+            <Link
+              to="/play"
+              className="dashboard-card primary-card"
+              onClick={playClickSound}
+            >
+              <i className="fa-solid fa-gamepad"></i>
+              <div className="dashboard-card-text">
+                <h3>{t('start_game')}</h3>
+                <p>{t('start_game_desc')}</p>
+              </div>
+            </Link>
 
-        {/* === 3. GŁÓWNA AKCJA: Ucz się (Średnia) === */}
-        <Link
-          to="/learn"
-          className="dashboard-card secondary-card"
-          onClick={playClickSound}
-        >
-          <i className="fa-solid fa-graduation-cap"></i>
-          <div className="dashboard-card-text">
-            <h3>{t('home_learn_strategy')}</h3>
-            <p>{t('home_learn_strategy_desc')}</p>
-          </div>
-        </Link>
+            {/* === 3. GŁÓWNA AKCJA: Ucz się (Średnia) === */}
+            <Link
+              to="/learn"
+              className="dashboard-card secondary-card"
+              onClick={playClickSound}
+            >
+              <i className="fa-solid fa-graduation-cap"></i>
+              <div className="dashboard-card-text">
+                <h3>{t('home_learn_strategy')}</h3>
+                <p>{t('home_learn_strategy_desc')}</p>
+              </div>
+            </Link>
 
-        {/* === 4. KARTA FOKUS (Szeroka) === */}
-        <div className="dashboard-card focus-card">
-          <i className="fa-solid fa-crosshairs"></i>
-          <div className="dashboard-card-text">
-            <h4>{t('home_focus_title')}</h4>
-            <p>{t('home_focus_desc')}</p>
-          </div>
-        </div>
+            {/* === 4. KARTA FOKUS (Szeroka) === */}{/*
+            <div className="dashboard-card focus-card">
+              <i className="fa-solid fa-crosshairs"></i>
+              <div className="dashboard-card-text">
+                <h4>{t('home_focus_title')}</h4>
+                <p>{t('home_focus_desc')}</p>
+              </div>
+            </div>*/}
 
-        {/* === 5. RANKINGI === */}
-        <GlobalRanking />
-        <FriendsRanking userId={user?.id} />
-      </>
-    )}
-  </div>
+            {/* === 5. RANKINGI === */}
+            <GlobalRanking />
+            <FriendsRanking userId={user?.id} />
+          </>
+        )}
+      </div>
     </>
   );
 }
