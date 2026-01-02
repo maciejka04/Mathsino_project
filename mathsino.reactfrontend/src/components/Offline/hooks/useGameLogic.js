@@ -10,7 +10,7 @@ export const useGameLogic = (user, audio, refreshUser, t) => {
     // --- STANY (STATE) ---
     const [gameId, setGameId] = useState(null);
     const [playerId, setPlayerId] = useState(null);
-    
+
     const [dealerCards, setDealerCards] = useState([]);
     const [playerCards, setPlayerCards] = useState([]);
     const [splitCards, setSplitCards] = useState([]);
@@ -57,7 +57,7 @@ export const useGameLogic = (user, audio, refreshUser, t) => {
     const analyzeMove = async (action, isTrainerEnabled) => {
         if (!isTrainerEnabled) return;
         const currentHand = isSplitActive ? splitCards : playerCards;
-        
+
         const parseCardName = (filename) => {
             const parts = filename.split("_of_");
             let rank = parts[0];
@@ -177,11 +177,11 @@ export const useGameLogic = (user, audio, refreshUser, t) => {
         resultProcessedRef.current = true;
 
         const getHandScore = (res, isDoubled) => {
-             const factor = isDoubled ? 2 : 1;
-             if (res === "Blackjack") return 1.5 * factor;
-             if (res === "Win") return 1 * factor;
-             if (res === "Lose") return -1 * factor;
-             return 0; // Push
+            const factor = isDoubled ? 2 : 1;
+            if (res === "Blackjack") return 1.5 * factor;
+            if (res === "Win") return 1 * factor;
+            if (res === "Lose") return -1 * factor;
+            return 0; // Push
         };
 
         const score1 = getHandScore(mainResult, mainDoubled);
@@ -228,12 +228,12 @@ export const useGameLogic = (user, audio, refreshUser, t) => {
         setIsShuffling(true);
         audio.playShuffle();
 
-        await sleep(1000); 
+        await sleep(1000);
 
         try {
             const response = await fetch(
                 `${API_URL}/games/create-singleplayer?userId=${user?.id}&betAmount=${betAmount}`,
-                { method: 'POST' }
+                { method: 'POST', credentials: 'include' }
             );
             if (!response.ok) {
                 const errorText = await response.text();
@@ -247,7 +247,7 @@ export const useGameLogic = (user, audio, refreshUser, t) => {
             updateGameState(gameData);
 
             if (gameData.status === "Completed") {
-                await sleep(1500); 
+                await sleep(1500);
                 await processFinalResults(gameData.id, gameData.players[0].playerId);
             }
         } catch (error) {
@@ -267,7 +267,7 @@ export const useGameLogic = (user, audio, refreshUser, t) => {
             } else {
                 await fetch(`${API_URL}/games/${gameId}/player-hit/${playerId}`);
             }
-            
+
             // 1. Pobieramy dane RĘCZNIE, bez automatycznego updateGameState
             const response = await fetch(`${API_URL}/games/${gameId}`);
             const gameData = await response.json();
@@ -297,7 +297,7 @@ export const useGameLogic = (user, audio, refreshUser, t) => {
                 updateGameState(gameData);
 
                 // D. Czekamy na animację dealera i pokazujemy wynik
-                await sleep(2000); 
+                await sleep(2000);
                 await processFinalResults(gameId, playerId);
 
             } else {
@@ -315,7 +315,7 @@ export const useGameLogic = (user, audio, refreshUser, t) => {
         if (!gameId || !playerId) return;
         try {
             await fetch(`${API_URL}/games/${gameId}/player-pass/${playerId}`);
-            
+
             const response = await fetch(`${API_URL}/games/${gameId}`);
             const data = await response.json();
 
@@ -323,7 +323,7 @@ export const useGameLogic = (user, audio, refreshUser, t) => {
 
             if (data.status === "Completed") {
                 // Dealer dobiera karty - dajemy dużo czasu na animację
-                await sleep(2500); 
+                await sleep(2500);
                 await processFinalResults(gameId, playerId);
             }
         } catch (error) {
@@ -376,37 +376,37 @@ export const useGameLogic = (user, audio, refreshUser, t) => {
                 return;
             }
             if (refreshUser) refreshUser();
-            
+
             // Double zawsze kończy turę dla danej ręki.
             // Sprawdzamy stan ręcznie
             const statusRes = await fetch(`${API_URL}/games/${gameId}`);
             const gameData = await statusRes.json();
 
             if (gameData.status === "Completed") {
-                 // A. Pokaż kartę gracza
-                 const player = gameData.players.find((p) => p.user.id === user?.id);
-                 if (player) {
-                     setPlayerCards(player.hand.map((c) => ({
-                         name: mapBackendCardToFilename(c),
-                         src: cardImagesMap[mapBackendCardToFilename(c)],
-                     })));
-                     if (player.splitHand) {
-                         setSplitCards(player.splitHand.map((c) => ({
-                             name: mapBackendCardToFilename(c),
-                             src: cardImagesMap[mapBackendCardToFilename(c)],
-                         })));
-                     }
-                 }
+                // A. Pokaż kartę gracza
+                const player = gameData.players.find((p) => p.user.id === user?.id);
+                if (player) {
+                    setPlayerCards(player.hand.map((c) => ({
+                        name: mapBackendCardToFilename(c),
+                        src: cardImagesMap[mapBackendCardToFilename(c)],
+                    })));
+                    if (player.splitHand) {
+                        setSplitCards(player.splitHand.map((c) => ({
+                            name: mapBackendCardToFilename(c),
+                            src: cardImagesMap[mapBackendCardToFilename(c)],
+                        })));
+                    }
+                }
 
-                 // B. Czekaj (niech gracz zobaczy czy weszła 10-tka czy 2-ka)
-                 await sleep(1000);
+                // B. Czekaj (niech gracz zobaczy czy weszła 10-tka czy 2-ka)
+                await sleep(1000);
 
-                 // C. Odsłoń Dealera
-                 updateGameState(gameData);
+                // C. Odsłoń Dealera
+                updateGameState(gameData);
 
-                 // D. Czekaj na animację i wynik
-                 await sleep(2000);
-                 await processFinalResults(gameId, playerId);
+                // D. Czekaj na animację i wynik
+                await sleep(2000);
+                await processFinalResults(gameId, playerId);
             } else {
                 updateGameState(gameData);
             }
@@ -421,7 +421,7 @@ export const useGameLogic = (user, audio, refreshUser, t) => {
             processFinalResults(gameId, playerId);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); 
+    }, []);
 
     return {
         dealerCards, playerCards, splitCards,

@@ -50,6 +50,10 @@ var app = builder.Build();
 
 app.UseCors("AllowReactApp");
 
+// Ważne: Włącz uwierzytelnianie i autoryzację
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseSwagger();
 app.UseSwaggerUI();
 

@@ -11,20 +11,21 @@ public static class GameEndPoints
         public void MapGameEndPoints()
         {
             app.MapPost(
-                "/games/create-singleplayer",
-                async (int userId, int betAmount, IGameService gameService) =>
-                {
-                    try
+                    "/games/create-singleplayer",
+                    async (int userId, int betAmount, IGameService gameService) =>
                     {
-                        var game = await gameService.CreateSinglePlayerGame(userId, betAmount);
-                        return Results.Ok(game);
+                        try
+                        {
+                            var game = await gameService.CreateSinglePlayerGame(userId, betAmount);
+                            return Results.Ok(game);
+                        }
+                        catch (InvalidOperationException ex)
+                        {
+                            return Results.BadRequest(ex.Message);
+                        }
                     }
-                    catch (InvalidOperationException ex)
-                    {
-                        return Results.BadRequest(ex.Message);
-                    }
-                }
-            );
+                )
+                .RequireAuthorization();
 
             app.MapGet(
                 "/games/{gameId}",

@@ -11,10 +11,6 @@ public static class AuthEndPoints
 {
     public static void MapAuthEndPoints(this WebApplication app)
     {
-        // Ważne: Włącz uwierzytelnianie i autoryzację
-        app.UseAuthentication();
-        app.UseAuthorization();
-
         // Endpoint do inicjacji logowania Google
         app.MapGet(
             "/api/auth/google",
