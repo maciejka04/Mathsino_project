@@ -99,27 +99,22 @@ function Layout() {
                 audioService.stopAllMusic();
               }
               else if (currentMusicId === null) {
-                // PRZYPADEK 1: Start aplikacji (nic nie grało) -> Graj to co w bazie
-                console.log(`Initial music start: ID ${newMusicId}`);
+                
                 musicService.setMusic(newMusicId);
                 audioService.changeBackgroundMusic(newMusicId);
               }
               else if (currentMusicId !== newMusicId) {
-                // PRZYPADEK 2: Zmiana utworu (w bazie jest co innego niż gra)
-                console.log(`Switching music from ${currentMusicId} to ${newMusicId}`);
-                // changeBackgroundMusic wewnątrz i tak robi stopAllMusic, ale dla pewności:
                 audioService.stopAllMusic();
                 musicService.setMusic(newMusicId);
                 audioService.changeBackgroundMusic(newMusicId);
               }
-              // PRZYPADEK 3: currentMusicId == newMusicId -> Nie rób nic, niech gra dalej!
+              
             })
             .catch(err => console.error('Failed to load audio preferences', err));
         }
       })
       .catch(err => {
         if (err.message === "Unauthorized") {
-          console.log("Użytkownik niezalogowany. Ustawiam 'Gość'.");
         } else {
           console.error("Layout user load error:", err);
         }
@@ -131,7 +126,6 @@ function Layout() {
     fetchUserProfile();
   }, []);
 
-  // Animacja menu
   useEffect(() => {
     if (!menuRef.current) return;
     const menuLinks = menuRef.current.querySelectorAll('li a');
