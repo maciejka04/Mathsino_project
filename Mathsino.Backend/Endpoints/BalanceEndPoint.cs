@@ -55,37 +55,37 @@ public static class BalanceEndPoints
                         return Results.NotFound();
                     }
 
-                    const int COOLDOWN_MINUTES = 24 * 60;
+                    const int COOLDOWN_MINUTES = 0;
                     var now = DateTime.UtcNow;
 
-                    if (user.LastSpinTime.HasValue)
-                    {
-                        var lastSpin = user.LastSpinTime.Value;
+                    // if (user.LastSpinTime.HasValue)
+                    // {
+                    //     var lastSpin = user.LastSpinTime.Value;
 
-                        if (lastSpin.Kind != DateTimeKind.Utc)
-                        {
-                            lastSpin = lastSpin.ToUniversalTime();
-                        }
+                    //     if (lastSpin.Kind != DateTimeKind.Utc)
+                    //     {
+                    //         lastSpin = lastSpin.ToUniversalTime();
+                    //     }
 
-                        var nextSpinAvailableAt = lastSpin.AddMinutes(COOLDOWN_MINUTES);
+                    //     var nextSpinAvailableAt = lastSpin.AddMinutes(COOLDOWN_MINUTES);
 
-                        if (now < nextSpinAvailableAt)
-                        {
-                            var timeRemaining = nextSpinAvailableAt - now;
+                    //     if (now < nextSpinAvailableAt)
+                    //     {
+                    //         var timeRemaining = nextSpinAvailableAt - now;
 
-                            return Results.BadRequest(
-                                new
-                                {
-                                    message = "Wymagana jest przerwa.",
-                                    cooldownHours = timeRemaining.Hours,
-                                    cooldownMinutes = timeRemaining.Minutes,
-                                    cooldownSeconds = timeRemaining.Seconds,
-                                    nextSpinAvailable = nextSpinAvailableAt,
-                                    lastSpin = lastSpin,
-                                }
-                            );
-                        }
-                    }
+                    //         return Results.BadRequest(
+                    //             new
+                    //             {
+                    //                 message = "Wymagana jest przerwa.",
+                    //                 cooldownHours = timeRemaining.Hours,
+                    //                 cooldownMinutes = timeRemaining.Minutes,
+                    //                 cooldownSeconds = timeRemaining.Seconds,
+                    //                 nextSpinAvailable = nextSpinAvailableAt,
+                    //                 lastSpin = lastSpin,
+                    //             }
+                    //         );
+                    //     }
+                    // }
 
                     var random = new Random();
                     int[] possibleRewards = { 100, 200, 400, 1000, 200, 400, 2000 };

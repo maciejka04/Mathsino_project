@@ -1,15 +1,13 @@
-// src/pages/Offline/Offline.js
 import React, { useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useOutletContext } from "react-router-dom";
 import "./Offline.css";
 import tableImage from "../../assets/table4.png";
 
-// Hooks
 import { useGameAudio } from "./hooks/useGameAudio";
-import { useGameLogic } from "./hooks/useGameLogic"; // <--- NOWY IMPORT
+import { useGameLogic } from "./hooks/useGameLogic";
+import { useCardSoundEffects } from "./hooks/useCardSoundEffects";
 
-// Components
 import UserPanel from "./components/UserPanel";
 import Deck from "./components/Deck";
 import Hand from "./components/Hand";
@@ -17,6 +15,9 @@ import Chips from "./components/Chips";
 import PlayerControls from "./components/PlayerControls";
 import GameActions from "./components/GameActions";
 import GameOverlays from "./components/GameOverlays";
+
+import { useAdReward } from "../Statistics/useAdReward"; 
+import { AdRewardModal } from "../Statistics/AdRewardModal";
 
 const DECK_POSITION = { left: 15, top: 30 };
 
@@ -26,14 +27,17 @@ function Offline() {
   const { user, refreshUser } = useOutletContext();
   const audio = useGameAudio();
 
-  // Stan lokalny tylko dla UI (Bet) i ustawień (Trener)
+  const game = useGameLogic(user, audio, refreshUser, t);
+  useCardSoundEffects(game.playerCards, game.dealerCards, game.splitCards, game.gameStatus);
+  const adReward = useAdReward(user?.id, refreshUser, t);
+
+  const isBankrupt = user?.balance < 10 && game.gameStatus === 'Waiting' && !game.showModal;
+
   const [currentBet, setCurrentBet] = useState(0);
   const [isTrainerEnabled, setIsTrainerEnabled] = useState(true);
 
-  // --- UŻYCIE LOGIKI Z NOWEGO PLIKU ---
-  const game = useGameLogic(user, audio, refreshUser, t);
+  useCardSoundEffects(game.playerCards, game.dealerCards, game.splitCards, game.gameStatus);
 
-  // Obsługa kliknięć UI
   const handleGoBack = () => {
     audio.playClick();
     setTimeout(() => navigate("/play"), 400);
@@ -41,6 +45,8 @@ function Offline() {
 
   const handleChipSelect = (value) => {
     if (game.gameStatus === "InProgress" || game.isShuffling) return;
+    if (isBankrupt) return; 
+    
     if (currentBet + value > user.balance) {
       alert(t('not_enough_funds'));
       return;
@@ -53,7 +59,6 @@ function Offline() {
     setCurrentBet(0);
   };
 
-  // Helpery do wyświetlania komunikatów (zostają w UI bo dotyczą tekstu)
   const getResultText = (result) => {
     if (!result) return "";
     if (result === "Win") return "WYGRANA!";
@@ -68,7 +73,7 @@ function Offline() {
     let totalWin = 0;
     const calc = (res, bet, isDoubled) => {
       const actualBet = isDoubled ? bet * 2 : bet;
-      if (res === "Win") return { txt: "Wygrałeś", val: actualBet }; // Zysk netto
+      if (res === "Win") return { txt: "Wygrałeś", val: actualBet };
       if (res === "Blackjack") return { txt: "Blackjack", val: actualBet * 1.5 };
       if (res === "Push") return { txt: "Zwrot", val: 0 };
       return { txt: "Przegrałeś", val: -actualBet };
@@ -107,6 +112,45 @@ function Offline() {
   return (
     <div className="offline-container">
       
+      <AdRewardModal
+        showAd={adReward.showAd}
+        showConfirmModal={adReward.showConfirmModal}
+        timeLeft={adReward.timeLeft}
+        rewardAmount={adReward.rewardAmount}
+        onClose={adReward.handleCloseAd}
+        onConfirmClose={adReward.confirmCloseAd}
+        onCancelClose={adReward.cancelCloseAd}
+        t={t}
+      />
+
+      {isBankrupt && !adReward.showAd && (
+        <div className="bankrupt-overlay">
+            <div className="bankrupt-content">
+                <i className="fa-solid fa-triangle-exclamation" style={{ fontSize: '4rem', color: '#ff4d4d', marginBottom: '20px' }}></i>
+                
+                <h1 style={{ color: '#ff4d4d' }}>You went bankrupt</h1>
+                
+                <div className="bankrupt-actions">
+                    <button 
+                        className="ad-reward-button"
+                        onClick={adReward.handleWatchAd}
+                        disabled={adReward.isDisabled}
+                    >
+                        Watch Ad (+100 PLN) <i className="fa-solid fa-clapperboard" style={{marginLeft: '8px'}} />
+                    </button>
+                    
+                    <button 
+                        className="danger-button" 
+                        onClick={handleGoBack}
+                        style={{ marginTop: '10px', width: '100%', padding: '12px' }}
+                    >
+                        Exit Game <i className="fa-solid fa-door-open" style={{marginLeft: '8px'}} />
+                    </button>
+                </div>
+            </div>
+        </div>
+      )}
+
       <UserPanel 
         user={user} 
         t={t} 
@@ -165,6 +209,7 @@ function Offline() {
         )}
 
         <Deck position={DECK_POSITION} isShuffling={game.isShuffling} />
+        
         <Chips onChipSelect={handleChipSelect} />
       </div>
 
@@ -185,7 +230,6 @@ function Offline() {
         isShuffling={game.isShuffling}
         canSplit={game.canSplit}
         canDouble={game.canDouble}
-        // Przekazujemy funkcje z Hooka, przekazując potrzebne argumenty
         onHit={() => game.handleHit(isTrainerEnabled)}
         onStand={() => game.handleStand(isTrainerEnabled)}
         onSplit={() => game.handleSplit(currentBet, isTrainerEnabled)}

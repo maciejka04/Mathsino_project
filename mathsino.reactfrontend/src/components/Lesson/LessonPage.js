@@ -18,23 +18,6 @@ import avatarImgA from '../../assets/parrot-teacher.png';
 import avatarImgB from '../../assets/parrot-teacher-happy.png'; 
 import avatarImgC from '../../assets/parrot-teacher-thinking.png';
 
-// --- SOUNDS ---
-import lesson1snd from '../../assets/lesson1.mp3';
-import lesson2snd from '../../assets/lesson2.mp3';
-import lesson3snd from '../../assets/lesson3.mp3';
-import lesson4snd from '../../assets/lesson4.mp3';
-import lesson5snd from '../../assets/lesson5.mp3';
-import lesson6snd from '../../assets/lesson6.mp3';
-import lesson7snd from '../../assets/lesson7.mp3';
-import lesson8snd from '../../assets/lesson8.mp3';
-import lesson9snd from '../../assets/lesson9.mp3';
-import lesson10snd from '../../assets/lesson9.mp3'; 
-
-const lessonSoundMap = {
-  1: lesson1snd, 2: lesson2snd, 3: lesson3snd, 4: lesson4snd, 
-  5: lesson5snd, 6: lesson6snd, 7: lesson7snd, 8: lesson8snd, 9: lesson9snd, 10: lesson10snd
-};
-
 const avatarMap = { "A": avatarImgA, "B": avatarImgB, "C": avatarImgC };
 
 // --- CARD HELPERS ---
@@ -68,8 +51,6 @@ const LessonPage = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
 
-  const lessonAudioRef = useRef(null);
-
   const [currentLessonData, setCurrentLessonData] = useState(null);
   const [loadingLesson, setLoadingLesson] = useState(true);
 
@@ -93,14 +74,6 @@ const LessonPage = () => {
     const playClickSound = () => {
         const audio = new Audio(clickSound);
         audio.play().catch(e => console.warn("Audio playback failed (click):", e));
-    };
-
-    const stopLessonAudio = () => {
-        if (lessonAudioRef.current) {
-            lessonAudioRef.current.pause();
-            lessonAudioRef.current.currentTime = 0;
-            lessonAudioRef.current = null; 
-        }
     };
 
   // --- SPECIAL CASE: LESSON 11 (CHEAT SHEET) ---
@@ -137,14 +110,6 @@ const LessonPage = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (currentLessonData) {
-        stopLessonAudio(); 
-        const lessonUrl = lessonSoundMap[id];
-        if (lessonUrl) {
-             const audioInstance = new Audio(lessonUrl);
-             audioInstance.play().catch(e => console.warn("Audio playback failed (lesson):", e));
-             lessonAudioRef.current = audioInstance;
-        }
-
         setLessonPhase('INTRO');
         setCurrentScenarioIndex(0);
         setCurrentStepIndex(0);
@@ -157,7 +122,7 @@ const LessonPage = () => {
             setAvatarPose(currentLessonData.introduction.avatar_pose);
         }
     }
-  }, [currentLessonData, id]);
+  }, [currentLessonData]);
 
   // --- 2. SETUP SCENARIO ---
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -186,13 +151,6 @@ const LessonPage = () => {
       }
     }
   }, [lessonPhase, currentScenarioIndex, scenario]);
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  useEffect(() => {
-      return () => {
-          stopLessonAudio();
-      };
-  }, []);
 
   // --- ACTIONS ---
   const startLesson = () => setLessonPhase('GAME');
@@ -304,7 +262,6 @@ const LessonPage = () => {
         <button
             className="back-button"
             onClick={() => {
-                stopLessonAudio();
                 playClickSound();
                 setTimeout(() => {
                     navigate('/learn');
