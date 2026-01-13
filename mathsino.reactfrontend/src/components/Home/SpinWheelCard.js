@@ -1,16 +1,14 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import './SpinWheelCard.css';
 import clickSound from '../../assets/mouse-click.mp3';
-import spinSoundFile from '../../assets/krynce.mp3'; // Upewnij się co do nazwy pliku
+import spinSoundFile from '../../assets/krynce.mp3';
 import { useTranslation } from 'react-i18next';
-// IMPORT SERWISU
 import audioService from '../../services/audioService';
 
 const API_URL = "http://localhost:5126";
 const COOLDOWN_MINUTES = 0; 
 
 const playClickSound = () => {
-  // Sprawdzamy ustawienia przed kliknięciem
   if (audioService.areSoundEffectsEnabled()) {
     const audio = new Audio(clickSound);
     audio.play().catch(() => {});
@@ -19,9 +17,7 @@ const playClickSound = () => {
 
 export default function SpinWheelCard({ user, refreshUser }) {
   const { t } = useTranslation();
-  
-  const [segments] = useState([100, 200, 400, 1000, 200, 400, 2000]);
-  
+  const [segments] = useState([100, 300, 200, 400, 1000, 200, 400, 2000]);
   const [cooldown, setCooldown] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showWheel, setShowWheel] = useState(false);
@@ -33,7 +29,6 @@ export default function SpinWheelCard({ user, refreshUser }) {
   const startTimeRef = useRef();
   const startRotationRef = useRef(0);
   const targetRotationRef = useRef(0);
-
   const spinAudioRef = useRef(null);
 
   useEffect(() => {
@@ -75,7 +70,6 @@ export default function SpinWheelCard({ user, refreshUser }) {
     const elapsed = timestamp - startTimeRef.current;
     const duration = 15500; 
     const progress = Math.min(elapsed / duration, 1);
-    
     const eased = 1 - Math.pow(1 - progress, 3);
     const currentRotation = startRotationRef.current + (targetRotationRef.current - startRotationRef.current) * eased;
     
@@ -93,7 +87,7 @@ export default function SpinWheelCard({ user, refreshUser }) {
   const handleSpin = async () => {
     if (!user?.id || cooldown > 0 || isLoading) return;
     
-    playClickSound(); // To teraz sprawdza audioService wewnątrz funkcji
+    playClickSound();
     setIsLoading(true);
     setWinText('');
     setShowWheel(true);
@@ -107,22 +101,24 @@ export default function SpinWheelCard({ user, refreshUser }) {
       
       const data = await response.json();
 
-    if (response.ok) {
+      if (response.ok) {
         const rewardIndex = data.rewardIndex; 
         rewardRef.current = data.reward; 
 
         const numSegments = segments.length;
         const segmentAngle = 360 / numSegments;
         const extraRotations = 360 * 8; 
-        
+
+        const padding = segmentAngle * 0.1;
+        const randomOffset = padding + Math.random() * (segmentAngle - 2 * padding);
+
         const currentRotationBase = rotation - (rotation % 360);
-        const targetAngle = 360 - (rewardIndex * segmentAngle) - (segmentAngle / 2) - 90;
+        const targetAngle = -(rewardIndex * segmentAngle + randomOffset);
 
         startRotationRef.current = rotation;
         targetRotationRef.current = currentRotationBase + extraRotations + targetAngle;
         startTimeRef.current = null;
 
-        // START DŹWIĘKU - SPRAWDZAMY AUDIOSERVICE
         if (spinSoundFile && audioService.areSoundEffectsEnabled()) {
             spinAudioRef.current = new Audio(spinSoundFile);
             spinAudioRef.current.volume = 0.5;
@@ -136,7 +132,6 @@ export default function SpinWheelCard({ user, refreshUser }) {
         const nextAvailable = new Date(lastSpin.getTime() + COOLDOWN_MINUTES * 60000);
         setCooldown(nextAvailable.getTime() - Date.now());
         localStorage.setItem('spinCooldownUntil', nextAvailable.toISOString());
-        
       } else {
         alert(data.message || "Błąd losowania");
         setShowWheel(false);
@@ -150,10 +145,10 @@ export default function SpinWheelCard({ user, refreshUser }) {
   };
 
   useEffect(() => {
-      return () => {
-          stopSpinSound();
-          if (requestRef.current) cancelAnimationFrame(requestRef.current);
-      };
+    return () => {
+      stopSpinSound();
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    };
   }, []);
 
   const formatTime = useMemo(() => {
@@ -165,6 +160,37 @@ export default function SpinWheelCard({ user, refreshUser }) {
     return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
   }, [cooldown]);
 
+  const wheelBackground = useMemo(() => {
+  const colors = [
+    '#000000ff', 
+    '#6a0019ff', 
+    '#000000ff', 
+    '#6a0019ff', 
+    '#000000ff', 
+    '#6a0019ff', 
+    '#000000ff', 
+    '#6a0019ff', 
+  ];
+  const angle = 360 / segments.length;
+  const colorSegments = segments.map((_, i) => 
+    `${colors[i % colors.length]} ${i * angle}deg ${(i + 1) * angle}deg`
+  ).join(', ');
+
+
+  const overlay = `conic-gradient(
+    from 0deg,
+    rgba(255, 255, 255, 0.2) 0deg,
+    rgba(0, 0, 0, 0.2) ${angle / 2}deg,
+    rgba(255, 255, 255, 0.2) ${angle}deg
+  )`;
+
+  return `repeating-conic-gradient(
+    from 0deg,
+    rgba(255, 255, 255, 0.2) 0deg,
+    rgba(0, 0, 0, 0.2) ${angle / 2}deg,
+    rgba(255, 255, 255, 0.2) ${angle}deg
+  ), conic-gradient(${colorSegments})`;
+}, [segments]);
   return (
     <>
       <div className="dashboard-card spin-wheel-card" style={{ gridColumn: 'span 2' }}>
@@ -187,35 +213,20 @@ export default function SpinWheelCard({ user, refreshUser }) {
       {showWheel && (
         <div className="wheel-modal">
           <div className="wheel-container">
-            <button className="wheel-close" onClick={() => {
-                setShowWheel(false);
-                stopSpinSound();
-            }}>×</button>
-            
+            <button className="wheel-close" onClick={() => { setShowWheel(false); stopSpinSound(); }}>×</button>
             <div className="wheel-pointer">▼</div>
-
-            <div
-                className="wheel"
-                style={{ transform: `rotate(${rotation}deg)` }}
-                >
+            <div className="wheel" style={{ transform: `rotate(${rotation}deg)`, background: wheelBackground }}>
                 {segments.map((val, i) => {
-                    const angle = i * (360 / segments.length);
-                    return (
-                    <div
-                        key={i}
-                        className="wheel-segment"
-                        style={{
-                        transform: `rotate(${angle}deg)`,
-                        backgroundColor: i % 2 === 0 ? '#2e7d32' : '#1b5e20',
-                        }}
-                    >
-                        <span className="segment-value">
-                        {val}
-                        </span>
+                  const angle = 360 / segments.length;
+                  const middleAngle = (i * angle) + (angle / 2);
+                  return (
+                    <div key={i} className="segment-label" style={{ transform: `translateX(-50%) rotate(${middleAngle}deg)` }}>
+                      <span>{val}</span>
                     </div>
-                    );
+                  );
                 })}
-                </div>
+                <div className="wheel-center-dot"></div>
+            </div>
 
             {winText && (
               <div className="wheel-win-text">

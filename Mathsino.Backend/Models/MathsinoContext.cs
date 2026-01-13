@@ -60,6 +60,7 @@ public class MathsinoContext : DbContext
                     AvatarPath = "snake.png",
                     Language = "en",
                     LastSpinTime = StaticPastSpinTime,
+                    LessonsCompleted = 0,
                 },
                 new User
                 {
@@ -72,6 +73,7 @@ public class MathsinoContext : DbContext
                     AvatarPath = "mouse.png",
                     Language = "en",
                     LastSpinTime = StaticPastSpinTime,
+                    LessonsCompleted = 0,
                 }
             );
         modelBuilder

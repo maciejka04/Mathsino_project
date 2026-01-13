@@ -84,6 +84,7 @@ public static class AuthEndPoints
                                     Balance = user.Balance,
                                     UserNameTag = user.UserName,
                                     LastSpinTime = user.LastSpinTime,
+                                    LessonsCompleted = user.LessonsCompleted,
                                     Message = "Zalogowano pomyślnie!",
                                 }
                             );

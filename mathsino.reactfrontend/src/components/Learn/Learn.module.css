@@ -58,6 +58,7 @@ h2 {
 .card img {
   max-width: 280px;
   border-radius: 10px;
+    -webkit-user-drag: none;
 }
 
 /* Używamy selektorów potomków dla klas CSS Modules */
@@ -159,6 +160,34 @@ h2 {
   z-index: -2;
 }
 
+.progressContainer {
+  max-width: 960px;
+  margin: 0px auto -40px auto;
+  padding: 0 20px;
+}
+
+.progressLabel {
+  color: #ffffff;
+  margin-bottom: 10px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.progressBase {
+  background: rgba(255, 255, 255, 0.1);
+  height: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progressFill {
+  background: #2ecc71;
+  height: 100%;
+  transition: width 0.5s ease-in-out;
+  box-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+}
+
 /* --- 
 --- POCZĄTEK BRAKUJĄCEGO KODU ---
 --- 
@@ -221,3 +250,42 @@ h2 {
 --- KONIEC BRAKUJĄCEGO KODU ---
 --- 
 */
+
+.card.locked {
+  cursor: not-allowed;
+  pointer-events: none; 
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.card.locked .card__image {
+  filter: grayscale(100%) brightness(40%); 
+  transition: all 0.3s ease;
+}
+
+.card__image-holder {
+  position: relative; 
+}
+
+.lockOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.lockIcon {
+  width: 60px !important;
+  height: auto;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+}
+
+.card.locked .card-title h2 {
+  color: #666;
+}

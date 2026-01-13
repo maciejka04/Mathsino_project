@@ -125,6 +125,7 @@ public static class AuthBuilderExtenctions
                 AvatarPath = "snake.png",
                 Balance = 2000,
                 LastSpinTime = NewUserPastSpinTime,
+                LessonsCompleted = 0,
             };
             dbContext.Users.Add(user);
             await dbContext.SaveChangesAsync();

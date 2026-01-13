@@ -74,7 +74,8 @@ function Layout() {
           avatarUrl: finalAvatarUrl,
           avatarPath: avatarPathFromDb,
           balance: fetchedBalance,
-          userName: data.userNameTag
+          userName: data.userNameTag,
+          lessonsCompleted: data.lessonsCompleted
         });
 
         // --- LOGIKA AUDIO (UPROSZCZONA) ---

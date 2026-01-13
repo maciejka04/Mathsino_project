@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import lekcja1 from '../../assets/lessonpic/lesson1.png';
 import lekcja2 from '../../assets/lessonpic/lesson2.png';
@@ -12,6 +12,8 @@ import lekcja8 from '../../assets/lessonpic/lesson8.png';
 import lekcja9 from '../../assets/lessonpic/lesson9.png';
 import lekcja10 from '../../assets/lessonpic/lesson10.png';
 import lekcja11 from '../../assets/lessonpic/lesson11.png';
+
+import lockIcon from '../../assets/lock.png';
 
 import styles from './Learn.module.css'; 
 import audioService from '../../services/audioService';
@@ -124,69 +126,105 @@ const cardData = [
   },
 ];
 
-function Learn({ image, alt, isShowing, zIndex, onClick, title, subtitle, description, onReadMore }) {
+function Learn({ image, alt, isShowing, zIndex, onClick, title, subtitle, description, onReadMore, isLocked }) {
   const { t } = useTranslation(); 
 
   return (
     <div
-      className={`${styles.card} ${isShowing ? styles.show : ''}`}
+      className={`${styles.card} ${isShowing ? styles.show : ''} ${isLocked ? styles.locked : ''}`}
       style={{ zIndex: zIndex }}
-      onClick={(e) => { playClickSound(); onClick(e); }}
+      onClick={(e) => { 
+        if (isLocked) return; 
+        playClickSound(); 
+        onClick(e); 
+      }}
     >
       <div className={styles['card__image-holder']}>
         <img className={styles['card__image']} src={image} alt={alt} />
+        {isLocked && (
+          <div className={styles.lockOverlay}>
+            <img src={lockIcon} alt="Locked" className={styles.lockIcon} />
+          </div>
+        )}
       </div>
       <div className={styles['card-title']}>
-        
-        <a href="#" className={`${styles['toggle-info']} ${styles.btn}`} onClick={(e) => e.preventDefault()}>
-          <span className={styles.left}></span>
-          <span className={styles.right}></span>
-        </a>
+        {!isLocked && (
+          <a href="#" className={`${styles['toggle-info']} ${styles.btn}`} onClick={(e) => e.preventDefault()}>
+            <span className={styles.left}></span>
+            <span className={styles.right}></span>
+          </a>
+        )}
 
         <h2>
-          {}
           {t(title)}
           <small>{t(subtitle)}</small>
         </h2>
       </div>
-      <div className={`${styles['card-flap']} ${styles.flap1}`}>
-        <div className={styles['card-description']}>
-           {}
-          {t(description)}
-        </div>
-        <div className={`${styles['card-flap']} ${styles.flap2}`}>
-          <div className={styles['card-actions']}>
-            
-            <a 
-                href="#" 
-                className={styles.btn} 
-                onClick={(e) => {
-                  e.preventDefault(); 
-                  e.stopPropagation(); 
-                  playClickSound();
-                  onReadMore(); 
-              }}
-            >
-              {}
-              {t('learn_read_more')}
-            </a>
-
+      
+      {!isLocked && (
+        <div className={`${styles['card-flap']} ${styles.flap1}`}>
+          <div className={styles['card-description']}>
+            {t(description)}
+          </div>
+          <div className={`${styles['card-flap']} ${styles.flap2}`}>
+            <div className={styles['card-actions']}>
+              <a 
+                  href="#" 
+                  className={styles.btn} 
+                  onClick={(e) => {
+                    e.preventDefault(); 
+                    e.stopPropagation(); 
+                    playClickSound();
+                    onReadMore(); 
+                }}
+              >
+                {t('learn_read_more')}
+              </a>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
 
+const ProgressBar = ({ completed }) => {
+  const { t } = useTranslation();
+  const totalLessons = 11;
+  const percentage = Math.round((completed / totalLessons) * 100);
+
+  return (
+    <div className={styles.progressContainer}>
+      <div className={styles.progressLabel}>
+        {t('learn_progress_label') || "Your progress"}: {percentage}%
+      </div>
+      <div className={styles.progressBase}>
+        <div 
+          className={styles.progressFill} 
+          style={{ 
+            width: `${percentage}%`,
+            backgroundColor: '#4caf50', 
+            height: '100%',
+            transition: 'width 0.5s ease-out' 
+          }}
+        ></div>
+      </div>
+    </div>
+  );
+};
 
 function CardGrid() {
   const zIndexCounter = useRef(10);
   const [activeIndex, setActiveIndex] = useState(null);
   const [cardZIndexes, setCardZIndexes] = useState({});
   
+  const { user } = useOutletContext();
   const navigate = useNavigate(); 
 
-  const handleCardClick = (e, clickedIndex) => {
+  const completed = user?.lessonsCompleted || 0;
+
+  const handleCardClick = (e, clickedIndex, isLocked) => {
+    if (isLocked) return;
     e.preventDefault();
     const newZIndex = zIndexCounter.current++;
     setCardZIndexes(prev => ({
@@ -198,30 +236,32 @@ function CardGrid() {
     );
   };
 
-  const handleReadMoreClick = (lessonId) => {
-      navigate(`/lesson/${lessonId}`);
-  };
-
   const isShowing = activeIndex !== null;
 
   return (
-    <div className={`${styles.cards} ${isShowing ? styles.showing : ''}`}>
-      {cardData.map((card, index) => (
-        <Learn
-          key={card.id} 
-          image={card.image}
-          alt={card.alt}
-          
-          title={card.title}
-          subtitle={card.subtitle}
-          description={card.description}
-          
-          isShowing={activeIndex === index}
-          zIndex={cardZIndexes[index] || 1}
-          onClick={(e) => handleCardClick(e, index)}
-          onReadMore={() => handleReadMoreClick(card.id)} 
-        />
-      ))}
+    <div className={styles.learnWrapper}>
+      <ProgressBar completed={completed} />
+      <div className={`${styles.cards} ${isShowing ? styles.showing : ''}`}>
+        {cardData.map((card, index) => {
+          const isLocked = card.id > (completed + 1);
+
+          return (
+            <Learn
+              key={card.id} 
+              image={card.image}
+              alt={card.alt}
+              title={card.title}
+              subtitle={card.subtitle}
+              description={card.description}
+              isShowing={activeIndex === index}
+              zIndex={cardZIndexes[index] || 1}
+              isLocked={isLocked}
+              onClick={(e) => handleCardClick(e, index, isLocked)}
+              onReadMore={() => !isLocked && navigate(`/lesson/${card.id}`)}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }

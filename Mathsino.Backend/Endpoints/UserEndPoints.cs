@@ -1,6 +1,7 @@
 using Mathsino.Backend.Interfaces;
 using Mathsino.Backend.Models;
 using Mathsino.Backend.Services;
+using Microsoft.AspNetCore.Mvc;
 
 public record UserLanguageDto(string Language);
 
@@ -134,6 +135,22 @@ public static class UserEndPoints
                 user.MusicEnabled = dto.MusicEnabled;
                 user.SoundEffectsEnabled = dto.SoundEffectsEnabled;
                 await db.SaveChangesAsync();
+                return Results.NoContent();
+            }
+        );
+
+        app.MapPut(
+            "/users/{id}/progress/{completedLessons}", 
+            async (int id, int completedLessons, MathsinoContext db) =>
+            {
+                var user = await db.Users.FindAsync(id);
+                if (user is null) return Results.NotFound();
+
+                if (completedLessons > user.LessonsCompleted)
+                {
+                    user.LessonsCompleted = completedLessons;
+                    await db.SaveChangesAsync();
+                }
                 return Results.NoContent();
             }
         );

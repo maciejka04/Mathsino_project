@@ -47,6 +47,8 @@ public class User
     public bool MusicEnabled { get; set; } = true;
 
     public bool SoundEffectsEnabled { get; set; } = true;
+
+    public int LessonsCompleted { get; set; } = 0;
 }
 
 public class UserFriend
@@ -80,6 +82,7 @@ public record UserDto(
     int MusicId,
     bool MusicEnabled,
     bool SoundEffectsEnabled,
+    int LessonsCompleted,
     DateTime? LastSpinTime
 );
 

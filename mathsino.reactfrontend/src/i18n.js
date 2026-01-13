@@ -236,6 +236,9 @@ const resources = {
       "learn_l11_title": "Lesson 11",
       "learn_l11_subtitle": "Advanced Betting",
       "learn_l11_desc": "Systems and patterns.",
+
+      "learn_progress_label": "Your progress",
+      "learn_read_more": "Read more",
       /* --- LESSON PAGE --- */
       "lesson_wrong_action": "Nope! That's not the best move here. Try something else!",
       "lesson_intro_title": "Introduction",
@@ -591,6 +594,9 @@ const resources = {
       "learn_l11_title": "Lekcja 11",
       "learn_l11_subtitle": "Zaawansowane zakłady",
       "learn_l11_desc": "Systemy i schematy obstawiania.",
+
+      "learn_progress_label": "Twój postęp",
+      "learn_read_more": "Czytaj więcej",
       /* --- LESSON PAGE --- */
       "lesson_intro_title": "Wprowadzenie",
       "lesson_wrong_action": "Nie! To nie jest najlepszy ruch. Spróbuj czegoś innego!",

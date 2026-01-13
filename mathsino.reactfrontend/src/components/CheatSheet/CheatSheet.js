@@ -1,13 +1,19 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './CheatSheet.css';
+const API_URL = "http://localhost:5126";
 
 const CheatSheet = () => {
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
+    const { user, refreshUser } = useOutletContext();
     const isPl = i18n.language === 'pl';
 
+    const completed = user?.lessonsCompleted || 0;
+    if (user && completed < 10) {
+        return;
+    }
     // Pomocnicza funkcja do renderowania komórki
     // val: S, H, D, SP, U (Surrender)
     const Cell = ({ action }) => {
@@ -44,9 +50,24 @@ const CheatSheet = () => {
         </thead>
     );
 
+    const handleExit = async () => {
+        if (user && user.lessonsCompleted < 11) {
+            try {
+                await fetch(`${API_URL}/users/${user.id}/progress/11`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                await refreshUser();
+            } catch (error) {
+                console.error("Błąd zapisu CheatSheet progress:", error);
+            }
+        }
+        navigate('/learn');
+    };
+
     return (
         <div className="cheatsheet-container">
-            <button className="back-button" onClick={() => navigate('/learn')}>
+            <button className="back-button" onClick={handleExit}>
                 &#8592; {isPl ? "Wróć do Menu" : "Back to Menu"}
             </button>
 

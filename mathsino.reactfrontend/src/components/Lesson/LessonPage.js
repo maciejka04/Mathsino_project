@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import clickSound from '../../assets/mouse-click.mp3';
@@ -18,6 +18,7 @@ import avatarImgA from '../../assets/parrot-teacher.png';
 import avatarImgB from '../../assets/parrot-teacher-happy.png'; 
 import avatarImgC from '../../assets/parrot-teacher-thinking.png';
 
+const API_URL = "http://localhost:5126";
 const avatarMap = { "A": avatarImgA, "B": avatarImgB, "C": avatarImgC };
 
 // --- CARD HELPERS ---
@@ -51,6 +52,8 @@ const LessonPage = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
 
+  const { user, refreshUser } = useOutletContext();
+
   const [currentLessonData, setCurrentLessonData] = useState(null);
   const [loadingLesson, setLoadingLesson] = useState(true);
 
@@ -68,8 +71,15 @@ const LessonPage = () => {
   const [isScenarioFinished, setIsScenarioFinished] = useState(false);
   const [isWrongAction, setIsWrongAction] = useState(false);
 
+  const lessonNum = parseInt(id);
+  const completed = user?.lessonsCompleted || 0;
+
   // --- NAPRAWIONA LINIJKA: Definicja zmiennej scenario ---
   const scenario = currentLessonData ? currentLessonData.scenarios[currentScenarioIndex] : null;
+
+    if (user && lessonNum > (completed + 1) && id !== '11') {
+    return;
+  }
 
     const playClickSound = () => {
         const audio = new Audio(clickSound);
@@ -206,6 +216,26 @@ const LessonPage = () => {
     }
   };
 
+const handleExitLesson = async () => {
+    playClickSound();
+    const lessonNum = parseInt(id);
+
+    if (user && !isNaN(lessonNum)) {
+        if (lessonNum > (user.lessonsCompleted || 0)) {
+            try {
+                await fetch(`${API_URL}/users/${user.id}/progress/${lessonNum}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                await refreshUser();
+            } catch (error) {
+                console.error("Błąd zapisu postępu:", error);
+            }
+        }
+    }
+    navigate('/learn');
+};
+
   const finishScenario = () => {
     if (!scenario) return;
     setIsScenarioFinished(true);
@@ -256,21 +286,22 @@ const LessonPage = () => {
         </div>
       );
   }
-
+ 
   return (
     <div className="offline-container">
-        <button
-            className="back-button"
-            onClick={() => {
+        {lessonPhase !== 'CONCLUSION' && (
+            <button
+                className="back-button"
+                onClick={() => {
                 playClickSound();
                 setTimeout(() => {
                     navigate('/learn');
                 }, 400); 
             }}
-        >
-            &#8592; Exit Lesson
-        </button>
-
+            >
+                &#8592; Exit Lesson
+            </button>
+        )}
         <div className="game-table-area">
             <img src={tableImage} alt="Game Table" className="game-table-image" />
 
@@ -346,7 +377,7 @@ const LessonPage = () => {
                 )}
 
                 {lessonPhase === 'CONCLUSION' && (
-                    <button onClick={() => navigate('/learn')} className="bubble-btn menu">
+                    <button onClick={handleExitLesson} className="bubble-btn menu">
                         {t('lesson_back_to_menu') || "BACK TO MENU"}
                     </button>
                 )}
