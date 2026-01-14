@@ -48,7 +48,7 @@ export const useGameLogic = (user, audio, refreshUser, t) => {
     };
 
     const fetchGameStatus = async (gId) => {
-        const response = await fetch(`${API_URL}/games/${gId}`);
+        const response = await fetch(`${API_URL}/games/${gId}`, { credentials: 'include' });
         const data = await response.json();
         updateGameState(data);
         return data;
@@ -160,8 +160,12 @@ export const useGameLogic = (user, audio, refreshUser, t) => {
 
     const processFinalResults = async (gId, pId) => {
         try {
-            await fetch(`${API_URL}/games/${gId}/check-results/${pId}`);
-            const finalData = await fetchGameStatus(gId);
+            const response = await fetch(`${API_URL}/games/${gId}/check-results/${pId}`, { credentials: 'include' });
+            if (!response.ok) throw new Error("Check results failed");
+
+            const finalData = await response.json();
+            updateGameState(finalData);
+
             const player = finalData.players.find((p) => p.user.id === user?.id);
             if (player) {
                 handleGameResult(player.result, player.splitResult);
@@ -263,13 +267,13 @@ export const useGameLogic = (user, audio, refreshUser, t) => {
         if (!gameId || !playerId) return;
         try {
             if (isSplitActive) {
-                await fetch(`${API_URL}/games/${gameId}/player-hit-split/${playerId}`, { method: "POST" });
+                await fetch(`${API_URL}/games/${gameId}/player-hit-split/${playerId}`, { method: "POST", credentials: 'include' });
             } else {
-                await fetch(`${API_URL}/games/${gameId}/player-hit/${playerId}`);
+                await fetch(`${API_URL}/games/${gameId}/player-hit/${playerId}`, { credentials: 'include' });
             }
 
             // 1. Pobieramy dane RĘCZNIE, bez automatycznego updateGameState
-            const response = await fetch(`${API_URL}/games/${gameId}`);
+            const response = await fetch(`${API_URL}/games/${gameId}`, { credentials: 'include' });
             const gameData = await response.json();
 
             // 2. Jeśli gra się skończyła (np. Bust), robimy aktualizację "na raty"
@@ -415,6 +419,26 @@ export const useGameLogic = (user, audio, refreshUser, t) => {
             alert("Błąd połączenia z serwerem.");
         }
     };
+
+    useEffect(() => {
+        const checkActiveGame = async () => {
+            if (!user?.id) return;
+            try {
+                const response = await fetch(`${API_URL}/games/active-singleplayer?userId=${user.id}`, {
+                    credentials: 'include'
+                });
+                if (response.ok) {
+                    const gameData = await response.json();
+                    updateGameState(gameData);
+                }
+            } catch (error) {
+                console.error("Błąd sprawdzania aktywnej gry:", error);
+            }
+        };
+
+        checkActiveGame();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user?.id]);
 
     useEffect(() => {
         if (gameStatus === "Completed" && !resultProcessed && gameId && playerId && !resultProcessedRef.current) {

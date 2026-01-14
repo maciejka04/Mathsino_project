@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Mathsino.Backend.Game;
 using Mathsino.Backend.Interfaces;
 using Mathsino.Backend.Models;
@@ -17,9 +19,21 @@ namespace Mathsino.Backend.Services
         private static readonly Dictionary<Guid, Game.Game> _games = new();
         private static readonly object _gamesLock = new object();
 
+        private readonly JsonSerializerOptions _jsonOptions = new()
+        {
+            ReferenceHandler = ReferenceHandler.IgnoreCycles
+        };
+
         public async Task<Game.Game> CreateSinglePlayerGame(int userId, int betAmount)
         {
-            _logger?.LogInformation("Creating single-player game for user ID {UserId}", userId);
+            _logger?.LogInformation("Request to create single-player game for user ID {UserId}", userId);
+
+            var existingGame = await GetActiveGameForUserAsync(userId);
+            if (existingGame != null)
+            {
+                _logger?.LogInformation("Found active game {GameId} for user {UserId}. Resuming.", existingGame.Id, userId);
+                return existingGame;
+            }
 
             if (!await _balanceService.DeductBalance(userId, betAmount))
             {
@@ -28,21 +42,38 @@ namespace Mathsino.Backend.Services
 
             using var scope = _scopeFactory.CreateScope();
             var usersService = scope.ServiceProvider.GetRequiredService<IUsersService>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<MathsinoContext>();
+            
             var user = await usersService.GetUserByIdAsync(userId);
 
             var player = new Player { User = user, BetAmount = betAmount };
             var game = new Game.Game { Type = GameType.SinglePlayer };
             game.AddPlayer(player);
+            
             lock (_gamesLock)
             {
                 _games[game.Id] = game;
-                _logger?.LogInformation(
-                    "[CreateGame] Game {GameId} added to dictionary. Total games: {Count}",
-                    game.Id,
-                    _games.Count
-                );
             }
             game.StartGame();
+
+            // Save initial state to DB
+            var singleGameRecord = new SingleGame
+            {
+                GameId = game.Id,
+                UserId = userId,
+                PlayerId = player.PlayerId,
+                StartTime = game.StartTime,
+                EndTime = DateTime.UtcNow, // Will be updated on finish
+                SingleGameResult = GameResult.InProgress,
+                BetAmount = betAmount,
+                BalanceAfterGame = user.Balance,
+                GameStateJson = JsonSerializer.Serialize(game, _jsonOptions)
+            };
+            dbContext.SingleGames.Add(singleGameRecord);
+            await dbContext.SaveChangesAsync();
+
+            _logger?.LogInformation("Created new game {GameId} and saved to DB.", game.Id);
+
             return game;
         }
 
@@ -60,40 +91,48 @@ namespace Mathsino.Backend.Services
             lock (_gamesLock)
             {
                 _games[game.Id] = game;
-                _logger?.LogInformation(
-                    "[CreateGame] Game {GameId} added to dictionary. Total games: {Count}",
-                    game.Id,
-                    _games.Count
-                );
             }
             return game;
         }
 
         public Game.Game GetGameById(Guid gameId)
         {
-            _logger?.LogInformation("Fetching game with ID {GameId}", gameId);
-
+            // Try memory first
             lock (_gamesLock)
             {
                 if (_games.TryGetValue(gameId, out var game))
                     return game;
             }
+
+            // Try DB if not in memory (maybe restarted)
+            var gameFromDb = LoadGameFromDb(gameId).Result;
+            if (gameFromDb != null)
+            {
+                lock (_gamesLock)
+                {
+                    _games[gameFromDb.Id] = gameFromDb;
+                }
+                return gameFromDb;
+            }
+
             throw new KeyNotFoundException($"Game with ID {gameId} not found.");
         }
 
-        public Game.Game PlayerHit(Guid gameId, Guid playerId)
+        public async Task<Game.Game> PlayerHit(Guid gameId, Guid playerId)
         {
             _logger?.LogInformation("Player {PlayerId} hits in game {GameId}", playerId, gameId);
             var game = GetGameById(gameId);
             game.PlayerHit(playerId);
+            await SaveGameStateAsync(game);
             return game;
         }
 
-        public Game.Game PlayerPass(Guid gameId, Guid playerId)
+        public async Task<Game.Game> PlayerPass(Guid gameId, Guid playerId)
         {
             _logger?.LogInformation("Player {PlayerId} passes in game {GameId}", playerId, gameId);
             var game = GetGameById(gameId);
             game.PlayerPass(playerId);
+            await SaveGameStateAsync(game);
             return game;
         }
 
@@ -112,6 +151,7 @@ namespace Mathsino.Backend.Services
             }
 
             game.PlayerDouble(playerId);
+            await SaveGameStateAsync(game);
             return game;
         }
 
@@ -130,10 +170,11 @@ namespace Mathsino.Backend.Services
             }
 
             game.PlayerSplit(playerId);
+            await SaveGameStateAsync(game);
             return game;
         }
 
-        public Game.Game PlayerHitSplit(Guid gameId, Guid playerId)
+        public async Task<Game.Game> PlayerHitSplit(Guid gameId, Guid playerId)
         {
             _logger?.LogInformation(
                 "Player {PlayerId} hits split in game {GameId}",
@@ -142,6 +183,7 @@ namespace Mathsino.Backend.Services
             );
             var game = GetGameById(gameId);
             game.PlayerHitSplit(playerId);
+            await SaveGameStateAsync(game);
             return game;
         }
 
@@ -166,6 +208,7 @@ namespace Mathsino.Backend.Services
             }
 
             game.PlayerDoubleSplit(playerId);
+            await SaveGameStateAsync(game);
             return game;
         }
 
@@ -178,7 +221,17 @@ namespace Mathsino.Backend.Services
             );
             var game = GetGameById(gameId);
             game.CheckResults(playerId);
-            await SaveResultsInDB(game);
+            await SaveResultsInDB(game); // This finalizes the game in DB
+            
+            // Remove from memory if completed
+            if (game.Status == GameStatus.Completed)
+            {
+                lock (_gamesLock)
+                {
+                    _games.Remove(gameId);
+                }
+            }
+            
             return game;
         }
 
@@ -193,18 +246,23 @@ namespace Mathsino.Backend.Services
 
             foreach (var player in game.Players)
             {
+                // Find existing 'InProgress' record to update
                 var existingRecord = await dbContext.SingleGames.FirstOrDefaultAsync(sg =>
                     sg.GameId == game.Id && sg.PlayerId == player.PlayerId
                 );
 
-                if (existingRecord != null)
+                if (existingRecord == null)
                 {
-                    _logger?.LogWarning(
-                        "Game result already exists for player {PlayerId} in game {GameId}. Skipping.",
-                        player.PlayerId,
-                        game.Id
-                    );
-                    continue;
+                    // Should not happen for SinglePlayer if created correctly, but fallback:
+                    existingRecord = new SingleGame
+                    {
+                        GameId = game.Id,
+                        UserId = player.User.Id,
+                        PlayerId = player.PlayerId,
+                        StartTime = game.StartTime,
+                        BetAmount = player.BetAmount
+                    };
+                    dbContext.SingleGames.Add(existingRecord);
                 }
 
                 _logger?.LogInformation(
@@ -227,24 +285,102 @@ namespace Mathsino.Backend.Services
                     totalPayout
                 );
 
-                var singleGameRecord = new SingleGame
-                {
-                    GameId = game.Id,
-                    UserId = player.User.Id,
-                    PlayerId = player.PlayerId,
-                    StartTime = game.StartTime,
-                    EndTime = DateTime.Now,
-                    SingleGameResult = player.Result,
-                    SingleGameSplitResult = player.SplitResult,
-                    BalanceAfterGame = await _balanceService.GetBalance(player.User.Id),
-                };
-                dbContext.SingleGames.Add(singleGameRecord);
+                existingRecord.EndTime = DateTime.UtcNow;
+                existingRecord.SingleGameResult = player.Result;
+                existingRecord.SingleGameSplitResult = player.SplitResult;
+                existingRecord.BalanceAfterGame = await _balanceService.GetBalance(player.User.Id);
+                existingRecord.GameStateJson = null; // Clear state as game is finished
             }
             await dbContext.SaveChangesAsync();
             _logger?.LogInformation(
                 "Game results saved successfully for game ID {GameId}",
                 game.Id
             );
+        }
+
+        private async Task SaveGameStateAsync(Game.Game game)
+        {
+             // Only save state for SinglePlayer games for now as structure suggests
+            if(game.Type != GameType.SinglePlayer) return;
+
+            using var scope = _scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<MathsinoContext>();
+            var json = JsonSerializer.Serialize(game, _jsonOptions);
+
+            foreach (var player in game.Players)
+            {
+                var record = await dbContext.SingleGames
+                    .FirstOrDefaultAsync(sg => sg.GameId == game.Id && sg.PlayerId == player.PlayerId);
+                
+                if (record != null)
+                {
+                    record.GameStateJson = json;
+                    record.EndTime = DateTime.UtcNow; // Update timestamp
+                }
+            }
+            await dbContext.SaveChangesAsync();
+        }
+
+        private async Task<Game.Game?> LoadGameFromDb(Guid gameId)
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<MathsinoContext>();
+            var record = await dbContext.SingleGames.FirstOrDefaultAsync(g => g.GameId == gameId);
+            
+            if (record != null && !string.IsNullOrEmpty(record.GameStateJson))
+            {
+                try
+                {
+                    return JsonSerializer.Deserialize<Game.Game>(record.GameStateJson, _jsonOptions);
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex, "Failed to load game {GameId}", gameId);
+                }
+            }
+            return null;
+        }
+
+        public async Task<Game.Game?> GetActiveGameForUserAsync(int userId)
+        {
+             // Check memory
+            lock (_gamesLock)
+            {
+                 var activeInMemory = _games.Values.FirstOrDefault(g => 
+                    g.Type == GameType.SinglePlayer && 
+                    g.Status == GameStatus.InProgress &&
+                    g.Players.Any(p => p.User.Id == userId));
+                 if (activeInMemory != null) return activeInMemory;
+            }
+
+            // Check DB
+            using var scope = _scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<MathsinoContext>();
+            var activeRecord = await dbContext.SingleGames
+                .OrderByDescending(g => g.StartTime)
+                .FirstOrDefaultAsync(g => g.UserId == userId && g.SingleGameResult == GameResult.InProgress);
+
+            if (activeRecord != null && !string.IsNullOrEmpty(activeRecord.GameStateJson))
+            {
+                try
+                {
+                    var game = JsonSerializer.Deserialize<Game.Game>(activeRecord.GameStateJson, _jsonOptions);
+                    if (game != null)
+                    {
+                        lock (_gamesLock)
+                        {
+                            if (!_games.ContainsKey(game.Id))
+                                _games[game.Id] = game;
+                        }
+                        return game;
+                    }
+                }
+                catch (Exception ex)
+                {
+                     _logger?.LogError(ex, "Failed to restore active game for user {UserId}", userId);
+                }
+            }
+            return null;
         }
 
         private int CalculatePayout(Player player)

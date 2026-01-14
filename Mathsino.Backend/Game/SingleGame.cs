@@ -26,6 +26,8 @@ namespace Mathsino.Backend.Game
         public bool HasSplit => SingleGameSplitResult != null;
         public int BalanceAfterGame { get; set; }
 
+        public string? GameStateJson { get; set; }
+
         [ForeignKey("UserId")]
         public User? Player { get; set; }
     }

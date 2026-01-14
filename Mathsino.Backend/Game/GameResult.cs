@@ -10,4 +10,5 @@ public enum GameResult
     Push,
     Blackjack,
     Snapshot,
+    InProgress,
 }

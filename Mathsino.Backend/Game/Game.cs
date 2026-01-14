@@ -15,7 +15,6 @@ namespace Mathsino.Backend.Game
 
         public DateTime StartTime { get; set; } = DateTime.Now;
 
-        [JsonIgnore]
         public Deck Deck { get; set; } = new Deck();
 
         public Player Dealer { get; set; } =
