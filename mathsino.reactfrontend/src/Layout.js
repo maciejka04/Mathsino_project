@@ -85,22 +85,15 @@ function Layout() {
             .then(userData => {
               const musicEnabled = userData.musicEnabled !== undefined ? userData.musicEnabled : true;
               const soundEffectsEnabled = userData.soundEffectsEnabled !== undefined ? userData.soundEffectsEnabled : true;
-
-              // Pobieramy ID z bazy (lub domyślne 1)
               const newMusicId = userData.musicId || 1;
 
-              // 1. Zaktualizuj globalne ustawienia (głośność itp.)
               audioService.initializeAudioSettings(musicEnabled, soundEffectsEnabled);
-
-              // 2. Pobierz to, co aktualnie "myśli" serwis, że gra
               const currentMusicId = musicService.getCurrentMusic();
 
               if (!musicEnabled) {
-                // Jeśli user wyłączył muzykę -> bezwzględna cisza
                 audioService.stopAllMusic();
               }
               else if (currentMusicId === null) {
-                
                 musicService.setMusic(newMusicId);
                 audioService.changeBackgroundMusic(newMusicId);
               }
@@ -109,14 +102,12 @@ function Layout() {
                 musicService.setMusic(newMusicId);
                 audioService.changeBackgroundMusic(newMusicId);
               }
-              
             })
             .catch(err => console.error('Failed to load audio preferences', err));
         }
       })
       .catch(err => {
-        if (err.message === "Unauthorized") {
-        } else {
+        if (err.message !== "Unauthorized") {
           console.error("Layout user load error:", err);
         }
         setUser({ name: "Gość", isAuthenticated: false, avatarUrl: awatar });
@@ -167,7 +158,6 @@ function Layout() {
               <Link to="/" onClick={playClickSound}>
                 <img src={logo} alt="Logo" />
               </Link>
-
             </div>
 
             <nav className="menu" ref={menuRef}>
@@ -202,6 +192,18 @@ function Layout() {
                   >
                     <i className="fas fa-chart-simple" />
                     <span>{t('nav_statistics')}</span>
+                  </NavLink>
+                </li>
+
+                {/* --- NOWA POZYCJA: ACHIEVEMENTS --- */}
+                <li>
+                  <NavLink
+                    to="/achievements"
+                    onClick={playClickSound}
+                    className={({ isActive }) => (isActive ? 'active-link' : '')}
+                  >
+                    <i className="fa-solid fa-trophy" />
+                    <span>{t('nav_achievements') || "Achievements"}</span>
                   </NavLink>
                 </li>
 
