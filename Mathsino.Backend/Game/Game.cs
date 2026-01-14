@@ -393,7 +393,31 @@ namespace Mathsino.Backend.Game
 
         public void EndGame()
         {
-            DealerDrawCard();
+            bool anyPlayerAlive = false;
+
+            foreach (var p in Players)
+            {
+                if (p.HandValue <= 21)
+                {
+                    anyPlayerAlive = true;
+                    break;
+                }
+
+                if (p.HasSplit)
+                {
+                    if (p.SplitHandValue.GetValueOrDefault(99) <= 21)
+                    {
+                        anyPlayerAlive = true;
+                        break;
+                    }
+                }
+            }
+
+            if (anyPlayerAlive)
+            {
+                DealerDrawCard();
+            }
+
             Status = GameStatus.Completed;
         }
     }
