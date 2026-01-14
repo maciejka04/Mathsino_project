@@ -124,7 +124,6 @@ function Home() {
                 <p>{t('home_learn_strategy_desc')}</p>
               </div>
             </Link>
-
             {/* === 4. KARTA FOKUS (Szeroka) === */}{/*
             <div className="dashboard-card focus-card">
               <i className="fa-solid fa-crosshairs"></i>

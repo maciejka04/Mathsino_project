@@ -23,6 +23,7 @@ import ResponsibleGaming from './components/Resources/ResponsibleGaming';
 import HowToPlay from './components/Resources/HowToPlay'; 
 import StrategyChart from './components/Resources/StrategyChart'; 
 import Glossary from './components/Resources/Glossary';
+import Achievements from './components/Achievements/Achievements';
 
 
 function App() {
@@ -54,6 +55,9 @@ function App() {
         } />
         <Route path="profile/:friendId" element={
           <ProtectedRoute><FriendProfile /></ProtectedRoute>
+        } />
+        <Route path="/achievements" element={
+          <ProtectedRoute><Achievements /></ProtectedRoute>
         } />
         <Route path="resources" element={
           <ProtectedRoute><Resources /></ProtectedRoute>

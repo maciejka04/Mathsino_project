@@ -8,8 +8,13 @@ const resources = {
       "nav_play": "Play",
       "nav_learn": "Learn",
       "nav_statistics": "Statistics",
+      "nav_achievements": "Achievements", // <--- DODANE
       "nav_friends": "Friends",
       "nav_resources": "Resources",
+
+      /* --- ACHIEVEMENTS PAGE --- */ // <--- DODANA SEKCJA
+      "achievements_title": "Your Achievements",
+      "achievements_subtitle": "Track your progress and earn exclusive avatars!",
 
       /* --- Offline.js --- */
       "exit": "Exit",
@@ -151,8 +156,6 @@ const resources = {
       "friends_request_sent": "Friend request sent successfully!",
       "friends_request_failed": "Failed to send friend request",
       "friends_error": "An error occurred",
-
-      "friends_error": "An error occurred",
       "back_to_friends": "Back to Friends",
 
       /* --- PROFILE.JS --- */
@@ -238,7 +241,6 @@ const resources = {
       "learn_l11_desc": "Systems and patterns.",
 
       "learn_progress_label": "Your progress",
-      "learn_read_more": "Read more",
       /* --- LESSON PAGE --- */
       "lesson_wrong_action": "Nope! That's not the best move here. Try something else!",
       "lesson_intro_title": "Introduction",
@@ -367,8 +369,13 @@ const resources = {
       "nav_play": "Graj",
       "nav_learn": "Nauka",
       "nav_statistics": "Statystyki",
+      "nav_achievements": "Osiągnięcia", // <--- DODANE
       "nav_friends": "Znajomi",
       "nav_resources": "Zasoby",
+
+      /* --- ACHIEVEMENTS PAGE --- */ // <--- DODANA SEKCJA
+      "achievements_title": "Twoje Osiągnięcia",
+      "achievements_subtitle": "Śledź postępy i zdobywaj unikalne awatary!",
 
       /* --- Offline.js --- */
       "exit": "Wyjdź",
@@ -510,7 +517,6 @@ const resources = {
       "friends_request_sent": "Zaproszenie wysłane pomyślnie!",
       "friends_request_failed": "Nie udało się wysłać zaproszenia",
       "friends_error": "Wystąpił błąd",
-      "friends_error": "Wystąpił błąd",
       "back_to_friends": "Wróć do Znajomych",
 
       /* --- PROFILE.JS --- */
@@ -596,7 +602,6 @@ const resources = {
       "learn_l11_desc": "Systemy i schematy obstawiania.",
 
       "learn_progress_label": "Twój postęp",
-      "learn_read_more": "Czytaj więcej",
       /* --- LESSON PAGE --- */
       "lesson_intro_title": "Wprowadzenie",
       "lesson_wrong_action": "Nie! To nie jest najlepszy ruch. Spróbuj czegoś innego!",
