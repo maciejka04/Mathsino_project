@@ -5,8 +5,8 @@ class MusicService {
     this.currentMusic = null;
     this.tracks = {
       1: 'casino.mp3',
-      2: 'gejowski_blues.mp3', 
-      3: 'Trzy.mp3'
+      2: 'casino2.mp3', 
+      3: 'casino3.mp3'
     };
   }
 

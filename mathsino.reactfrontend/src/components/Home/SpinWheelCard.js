@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import './SpinWheelCard.css';
 import clickSound from '../../assets/mouse-click.mp3';
-import spinSoundFile from '../../assets/krynce.mp3';
+import spinSoundFile from '../../assets/wheel_sound.mp3';
 import { useTranslation } from 'react-i18next';
 import audioService from '../../services/audioService';
 
