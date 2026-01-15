@@ -14,6 +14,7 @@ export const useGameLogic = (user, audio, refreshUser, t) => {
     const [dealerCards, setDealerCards] = useState([]);
     const [playerCards, setPlayerCards] = useState([]);
     const [splitCards, setSplitCards] = useState([]);
+    const [currentBet, setCurrentBet] = useState(0);
 
     const [gameStatus, setGameStatus] = useState("Waiting");
     const [gameResult, setGameResult] = useState(null);
@@ -113,6 +114,11 @@ export const useGameLogic = (user, audio, refreshUser, t) => {
 
         if (player) {
             setPlayerId(player.playerId);
+
+            if (player.betAmount !== undefined && player.betAmount > 0) {
+                setCurrentBet(player.betAmount);
+            }
+
             setPlayerCards(player.hand.map((c) => ({
                 name: mapBackendCardToFilename(c),
                 src: cardImagesMap[mapBackendCardToFilename(c)],
@@ -228,6 +234,8 @@ export const useGameLogic = (user, audio, refreshUser, t) => {
         setDealerCards([]);
         setPlayerCards([]);
         resetGameFlags();
+
+        setCurrentBet(betAmount);
 
         setIsShuffling(true);
         audio.playShuffle();
@@ -453,11 +461,13 @@ export const useGameLogic = (user, audio, refreshUser, t) => {
         isShuffling, showModal, showFireworks,
         canSplit, canDouble, isSplitActive, hasSplit,
         mainDoubled, splitDoubled, strategyFeedback,
+        currentBet, setCurrentBet,
         startNewGame, handleHit, handleStand, handleSplit, handleDouble,
         closeModal: () => {
             setShowModal(false);
             setGameStatus("Waiting");
             resetGameFlags();
+            setCurrentBet(0);
         }
     };
 };

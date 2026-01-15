@@ -16,7 +16,7 @@ import PlayerControls from "./components/PlayerControls";
 import GameActions from "./components/GameActions";
 import GameOverlays from "./components/GameOverlays";
 
-import { useAdReward } from "../Statistics/useAdReward"; 
+import { useAdReward } from "../Statistics/useAdReward";
 import { AdRewardModal } from "../Statistics/AdRewardModal";
 
 const DECK_POSITION = { left: 15, top: 30 };
@@ -33,7 +33,6 @@ function Offline() {
 
   const isBankrupt = user?.balance < 10 && game.gameStatus === 'Waiting' && !game.showModal;
 
-  const [currentBet, setCurrentBet] = useState(0);
   const [isTrainerEnabled, setIsTrainerEnabled] = useState(true);
 
   useCardSoundEffects(game.playerCards, game.dealerCards, game.splitCards, game.gameStatus);
@@ -45,18 +44,18 @@ function Offline() {
 
   const handleChipSelect = (value) => {
     if (game.gameStatus === "InProgress" || game.isShuffling) return;
-    if (isBankrupt) return; 
-    
-    if (currentBet + value > user.balance) {
+    if (isBankrupt) return;
+
+    if (game.currentBet + value > user.balance) {
       alert(t('not_enough_funds'));
       return;
     }
-    setCurrentBet((prev) => prev + value);
+    game.setCurrentBet((prev) => prev + value);
   };
 
   const clearBet = () => {
     if (game.gameStatus === "InProgress" || game.isShuffling) return;
-    setCurrentBet(0);
+    game.setCurrentBet(0);
   };
 
   const getResultText = (result) => {
@@ -79,11 +78,11 @@ function Offline() {
       return { txt: "Przegrałeś", val: -actualBet };
     };
 
-    const main = calc(game.gameResult, currentBet, game.mainDoubled);
+    const main = calc(game.gameResult, game.currentBet, game.mainDoubled);
     totalWin += main.val;
 
     if (game.hasSplit) {
-      const split = calc(game.splitResult, currentBet, game.splitDoubled);
+      const split = calc(game.splitResult, game.currentBet, game.splitDoubled);
       totalWin += split.val;
       msg = `${t('hand')} 1: ${getResultText(game.gameResult)} | ${t('hand')} 2: ${getResultText(game.splitResult)}`;
     } else {
@@ -93,25 +92,25 @@ function Offline() {
     return {
       title: msg,
       desc: totalWin >= 0
-          ? `Wygrałeś łącznie ${totalWin} PLN na czysto`
-          : `Straciłeś łącznie ${Math.abs(totalWin)} PLN`,
+        ? `Wygrałeś łącznie ${totalWin} PLN na czysto`
+        : `Straciłeś łącznie ${Math.abs(totalWin)} PLN`,
     };
   };
 
   const displayedBetOnTable = () => {
-    if (game.gameStatus === "Waiting") return currentBet;
-    let total = currentBet;
-    if (game.mainDoubled) total += currentBet;
+    if (game.gameStatus === "Waiting") return game.currentBet;
+    let total = game.currentBet;
+    if (game.mainDoubled) total += game.currentBet;
     if (game.hasSplit) {
-      total += currentBet;
-      if (game.splitDoubled) total += currentBet;
+      total += game.currentBet;
+      if (game.splitDoubled) total += game.currentBet;
     }
     return total;
   };
 
   return (
     <div className="offline-container">
-      
+
       <AdRewardModal
         showAd={adReward.showAd}
         showConfirmModal={adReward.showConfirmModal}
@@ -125,37 +124,37 @@ function Offline() {
 
       {isBankrupt && !adReward.showAd && (
         <div className="bankrupt-overlay">
-            <div className="bankrupt-content">
-                <i className="fa-solid fa-triangle-exclamation" style={{ fontSize: '4rem', color: '#ff4d4d', marginBottom: '20px' }}></i>
-                
-                <h1 style={{ color: '#ff4d4d' }}>You went bankrupt</h1>
-                
-                <div className="bankrupt-actions">
-                    <button 
-                        className="ad-reward-button"
-                        onClick={adReward.handleWatchAd}
-                        disabled={adReward.isDisabled}
-                    >
-                        Watch Ad (+100 PLN) <i className="fa-solid fa-clapperboard" style={{marginLeft: '8px'}} />
-                    </button>
-                    
-                    <button 
-                        className="danger-button" 
-                        onClick={handleGoBack}
-                        style={{ marginTop: '10px', width: '100%', padding: '12px' }}
-                    >
-                        Exit Game <i className="fa-solid fa-door-open" style={{marginLeft: '8px'}} />
-                    </button>
-                </div>
+          <div className="bankrupt-content">
+            <i className="fa-solid fa-triangle-exclamation" style={{ fontSize: '4rem', color: '#ff4d4d', marginBottom: '20px' }}></i>
+
+            <h1 style={{ color: '#ff4d4d' }}>You went bankrupt</h1>
+
+            <div className="bankrupt-actions">
+              <button
+                className="ad-reward-button"
+                onClick={adReward.handleWatchAd}
+                disabled={adReward.isDisabled}
+              >
+                Watch Ad (+100 PLN) <i className="fa-solid fa-clapperboard" style={{ marginLeft: '8px' }} />
+              </button>
+
+              <button
+                className="danger-button"
+                onClick={handleGoBack}
+                style={{ marginTop: '10px', width: '100%', padding: '12px' }}
+              >
+                Exit Game <i className="fa-solid fa-door-open" style={{ marginLeft: '8px' }} />
+              </button>
             </div>
+          </div>
         </div>
       )}
 
-      <UserPanel 
-        user={user} 
-        t={t} 
-        isTrainerEnabled={isTrainerEnabled} 
-        setIsTrainerEnabled={setIsTrainerEnabled} 
+      <UserPanel
+        user={user}
+        t={t}
+        isTrainerEnabled={isTrainerEnabled}
+        setIsTrainerEnabled={setIsTrainerEnabled}
         onExit={handleGoBack}
       />
 
@@ -169,62 +168,62 @@ function Offline() {
         strategyFeedback={game.strategyFeedback}
         isTrainerEnabled={isTrainerEnabled}
         onModalClose={() => {
-            game.closeModal();
-            setCurrentBet(0);
+          game.closeModal();
+          game.setCurrentBet(0);
         }}
       />
 
       <div className="game-table-area">
         <img src={tableImage} alt="Stół do gry" className="game-table-image" />
 
-        <Hand 
-            cards={game.dealerCards} 
-            deckPosition={DECK_POSITION} 
-            title={`${t('dealer')}:`} 
-            gameStatus={game.gameStatus} 
-            isDealer={true}
+        <Hand
+          cards={game.dealerCards}
+          deckPosition={DECK_POSITION}
+          title={`${t('dealer')}:`}
+          gameStatus={game.gameStatus}
+          isDealer={true}
         />
 
-        <Hand 
-            cards={game.playerCards} 
-            deckPosition={DECK_POSITION} 
-            title={game.hasSplit ? `${t('hand')} 1` : "Ty"} 
-            gameStatus={game.gameStatus} 
-            isDealer={false}
-            hasSplit={game.hasSplit}
-            isActive={game.hasSplit && !game.isSplitActive}
+        <Hand
+          cards={game.playerCards}
+          deckPosition={DECK_POSITION}
+          title={game.hasSplit ? `${t('hand')} 1` : "Ty"}
+          gameStatus={game.gameStatus}
+          isDealer={false}
+          hasSplit={game.hasSplit}
+          isActive={game.hasSplit && !game.isSplitActive}
         />
 
         {game.hasSplit && (
-             <Hand 
-                cards={game.splitCards} 
-                deckPosition={DECK_POSITION} 
-                title={`${t('hand')} 2:`} 
-                gameStatus={game.gameStatus} 
-                isDealer={false}
-                hasSplit={game.hasSplit}
-                isActive={game.isSplitActive}
-                leftPositionBase={56}
-            />
+          <Hand
+            cards={game.splitCards}
+            deckPosition={DECK_POSITION}
+            title={`${t('hand')} 2:`}
+            gameStatus={game.gameStatus}
+            isDealer={false}
+            hasSplit={game.hasSplit}
+            isActive={game.isSplitActive}
+            leftPositionBase={56}
+          />
         )}
 
         <Deck position={DECK_POSITION} isShuffling={game.isShuffling} />
-        
+
         <Chips onChipSelect={handleChipSelect} />
       </div>
 
-      <PlayerControls 
-          t={t}
-          gameStatus={game.gameStatus}
-          isShuffling={game.isShuffling}
-          userBalance={user.balance}
-          currentBet={currentBet}
-          onClearBet={clearBet}
-          onStartGame={() => game.startNewGame(currentBet)}
-          displayedBetOnTable={displayedBetOnTable()}
+      <PlayerControls
+        t={t}
+        gameStatus={game.gameStatus}
+        isShuffling={game.isShuffling}
+        userBalance={user.balance}
+        currentBet={game.currentBet}
+        onClearBet={clearBet}
+        onStartGame={() => game.startNewGame(game.currentBet)}
+        displayedBetOnTable={displayedBetOnTable()}
       />
 
-      <GameActions 
+      <GameActions
         t={t}
         gameStatus={game.gameStatus}
         isShuffling={game.isShuffling}
@@ -232,8 +231,8 @@ function Offline() {
         canDouble={game.canDouble}
         onHit={() => game.handleHit(isTrainerEnabled)}
         onStand={() => game.handleStand(isTrainerEnabled)}
-        onSplit={() => game.handleSplit(currentBet, isTrainerEnabled)}
-        onDouble={() => game.handleDouble(currentBet, isTrainerEnabled)}
+        onSplit={() => game.handleSplit(game.currentBet, isTrainerEnabled)}
+        onDouble={() => game.handleDouble(game.currentBet, isTrainerEnabled)}
       />
     </div>
   );
