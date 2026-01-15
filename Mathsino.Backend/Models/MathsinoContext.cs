@@ -12,6 +12,7 @@ public class MathsinoContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<UserFriend> UserFriends => Set<UserFriend>();
+    public DbSet<UserAchievement> UserAchievements => Set<UserAchievement>();
 
     public DbSet<SingleGame> SingleGames => Set<SingleGame>();
 
@@ -31,6 +32,16 @@ public class MathsinoContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<UserFriend>().HasKey(uf => new { uf.UserId, uf.FriendId });
+
+        // UserAchievement unique composite index and relation
+        modelBuilder.Entity<UserAchievement>()
+            .HasIndex(ua => new { ua.UserId, ua.AchievementId })
+            .IsUnique();
+        modelBuilder.Entity<UserAchievement>()
+            .HasOne(ua => ua.User)
+            .WithMany()
+            .HasForeignKey(ua => ua.UserId);
+
 
         modelBuilder
             .Entity<UserFriend>()

@@ -31,6 +31,19 @@ const AVATAR_MAP = {
 
 const avatars = [snake, mouse, racoon, boar, owl, fox];
 
+// Map achievement rewardValue to actual avatar filenames you have
+const ACHIEVEMENT_AVATAR_MAP = {
+  avatar_student: 'mouse.png',
+  avatar_vip: 'racoon.png',
+  avatar_rich: 'boar.png',
+  avatar_king: 'owl.png',
+  avatar_crazy: 'fox.png',
+  avatar_veteran: 'racoon.png',
+  avatar_cyborg: 'boar.png',
+  avatar_ace: 'owl.png',
+  avatar_risk: 'fox.png'
+};
+
 const getAvatarFilename = (avatarImport) => {
   const entries = Object.entries(AVATAR_MAP);
   for (const [filename, path] of entries) {
@@ -48,6 +61,7 @@ function Profile() {
   const [selectedAvatar, setSelectedAvatar] = useState(snake);
   const [pendingAvatar, setPendingAvatar] = useState(getAvatarFilename(snake));
   const [saveStatus, setSaveStatus] = useState('');
+const [unlockedAvatars, setUnlockedAvatars] = useState(new Set(['snake.png'])); // default snake
 
   const [user, setUser] = useState({
     id: null,      // ⬅️ DODANE
@@ -62,6 +76,8 @@ function Profile() {
   const [usernameAvailable, setUsernameAvailable] = useState(null);
 
   const handleAvatarSelect = (avatarSrc) => {
+    const filename = getAvatarFilename(avatarSrc);
+    if(!unlockedAvatars.has(filename)) return; // prevent selecting locked avatar
     setSelectedAvatar(avatarSrc);
     setPendingAvatar(getAvatarFilename(avatarSrc));
   };
@@ -202,6 +218,24 @@ function Profile() {
       .catch(err => console.error("User load error:", err));
   }, []);
 
+  // Fetch achievements to know unlocked avatars
+  useEffect(()=>{
+    if(!user.id) return;
+    fetch(`${API_URL}/users/${user.id}/achievements`)
+      .then(res => res.json())
+      .then(data => {
+        const unlocked = new Set(['snake.png']);
+        data.forEach(a => {
+          if(a.status === 2 && (a.rewardType === 1 || (typeof a.rewardType === 'string' && a.rewardType.toUpperCase() === 'AVATAR')) && a.rewardLabel){
+            const filename = ACHIEVEMENT_AVATAR_MAP[a.rewardLabel] || a.rewardLabel;
+            unlocked.add(filename);
+          }
+        });
+        setUnlockedAvatars(unlocked);
+      })
+      .catch(err=>console.error('achievements load error',err));
+  },[user.id]);
+
   const handleLogout = async () => {
     try {
       await fetch(`${API_URL}/api/auth/logout`, {
@@ -265,7 +299,7 @@ function Profile() {
 
               {usernameAvailable !== null && (
                 <span className={`availability-indicator ${usernameAvailable ? 'available' : 'taken'}`}>
-                  {usernameAvailable ? '✅ Available' : '❌ Taken'}
+                  {usernameAvailable ? ' ' : ' '}
                 </span>
               )}
 
@@ -305,15 +339,20 @@ function Profile() {
           <h4>{t('profile_choose_avatar')}</h4>
           <p>{t('profile_choose_prompt')}</p>
           <div className="avatar-grid">
-            {avatars.map((avatarSrc, index) => (
-              <img
-                key={index}
-                src={avatarSrc}
-                alt={`Awatar ${index + 1}`}
-                className={selectedAvatar === avatarSrc ? 'avatar-option active' : 'avatar-option'}
-                onClick={() => { playClickSound(); handleAvatarSelect(avatarSrc); }}
-              />
-            ))}
+            {avatars.map((avatarSrc, index) => {
+              const filename = getAvatarFilename(avatarSrc);
+              const locked = !unlockedAvatars.has(filename);
+              return (
+                <img
+                  key={index}
+                  src={avatarSrc}
+                  alt={`Awatar ${index + 1}`}
+                  className={(selectedAvatar === avatarSrc ? 'avatar-option active' : 'avatar-option') + (locked ? ' locked' : '')}
+                  onClick={() => { playClickSound(); handleAvatarSelect(avatarSrc); }}
+                  style={locked ? {filter:'grayscale(100%)', cursor:'not-allowed'} : {}}
+                />
+              );
+            })}
           </div>
           <button
             className="save-avatar-button"

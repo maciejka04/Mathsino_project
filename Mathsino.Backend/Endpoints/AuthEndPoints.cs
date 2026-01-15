@@ -70,6 +70,10 @@ public static class AuthEndPoints
                         if (int.TryParse(userIdString, out var userIdInt))
                         {
                             var user = await db.Users.FindAsync(userIdInt);
+                            if (user == null)
+                            {
+                                return Results.NotFound(new { message = "User not found." });
+                            }
                             var userName = context.User.FindFirst(ClaimTypes.Name)?.Value;
                             var email = context.User.FindFirst(ClaimTypes.Email)?.Value;
 
