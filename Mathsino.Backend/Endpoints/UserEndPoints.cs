@@ -293,9 +293,9 @@ public static class UserEndPoints
             // Pobranie statystyk do weryfikacji
             var stats = await usersService.GetUserStatsByIdAsync(id);
 
-            // [DEBUG] Wypisujemy w konsoli stan faktyczny (BEZ FRIENDS COUNT)
+            // [DEBUG] Wypisujemy w konsoli stan faktyczny
             Console.WriteLine($"[CLAIM DEBUG] User: {user.UserName}, AchivID: {achievementId}");
-            Console.WriteLine($"[CLAIM DEBUG] Stats: TotalGames={stats.TotalGames}, Balance={user.Balance}, Streak={stats.DaysStreak}");
+            Console.WriteLine($"[CLAIM DEBUG] Stats: TotalGames={stats.TotalGames}, PeakBalance={stats.PeakBalance}, Streak={stats.DaysStreak}");
             Console.WriteLine($"[CLAIM DEBUG] User Fields: Spins={user.SpinWheelCount}, DoubleWins={user.DoubleDownWins}, Lessons={user.LessonsCompleted}");
 
             // LOGIKA WERYFIKACJI (musi się zgadzać z achievementsConfig.js)
@@ -304,49 +304,76 @@ public static class UserEndPoints
 
             switch (achievementId)
             {
-                case 1: // First Steps (1 game)
-                    conditionMet = stats.TotalGames >= 1;
-                    rewardValue = 100;
+                // --- GAMES ---
+                case 1: // 10 games
+                    conditionMet = stats.TotalGames >= 10;
+                    rewardValue = 50;
                     break;
-                case 2: // Regular Player (50 games)
-                    conditionMet = stats.TotalGames >= 50;
-                    rewardValue = 1000;
-                    break;
-                case 3: // High Roller (Balance 5000)
-                    conditionMet = user.Balance >= 2000; 
-                    rewardValue = 2000;
-                    break;
-                case 4: // Streak Master (Login 3 days)
-                    conditionMet = stats.DaysStreak >= 3;
-                    rewardValue = 500;
-                    break;
-                case 5: // Blackjack King (10 Blackjacks)
-                    conditionMet = stats.BlackJacks >= 10;
-                    rewardValue = 1500;
-                    break;
-                case 6: // Spin Enthusiast (5 spins)
-                    conditionMet = user.SpinWheelCount >= 5;
+                case 2: // 100 games
+                    conditionMet = stats.TotalGames >= 100;
                     rewardValue = 300;
                     break;
-                case 7: // Social Butterfly (3 friends)
-                    // conditionMet = stats.FriendsCount >= 3; // TYMCZASOWO WYŁĄCZONE
-                    conditionMet = false; 
-                    rewardValue = 500;
+                case 3: // 1000 games
+                    conditionMet = stats.TotalGames >= 1000;
+                    rewardValue = 1500;
                     break;
-                case 8: // Double Trouble (5 Double Down wins)
-                    conditionMet = user.DoubleDownWins >= 5;
+                case 4: // 10000 games
+                    conditionMet = stats.TotalGames >= 10000;
+                    rewardValue = 5000;
+                    break;
+
+                // --- PEAK BALANCE (Zmieniono na PeakBalance) ---
+                case 5: // 3000 balance
+                    conditionMet = stats.PeakBalance >= 3000; 
+                    rewardValue = 200;
+                    break;
+                case 6: // 10000 balance
+                    conditionMet = stats.PeakBalance >= 10000; 
                     rewardValue = 1000;
                     break;
-                case 9: // Scholar (5 lessons)
-                    conditionMet = user.LessonsCompleted >= 5;
-                    rewardValue = 800;
+                case 7: // 25000 balance
+                    conditionMet = stats.PeakBalance >= 25000; 
+                    rewardValue = 2500;
                     break;
-                case 10: // Grand Master (100 games)
-                    conditionMet = stats.TotalGames >= 100;
-                    rewardValue = 5000; 
+                case 8: // 100000 balance
+                    conditionMet = stats.PeakBalance >= 100000; 
+                    rewardValue = 10000;
                     break;
+
+                // --- LESSONS ---
+                case 9: // 1 lesson
+                    conditionMet = user.LessonsCompleted >= 1;
+                    rewardValue = 100;
+                    break;
+                case 10: // 5 lessons
+                    conditionMet = user.LessonsCompleted >= 10;
+                    rewardValue = 1000;
+                    break;
+
+                // --- SPIN WHEEL ---
+                case 11: // 1 spin
+                    conditionMet = user.SpinWheelCount >= 1;
+                    rewardValue = 50;
+                    break;
+                case 12: // 10 spins
+                    conditionMet = user.SpinWheelCount >= 10;
+                    rewardValue = 500;
+                    break;
+
+                // --- STREAK ---
+                case 13: // 5 days
+                    conditionMet = stats.DaysStreak >= 5;
+                    rewardValue = 500;
+                    break;
+
+                // --- NEW: DOUBLE DOWN (ID 14) ---
+                case 14: // 5 Double Down wins
+                    conditionMet = user.DoubleDownWins >= 5; // Sprawdzamy pole w User (lub stats.DoubleDownWins)
+                    rewardValue = 1000;
+                    break;
+
                 default:
-                    return Results.BadRequest(new { message = "Nieznane ID osiągnięcia." });
+                    return Results.BadRequest(new { message = "Unknown Achievement ID." });
             }
 
             if (!conditionMet)

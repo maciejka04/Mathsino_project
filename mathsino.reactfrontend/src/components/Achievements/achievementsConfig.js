@@ -1,176 +1,167 @@
-// src/components/Achievements/achievementsConfig.js
-
-// Tutaj w przyszłości podmienisz 'path_to_image' na importy prawdziwych awatarów
-import avatarDefault from '../../assets/parrot-teacher.png'; 
-// import avatarVip from '../../assets/avatars/vip.png'; // Przykład
-
 export const achievementsConfig = [
+    // --- GAMES (1-4) ---
     {
         id: 1,
-        title: "The Journey Begins",
-        description: "Complete Lesson 1, Win 1 game, Play 5 games, Spin the wheel once.",
-        targetValue: 1, // To jest złożone, w logice potraktujemy to jako boolean (czy odblokowane)
-        rewardType: "AVATAR",
-        rewardValue: "avatar_student", // ID awatara w bazie
-        rewardLabel: "Student Avatar",
-        icon: "fa-solid fa-graduation-cap"
+        title: "Warm Up",
+        description: "Play 10 games of Blackjack.",
+        icon: "fa-solid fa-play",
+        targetValue: 10,
+        statKey: "totalGames",
+        rewardType: "CASH",
+        rewardValue: 50,
+        rewardLabel: "50 PLN"
     },
     {
         id: 2,
-        title: "Master of Strategy",
-        description: "Complete all lessons.",
-        targetValue: 10, // Zakładamy 10 lekcji
-        statKey: "lessonsCompleted", // Klucz w obiekcie user (do zrobienia w backendzie)
+        title: "Regular",
+        description: "Play 100 games.",
+        icon: "fa-solid fa-layer-group",
+        targetValue: 100,
+        statKey: "totalGames",
         rewardType: "CASH",
-        rewardValue: 1000,
-        icon: "fa-solid fa-brain"
+        rewardValue: 300,
+        rewardLabel: "300 PLN"
     },
     {
         id: 3,
-        title: "In the Green",
-        description: "Reach a balance of 3,000 PLN.",
-        targetValue: 3000,
-        statKey: "maxBalance", // Najwyższe saldo kiedykolwiek
+        title: "Table Veteran",
+        description: "Play 1000 games.",
+        icon: "fa-solid fa-chess-king",
+        targetValue: 1000,
+        statKey: "totalGames",
         rewardType: "CASH",
-        rewardValue: 500,
-        icon: "fa-solid fa-money-bill-wave"
+        rewardValue: 1500,
+        rewardLabel: "1500 PLN"
     },
     {
         id: 4,
-        title: "Stacking Chips",
-        description: "Reach a balance of 7,000 PLN.",
-        targetValue: 7000,
-        statKey: "maxBalance",
+        title: "Casino Legend",
+        description: "Play 10,000 games.",
+        icon: "fa-solid fa-crown",
+        targetValue: 10000,
+        statKey: "totalGames",
         rewardType: "CASH",
-        rewardValue: 1000,
-        icon: "fa-solid fa-layer-group"
+        rewardValue: 5000,
+        rewardLabel: "5000 PLN"
     },
+
+    // --- PEAK BALANCE (5-8) ---
     {
         id: 5,
-        title: "High Roller",
-        description: "Reach a balance of 10,000 PLN.",
-        targetValue: 10000,
-        statKey: "maxBalance",
-        rewardType: "AVATAR",
-        rewardValue: "avatar_vip",
-        rewardLabel: "VIP Avatar",
-        icon: "fa-solid fa-crown"
+        title: "First Savings",
+        description: "Reach a peak balance of 3,000 PLN.",
+        icon: "fa-solid fa-wallet",
+        targetValue: 3000,
+        statKey: "peakBalance",
+        rewardType: "CASH",
+        rewardValue: 200,
+        rewardLabel: "200 PLN"
     },
     {
         id: 6,
-        title: "Casino Whale",
-        description: "Reach a balance of 20,000 PLN.",
-        targetValue: 20000,
-        statKey: "maxBalance",
-        rewardType: "AVATAR",
-        rewardValue: "avatar_rich",
-        rewardLabel: "Rich Avatar",
-        icon: "fa-solid fa-gem"
+        title: "Investor",
+        description: "Reach a peak balance of 10,000 PLN.",
+        icon: "fa-solid fa-briefcase",
+        targetValue: 10000,
+        statKey: "peakBalance",
+        rewardType: "CASH",
+        rewardValue: 1000,
+        rewardLabel: "1000 PLN"
     },
     {
         id: 7,
-        title: "The King",
-        description: "Reach a balance of 100,000 PLN.",
-        targetValue: 100000,
-        statKey: "maxBalance",
-        rewardType: "AVATAR",
-        rewardValue: "avatar_king",
-        rewardLabel: "King Avatar",
-        icon: "fa-solid fa-chess-king"
+        title: "Tycoon",
+        description: "Reach a peak balance of 25,000 PLN.",
+        icon: "fa-solid fa-money-bill-wave",
+        targetValue: 25000,
+        statKey: "peakBalance",
+        rewardType: "CASH",
+        rewardValue: 2500,
+        rewardLabel: "2500 PLN"
     },
     {
         id: 8,
-        title: "Daily Regular",
-        description: "Play 10 days in a row.",
-        targetValue: 10,
-        statKey: "loginStreak",
+        title: "Millionaire (Almost)",
+        description: "Reach a peak balance of 100,000 PLN.",
+        icon: "fa-solid fa-vault",
+        targetValue: 100000,
+        statKey: "peakBalance",
         rewardType: "CASH",
-        rewardValue: 2000,
-        icon: "fa-solid fa-calendar-check"
+        rewardValue: 10000,
+        rewardLabel: "10 000 PLN"
     },
+
+    // --- LESSONS (9-10) ---
     {
         id: 9,
-        title: "Fortune Seeker",
-        description: "Spin the Lucky Wheel 25 times.",
-        targetValue: 25,
-        statKey: "spinWheelCount",
-        rewardType: "AVATAR",
-        rewardValue: "avatar_crazy",
-        rewardLabel: "Crazy Avatar",
-        icon: "fa-solid fa-arrows-spin"
+        title: "Diligent Student",
+        description: "Complete at least one lesson.",
+        icon: "fa-solid fa-book-open",
+        targetValue: 1,
+        statKey: "lessonsCompleted",
+        rewardType: "CASH",
+        rewardValue: 100,
+        rewardLabel: "100 PLN"
     },
     {
         id: 10,
-        title: "Friendly Face",
-        description: "Add 3 friends.",
-        targetValue: 3,
-        statKey: "friendsCount",
+        title: "Strategy Master",
+        description: "Complete all lessons (5).",
+        icon: "fa-solid fa-graduation-cap",
+        targetValue: 10,
+        statKey: "lessonsCompleted",
         rewardType: "CASH",
-        rewardValue: 500,
-        icon: "fa-solid fa-user-group"
+        rewardValue: 1000,
+        rewardLabel: "1000 PLN"
     },
+
+    // --- SPIN WHEEL (11-12) ---
     {
         id: 11,
-        title: "Card Veteran",
-        description: "Play 100 hands.",
-        targetValue: 100,
-        statKey: "gamesPlayed",
-        rewardType: "AVATAR",
-        rewardValue: "avatar_veteran",
-        rewardLabel: "Veteran Avatar",
-        icon: "fa-solid fa-id-card"
+        title: "Lucky Spin",
+        description: "Spin the wheel once.",
+        icon: "fa-solid fa-dharmachakra",
+        targetValue: 1,
+        statKey: "spinWheelCount",
+        rewardType: "CASH",
+        rewardValue: 50,
+        rewardLabel: "50 PLN"
     },
     {
         id: 12,
-        title: "Table Regular",
-        description: "Play 1,000 hands.",
-        targetValue: 1000,
-        statKey: "gamesPlayed",
+        title: "Gambler",
+        description: "Spin the wheel 10 times.",
+        icon: "fa-solid fa-arrows-spin",
+        targetValue: 10,
+        statKey: "spinWheelCount",
         rewardType: "CASH",
-        rewardValue: 5000,
-        icon: "fa-solid fa-chair"
+        rewardValue: 500,
+        rewardLabel: "500 PLN"
     },
+
+    // --- STREAK (13) ---
     {
         id: 13,
-        title: "Living Legend",
-        description: "Play 10,000 hands.",
-        targetValue: 10000,
-        statKey: "gamesPlayed",
-        rewardType: "AVATAR",
-        rewardValue: "avatar_cyborg",
-        rewardLabel: "Cyborg Avatar",
-        icon: "fa-solid fa-robot"
+        title: "Loyal Player",
+        description: "Login 5 days in a row.",
+        icon: "fa-solid fa-fire",
+        targetValue: 5,
+        statKey: "loginStreak",
+        rewardType: "CASH",
+        rewardValue: 500,
+        rewardLabel: "500 PLN"
     },
+
+    // --- SPECIAL (14) - NOWY ---
     {
         id: 14,
-        title: "Natural 21",
-        description: "Hit a Blackjack.",
-        targetValue: 1,
-        statKey: "blackjacksCount",
-        rewardType: "CASH",
-        rewardValue: 200,
-        icon: "fa-solid fa-bolt"
-    },
-    {
-        id: 15,
-        title: "Blackjack Pro",
-        description: "Hit Blackjack 10 times.",
-        targetValue: 10,
-        statKey: "blackjacksCount",
-        rewardType: "AVATAR",
-        rewardValue: "avatar_ace",
-        rewardLabel: "Ace Avatar",
-        icon: "fa-solid fa-trophy"
-    },
-    {
-        id: 16,
-        title: "Double Trouble",
-        description: "Win 5 hands after a Double Down.",
+        title: "Risk Taker",
+        description: "Win 5 games after doubling down.",
+        icon: "fa-solid fa-angles-up",
         targetValue: 5,
         statKey: "doubleDownWins",
-        rewardType: "AVATAR",
-        rewardValue: "avatar_risk",
-        rewardLabel: "Risk Avatar",
-        icon: "fa-solid fa-percent"
+        rewardType: "CASH",
+        rewardValue: 1000,
+        rewardLabel: "1000 PLN"
     }
 ];

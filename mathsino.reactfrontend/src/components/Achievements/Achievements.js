@@ -24,7 +24,7 @@ function Achievements() {
                 const response = await fetch(`${API_URL}/users/${user.id}/stats`);
                 if(response.ok) {
                     const data = await response.json();
-                    console.log("Stats received from backend:", data); // <--- DEBUG: Zobacz w konsoli F12 co tu jest!
+                    console.log("Stats from Backend:", data); 
                     setStats(data);
                 }
             } catch (error) {
@@ -55,33 +55,54 @@ function Achievements() {
         }
     };
 
-    // Bezpieczna funkcja pobierania wartości (ignoruje wielkość liter)
     const getStatValue = (key) => {
         if (!stats) return 0;
-        // Sprawdź wprost
+        // 1. Dokładna nazwa
         if (stats[key] !== undefined) return stats[key];
-        // Sprawdź z dużej litery (np. key='totalGames', szukamy 'TotalGames')
+        // 2. PascalCase
         const upperKey = key.charAt(0).toUpperCase() + key.slice(1);
         if (stats[upperKey] !== undefined) return stats[upperKey];
-        // Sprawdź z małej litery
+        // 3. camelCase
         const lowerKey = key.charAt(0).toLowerCase() + key.slice(1);
         if (stats[lowerKey] !== undefined) return stats[lowerKey];
-        
+
         return 0;
     };
 
     const getProgress = (ach) => {
         let current = 0;
+        if (!user || !stats) return 0;
 
-        if (ach.statKey === 'maxBalance') current = user?.balance || 0;
-        else if (ach.statKey === 'friendsCount') current = getStatValue('friendsCount'); 
-        else if (ach.statKey === 'spinWheelCount') current = getStatValue('spinWheelCount');
-        // Tu używamy naszej bezpiecznej funkcji, bo backend może zwracać TotalGames lub totalGames
-        else if (ach.statKey === 'gamesPlayed') current = getStatValue('totalGames');
-        else if (ach.statKey === 'loginStreak') current = getStatValue('daysStreak');
-        else if (ach.statKey === 'blackjacksCount') current = getStatValue('blackJacks'); // Uwaga: Backend ma 'BlackJacks' w DTO
-        else if (ach.statKey === 'lessonsCompleted') current = getStatValue('lessonsCompleted');
-        else if (ach.statKey === 'doubleDownWins') current = getStatValue('doubleDownWins');
+        switch (ach.statKey) {
+            case 'totalGames':
+                current = getStatValue('totalGames'); 
+                break;
+            
+            case 'peakBalance':
+                // Teraz pobieramy historyczny rekord ze statystyk!
+                current = getStatValue('peakBalance'); 
+                break;
+
+            case 'lessonsCompleted':
+                current = getStatValue('lessonsCompleted');
+                break;
+
+            case 'spinWheelCount':
+                current = getStatValue('spinWheelCount');
+                break;
+
+            case 'loginStreak':
+                current = getStatValue('daysStreak');
+                break;
+
+            // --- NOWY ---
+            case 'doubleDownWins':
+                current = getStatValue('doubleDownWins');
+                break;
+
+            default:
+                current = 0;
+        }
         
         return current;
     };
@@ -95,14 +116,11 @@ function Achievements() {
 
             if (response.ok) {
                 const data = await response.json();
-                // Dodajemy ID do lokalnej listy, żeby przycisk zniknął od razu
                 setUserAchievements((prev) => [...prev, achievementId]);
                 if (refreshUser) refreshUser();
-                // Opcjonalnie: alert("Nagroda odebrana!");
             } else {
                 const err = await response.json();
-                console.error("Backend error:", err);
-                alert(err.message || "Błąd odbierania nagrody. Sprawdź konsolę.");
+                alert(err.message || "Something went wrong.");
             }
         } catch (error) {
             console.error("Claim error:", error);
@@ -140,13 +158,12 @@ function Achievements() {
                                 <p>{ach.description}</p>
                             </div>
 
-                            {/* TEN ELEMENT MA SZTYWNĄ WYSOKOŚĆ W CSS, WIĘC NIE SKACZE */}
                             <div className="achievement-actions">
                                 {isClaimed ? (
-                                    <div className="claimed-badge">Odebrano</div>
+                                    <div className="claimed-badge">Collected</div>
                                 ) : isConditionMet ? (
                                     <button className="claim-button" onClick={() => handleClaim(ach.id)}>
-                                        Odbierz nagrodę!
+                                        Claim Reward!
                                     </button>
                                 ) : (
                                     <>
