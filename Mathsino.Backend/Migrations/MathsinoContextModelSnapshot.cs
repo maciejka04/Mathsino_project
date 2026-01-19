@@ -121,6 +121,10 @@ namespace Mathsino.Backend.Migrations
                     b.Property<int>("Balance")
                         .HasColumnType("integer");
 
+                    b.Property<string>("ClaimedAchievements")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("DoubleDownWins")
                         .HasColumnType("integer");
 
@@ -187,6 +191,7 @@ namespace Mathsino.Backend.Migrations
                             Id = 1,
                             AvatarPath = "snake.png",
                             Balance = 5000,
+                            ClaimedAchievements = "",
                             DoubleDownWins = 0,
                             Email = "alice.smith@example.com",
                             FirstName = "Alice",
@@ -207,6 +212,7 @@ namespace Mathsino.Backend.Migrations
                             Id = 2,
                             AvatarPath = "mouse.png",
                             Balance = 3000,
+                            ClaimedAchievements = "",
                             DoubleDownWins = 0,
                             Email = "bob.johnson@example.com",
                             FirstName = "Bob",

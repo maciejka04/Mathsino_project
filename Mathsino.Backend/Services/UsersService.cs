@@ -78,15 +78,23 @@ public class UsersService(ILogger<UsersService>? logger, MathsinoContext dbConte
     {
         logger?.LogInformation("Calculating stats for user {UserId}", userId);
 
-        var allGames = await dbContext.SingleGames.Where(sg => sg.UserId == userId).ToListAsync();
+        // 1. Pobieramy usera (dla liczników achievementów zapisanych w bazie)
+        var user = await dbContext.Users.FindAsync(userId);
+        if (user == null) throw new KeyNotFoundException($"User {userId} not found");
 
+        // 2. Pobieramy gry
+        var allGames = await dbContext.SingleGames.Where(sg => sg.UserId == userId).ToListAsync();
         var realGames = allGames.Where(g => g.SingleGameResult != GameResult.Snapshot).ToList();
 
-        int peakBalance = 5000;
+        // 3. Obliczamy Peak Balance
+        int peakBalance = user.Balance; // startujemy od obecnego
         if (allGames.Any())
         {
-            peakBalance = allGames.Max(g => g.BalanceAfterGame);
+            int maxHist = allGames.Max(g => g.BalanceAfterGame);
+            if(maxHist > peakBalance) peakBalance = maxHist;
         }
+
+        // 4. Obliczamy Streak
         var daysStreak = 0;
         var datesWithGames = new List<DateTime>();
         if (allGames.Count > 0)
@@ -99,16 +107,21 @@ public class UsersService(ILogger<UsersService>? logger, MathsinoContext dbConte
 
             foreach (var day in datesWithGames)
             {
-                if (day == DateTime.UtcNow.Date.AddDays(-daysStreak))
+                if (day == DateTime.UtcNow.Date.AddDays(-daysStreak) || day == DateTime.UtcNow.Date.AddDays(-(daysStreak + 1)))
                 {
                     daysStreak++;
                 }
-                else
+                else if (day < DateTime.UtcNow.Date.AddDays(-(daysStreak + 1)))
                 {
                     break;
                 }
             }
         }
+
+        // 5. Liczymy znajomych (przywrócone dla Achievementu Social Butterfly)
+        var friendsCount = await dbContext.UserFriends.CountAsync(f => 
+            (f.UserId == userId || f.FriendId == userId) && f.Status == FriendStatus.Accepted
+        );
 
         return new UserStatsDto
         {
@@ -132,6 +145,12 @@ public class UsersService(ILogger<UsersService>? logger, MathsinoContext dbConte
             BlackJacks = realGames.Count(g => g.SingleGameResult == GameResult.Blackjack),
             PeakBalance = peakBalance,
             DaysStreak = daysStreak,
+
+            // --- NOWE POLA WYMAGANE PRZEZ FRONTEND ---
+            SpinWheelCount = user.SpinWheelCount,
+            DoubleDownWins = user.DoubleDownWins,
+            LessonsCompleted = user.LessonsCompleted,
+            FriendsCount = friendsCount
         };
     }
 
@@ -232,14 +251,12 @@ public class UsersService(ILogger<UsersService>? logger, MathsinoContext dbConte
 
         foreach (var u in users)
         {
-            // Filtrujemy gry tylko z danego okresu
             var peak =
                 await dbContext
                     .SingleGames.Where(sg => sg.UserId == u.Id && sg.StartTime >= startDate)
                     .Select(sg => (int?)sg.BalanceAfterGame)
-                    .MaxAsync() ?? 0; // Jeśli nie grał w tym tygodniu, dajemy 0
+                    .MaxAsync() ?? 0;
 
-            // Dodajemy do rankingu tylko osoby, które zagrały chociaż raz w tym okresie
             if (peak > 0)
             {
                 ranking.Add(new UserRankingDto(u.Id, u.UserName, u.AvatarPath, peak));
@@ -250,6 +267,7 @@ public class UsersService(ILogger<UsersService>? logger, MathsinoContext dbConte
     }
 }
 
+// Zaktualizowane DTO na dole pliku (Zawiera teraz brakujące pola!)
 public record UserStatsDto
 {
     public int TotalGames { get; init; }
@@ -258,10 +276,14 @@ public record UserStatsDto
     public int TotalPushes { get; init; }
     public double WinRate { get; init; }
     public int BlackJacks { get; init; } = 0;
-
     public int PeakBalance { get; init; } = 5000;
-
     public int DaysStreak { get; init; } = 0;
+    
+    // Pola niezbędne do Achievementów:
+    public int SpinWheelCount { get; init; } = 0;
+    public int DoubleDownWins { get; init; } = 0;
+    public int LessonsCompleted { get; init; } = 0;
+    public int FriendsCount { get; init; } = 0;
 }
 
 public record UserRankingDto(int Id, string UserName, string AvatarPath, int PeakBalance);

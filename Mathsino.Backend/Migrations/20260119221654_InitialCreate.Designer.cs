@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mathsino.Backend.Migrations
 {
     [DbContext(typeof(MathsinoContext))]
-    [Migration("20260115075000_migracja7378429kkll")]
-    partial class migracja7378429kkll
+    [Migration("20260119221654_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -124,6 +124,10 @@ namespace Mathsino.Backend.Migrations
                     b.Property<int>("Balance")
                         .HasColumnType("integer");
 
+                    b.Property<string>("ClaimedAchievements")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("DoubleDownWins")
                         .HasColumnType("integer");
 
@@ -190,6 +194,7 @@ namespace Mathsino.Backend.Migrations
                             Id = 1,
                             AvatarPath = "snake.png",
                             Balance = 5000,
+                            ClaimedAchievements = "",
                             DoubleDownWins = 0,
                             Email = "alice.smith@example.com",
                             FirstName = "Alice",
@@ -210,6 +215,7 @@ namespace Mathsino.Backend.Migrations
                             Id = 2,
                             AvatarPath = "mouse.png",
                             Balance = 3000,
+                            ClaimedAchievements = "",
                             DoubleDownWins = 0,
                             Email = "bob.johnson@example.com",
                             FirstName = "Bob",

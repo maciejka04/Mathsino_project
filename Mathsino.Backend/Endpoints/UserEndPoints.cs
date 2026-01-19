@@ -2,6 +2,8 @@ using Mathsino.Backend.Interfaces;
 using Mathsino.Backend.Models;
 using Mathsino.Backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore; // Ważne dla FindAsync
+using System.Text.Json;
 
 public record UserLanguageDto(string Language);
 
@@ -13,6 +15,8 @@ public static class UserEndPoints
 {
     public static void MapUserEndPoints(this WebApplication app)
     {
+        // --- ISTNIEJĄCE ENDPOINTY ---
+
         app.MapGet(
             "/users",
             async (IUsersService usersService) =>
@@ -140,7 +144,7 @@ public static class UserEndPoints
         );
 
         app.MapPut(
-            "/users/{id}/progress/{completedLessons}", 
+            "/users/{id}/progress/{completedLessons}",
             async (int id, int completedLessons, MathsinoContext db) =>
             {
                 var user = await db.Users.FindAsync(id);
@@ -251,5 +255,120 @@ public static class UserEndPoints
                 return Results.Ok(ranking);
             }
         );
+
+        // --- NOWE ENDPOINTY DLA OSIĄGNIĘĆ ---
+
+        // 1. Pobierz listę odebranych osiągnięć
+        app.MapGet("/users/{id}/achievements", async (int id, MathsinoContext db) =>
+        {
+            var user = await db.Users.FindAsync(id);
+            if (user == null) return Results.NotFound();
+
+            if (string.IsNullOrEmpty(user.ClaimedAchievements))
+                return Results.Ok(new List<int>());
+
+            var ids = user.ClaimedAchievements
+                          .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                          .Select(int.Parse)
+                          .ToList();
+            return Results.Ok(ids);
+        });
+
+        // 2. Odbierz nagrodę (z weryfikacją warunków)
+        app.MapPost("/users/{id}/achievements/claim", async (int id, int achievementId, MathsinoContext db, IUsersService usersService) =>
+        {
+            var user = await db.Users.FindAsync(id);
+            if (user == null) return Results.NotFound();
+
+            // Parsowanie listy odebranych
+            var claimedIds = string.IsNullOrEmpty(user.ClaimedAchievements)
+                ? new List<int>()
+                : user.ClaimedAchievements.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+
+            if (claimedIds.Contains(achievementId))
+            {
+                return Results.BadRequest(new { message = "Już odebrano tę nagrodę." });
+            }
+
+            // Pobranie statystyk do weryfikacji
+            var stats = await usersService.GetUserStatsByIdAsync(id);
+
+            // [DEBUG] Wypisujemy w konsoli stan faktyczny (BEZ FRIENDS COUNT)
+            Console.WriteLine($"[CLAIM DEBUG] User: {user.UserName}, AchivID: {achievementId}");
+            Console.WriteLine($"[CLAIM DEBUG] Stats: TotalGames={stats.TotalGames}, Balance={user.Balance}, Streak={stats.DaysStreak}");
+            Console.WriteLine($"[CLAIM DEBUG] User Fields: Spins={user.SpinWheelCount}, DoubleWins={user.DoubleDownWins}, Lessons={user.LessonsCompleted}");
+
+            // LOGIKA WERYFIKACJI (musi się zgadzać z achievementsConfig.js)
+            bool conditionMet = false;
+            int rewardValue = 0;
+
+            switch (achievementId)
+            {
+                case 1: // First Steps (1 game)
+                    conditionMet = stats.TotalGames >= 1;
+                    rewardValue = 100;
+                    break;
+                case 2: // Regular Player (50 games)
+                    conditionMet = stats.TotalGames >= 50;
+                    rewardValue = 1000;
+                    break;
+                case 3: // High Roller (Balance 5000)
+                    conditionMet = user.Balance >= 2000; 
+                    rewardValue = 2000;
+                    break;
+                case 4: // Streak Master (Login 3 days)
+                    conditionMet = stats.DaysStreak >= 3;
+                    rewardValue = 500;
+                    break;
+                case 5: // Blackjack King (10 Blackjacks)
+                    conditionMet = stats.BlackJacks >= 10;
+                    rewardValue = 1500;
+                    break;
+                case 6: // Spin Enthusiast (5 spins)
+                    conditionMet = user.SpinWheelCount >= 5;
+                    rewardValue = 300;
+                    break;
+                case 7: // Social Butterfly (3 friends)
+                    // conditionMet = stats.FriendsCount >= 3; // TYMCZASOWO WYŁĄCZONE
+                    conditionMet = false; 
+                    rewardValue = 500;
+                    break;
+                case 8: // Double Trouble (5 Double Down wins)
+                    conditionMet = user.DoubleDownWins >= 5;
+                    rewardValue = 1000;
+                    break;
+                case 9: // Scholar (5 lessons)
+                    conditionMet = user.LessonsCompleted >= 5;
+                    rewardValue = 800;
+                    break;
+                case 10: // Grand Master (100 games)
+                    conditionMet = stats.TotalGames >= 100;
+                    rewardValue = 5000; 
+                    break;
+                default:
+                    return Results.BadRequest(new { message = "Nieznane ID osiągnięcia." });
+            }
+
+            if (!conditionMet)
+            {
+                return Results.BadRequest(new { message = "Nie spełniono warunków do odebrania nagrody (Sprawdź konsolę serwera)." });
+            }
+
+            // Przyznanie nagrody
+            user.Balance += rewardValue;
+            
+            // Zapisanie faktu odebrania
+            claimedIds.Add(achievementId);
+            user.ClaimedAchievements = string.Join(",", claimedIds);
+
+            await db.SaveChangesAsync();
+
+            return Results.Ok(new
+            {
+                message = "Nagroda odebrana!",
+                newBalance = user.Balance,
+                claimedId = achievementId
+            });
+        });
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Mathsino.Backend.Endpoints;
 
@@ -24,7 +25,7 @@ public static class AuthEndPoints
                             ?? throw new InvalidOperationException(
                                 "LogInRedirectUri is not configured."
                             ),
-                    }, // Przekierowanie do root po sukcesie
+                    },
                     authenticationSchemes: new[] { GoogleDefaults.AuthenticationScheme }
                 );
             }
@@ -43,7 +44,7 @@ public static class AuthEndPoints
                             ?? throw new InvalidOperationException(
                                 "LogInRedirectUri is not configured."
                             ),
-                    }, // Przekierowanie do root po sukcesie
+                    },
                     authenticationSchemes: new[] { FacebookDefaults.AuthenticationScheme }
                 );
             }
@@ -55,51 +56,64 @@ public static class AuthEndPoints
             async (HttpContext context) =>
             {
                 await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                context.Response.StatusCode = 200;
+                return Results.Ok(new { message = "Wylogowano pomyślnie" });
             }
         );
 
-        // Endpoint testowy statusu/profilu
+        // Endpoint testowy statusu/profilu (ZABEZPIECZONY PRZED CRASHEM)
         app.MapGet(
                 "/api/auth/profile",
                 async (HttpContext context, MathsinoContext db) =>
                 {
-                    if (context.User.Identity?.IsAuthenticated == true)
+                    // 1. Sprawdzenie czy user jest w ogóle zalogowany w kontekście HTTP
+                    if (context.User?.Identity?.IsAuthenticated != true)
                     {
-                        var userIdString = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                        if (int.TryParse(userIdString, out var userIdInt))
-                        {
-                            var user = await db.Users.FindAsync(userIdInt);
-                            var userName = context.User.FindFirst(ClaimTypes.Name)?.Value;
-                            var email = context.User.FindFirst(ClaimTypes.Email)?.Value;
-
-                            return Results.Ok(
-                                new
-                                {
-                                    IsAuthenticated = true,
-                                    UserId = userIdString,
-                                    UserName = userName,
-                                    Email = email,
-                                    AvatarPath = user.AvatarPath,
-                                    Balance = user.Balance,
-                                    UserNameTag = user.UserName,
-                                    LastSpinTime = user.LastSpinTime,
-                                    LessonsCompleted = user.LessonsCompleted,
-                                    Message = "Zalogowano pomyślnie!",
-                                }
-                            );
-                        }
+                        return Results.Unauthorized();
                     }
+
+                    // 2. Bezpieczne pobranie ID
+                    var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier);
+                    if (userIdClaim == null || string.IsNullOrEmpty(userIdClaim.Value))
+                    {
+                        return Results.Unauthorized();
+                    }
+
+                    if (int.TryParse(userIdClaim.Value, out var userIdInt))
+                    {
+                        var user = await db.Users.FindAsync(userIdInt);
+                        if (user == null) return Results.Unauthorized();
+
+                        var userName = context.User.FindFirst(ClaimTypes.Name)?.Value ?? user.UserName;
+                        var email = context.User.FindFirst(ClaimTypes.Email)?.Value ?? user.Email;
+
+                        return Results.Ok(
+                            new
+                            {
+                                IsAuthenticated = true,
+                                UserId = userIdClaim.Value,
+                                UserName = userName,
+                                Email = email,
+                                AvatarPath = user.AvatarPath,
+                                Balance = user.Balance,
+                                UserNameTag = user.UserName,
+                                LastSpinTime = user.LastSpinTime,
+                                LessonsCompleted = user.LessonsCompleted,
+                                Message = "Zalogowano pomyślnie!",
+                            }
+                        );
+                    }
+                    
                     return Results.Unauthorized();
                 }
             )
             .RequireAuthorization();
 
+        // Endpoint do aktualizacji awatara
         app.MapPut(
                 "/api/user/avatar",
                 async (HttpContext context, UpdateAvatarRequest request, MathsinoContext db) =>
                 {
-                    if (context.User.Identity?.IsAuthenticated == true)
+                    if (context.User?.Identity?.IsAuthenticated == true)
                     {
                         var userIdString = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                         if (int.TryParse(userIdString, out var userId))
@@ -121,5 +135,21 @@ public static class AuthEndPoints
                 }
             )
             .RequireAuthorization();
+            
+        // Prosty endpoint do sprawdzania stanu (często używany przez frontend)
+        app.MapGet("/auth/user", (HttpContext context) => 
+        {
+             if (context.User?.Identity?.IsAuthenticated == true)
+             {
+                 return Results.Ok(new { 
+                     isAuthenticated = true,
+                     userName = context.User.Identity.Name,
+                     userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                 });
+             }
+             return Results.Unauthorized();
+        });
     }
 }
+
+public record UpdateAvatarRequest(string AvatarPath);

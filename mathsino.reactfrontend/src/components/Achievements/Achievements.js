@@ -9,23 +9,22 @@ import audioService from '../../services/audioService';
 const API_URL = "http://localhost:5126";
 
 function Achievements() {
-    const { user } = useOutletContext();
+    const { user, refreshUser } = useOutletContext();
     const { t } = useTranslation();
     const navigate = useNavigate();
 
-    // Dodatkowy stan na statystyki gracza (pobieramy je osobno, tak jak w Home.js)
     const [stats, setStats] = useState(null);
-    const [userAchievements, setUserAchievements] = useState([]); // ID odblokowanych
+    const [userAchievements, setUserAchievements] = useState([]);
 
     useEffect(() => {
         if (!user?.id) return;
 
-        // 1. Pobieramy statystyki (ilość gier, winrate itp.)
         const fetchStats = async () => {
             try {
                 const response = await fetch(`${API_URL}/users/${user.id}/stats`);
                 if(response.ok) {
                     const data = await response.json();
+                    console.log("Stats received from backend:", data); // <--- DEBUG: Zobacz w konsoli F12 co tu jest!
                     setStats(data);
                 }
             } catch (error) {
@@ -33,16 +32,16 @@ function Achievements() {
             }
         };
 
-        // 2. Pobieramy listę odblokowanych osiągnięć (to trzeba dorobić w backendzie, na razie mock)
-        // Zakładamy, że backend zwróci np. [1, 3, 8] - listę ID odblokowanych
         const fetchAchievements = async () => {
-             // TYMCZASOWO: Pusta lista lub mock, dopóki nie ma endpointu
-             // const response = await fetch(`${API_URL}/users/${user.id}/achievements`);
-             // const data = await response.json();
-             // setUserAchievements(data.map(a => a.achievementId));
-             
-             // MOCKOWANIE DO TESTÓW (Możesz usunąć jak będzie backend):
-             // setUserAchievements([1, 3]); 
+             try {
+                 const response = await fetch(`${API_URL}/users/${user.id}/achievements`);
+                 if(response.ok) {
+                     const data = await response.json();
+                     setUserAchievements(data);
+                 }
+             } catch (error) {
+                 console.error('Error fetching achievements:', error);
+             }
         };
 
         fetchStats();
@@ -56,33 +55,62 @@ function Achievements() {
         }
     };
 
-    // Funkcja obliczająca postęp dla danego kafelka
+    // Bezpieczna funkcja pobierania wartości (ignoruje wielkość liter)
+    const getStatValue = (key) => {
+        if (!stats) return 0;
+        // Sprawdź wprost
+        if (stats[key] !== undefined) return stats[key];
+        // Sprawdź z dużej litery (np. key='totalGames', szukamy 'TotalGames')
+        const upperKey = key.charAt(0).toUpperCase() + key.slice(1);
+        if (stats[upperKey] !== undefined) return stats[upperKey];
+        // Sprawdź z małej litery
+        const lowerKey = key.charAt(0).toLowerCase() + key.slice(1);
+        if (stats[lowerKey] !== undefined) return stats[lowerKey];
+        
+        return 0;
+    };
+
     const getProgress = (ach) => {
         let current = 0;
 
-        // Mapowanie kluczy z configu na to co mamy w `user` lub `stats`
-        // Dostosuj te pola jak już zrobimy backend
-        if (ach.statKey === 'gamesPlayed') current = stats?.totalGames || 0;
-        else if (ach.statKey === 'maxBalance') current = user?.balance || 0; // Tymczasowo bieżący balans
-        else if (ach.statKey === 'loginStreak') current = stats?.daysStreak || 0;
-        else if (ach.statKey === 'friendsCount') current = 0; // TODO
-        else if (ach.statKey === 'spinWheelCount') current = 0; // TODO
-        else if (ach.statKey === 'blackjacksCount') current = 0; // TODO
-        else if (ach.statKey === 'lessonsCompleted') current = 0; // TODO
-        else if (ach.statKey === 'doubleDownWins') current = 0; // TODO
+        if (ach.statKey === 'maxBalance') current = user?.balance || 0;
+        else if (ach.statKey === 'friendsCount') current = getStatValue('friendsCount'); 
+        else if (ach.statKey === 'spinWheelCount') current = getStatValue('spinWheelCount');
+        // Tu używamy naszej bezpiecznej funkcji, bo backend może zwracać TotalGames lub totalGames
+        else if (ach.statKey === 'gamesPlayed') current = getStatValue('totalGames');
+        else if (ach.statKey === 'loginStreak') current = getStatValue('daysStreak');
+        else if (ach.statKey === 'blackjacksCount') current = getStatValue('blackJacks'); // Uwaga: Backend ma 'BlackJacks' w DTO
+        else if (ach.statKey === 'lessonsCompleted') current = getStatValue('lessonsCompleted');
+        else if (ach.statKey === 'doubleDownWins') current = getStatValue('doubleDownWins');
         
-        // Specjalny przypadek dla ID 1 (First Steps)
-        if (ach.id === 1) {
-            // Tutaj logika jest skomplikowana, na razie zwracamy 0 lub 1
-            return userAchievements.includes(1) ? 1 : 0; 
-        }
-
         return current;
+    };
+
+    const handleClaim = async (achievementId) => {
+        playClick();
+        try {
+            const response = await fetch(`${API_URL}/users/${user.id}/achievements/claim?achievementId=${achievementId}`, {
+                method: 'POST'
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                // Dodajemy ID do lokalnej listy, żeby przycisk zniknął od razu
+                setUserAchievements((prev) => [...prev, achievementId]);
+                if (refreshUser) refreshUser();
+                // Opcjonalnie: alert("Nagroda odebrana!");
+            } else {
+                const err = await response.json();
+                console.error("Backend error:", err);
+                alert(err.message || "Błąd odbierania nagrody. Sprawdź konsolę.");
+            }
+        } catch (error) {
+            console.error("Claim error:", error);
+        }
     };
 
     return (
         <div className="achievements-container">
-
             <div className="achievements-header">
                 <h2>{t('achievements_title') || "Achievements"}</h2>
                 <p>{t('achievements_subtitle') || "Track your progress and earn rewards!"}</p>
@@ -93,17 +121,16 @@ function Achievements() {
                     const currentVal = getProgress(ach);
                     const target = ach.targetValue;
                     
-                    // Czy odblokowane?
-                    // Sprawdzamy czy ID jest w liście userAchievements (z bazy) 
-                    // LUB (tymczasowo) czy progress >= target (dla testów frontendowych)
-                    const isUnlocked = userAchievements.includes(ach.id) || (currentVal >= target);
-                    
+                    const isClaimed = userAchievements.includes(ach.id);
+                    const isConditionMet = currentVal >= target;
                     const progressPercent = Math.min((currentVal / target) * 100, 100);
 
                     return (
-                        <div key={ach.id} className={`achievement-card ${isUnlocked ? 'unlocked' : 'locked'}`}>
+                        <div key={ach.id} className={`achievement-card ${isClaimed ? 'claimed' : (isConditionMet ? 'unlocked' : 'locked')}`}>
                             <div className="status-icon">
-                                {isUnlocked ? <i className="fa-solid fa-check-circle unlocked"></i> : <i className="fa-solid fa-lock locked"></i>}
+                                {isClaimed ? <i className="fa-solid fa-check-circle claimed-icon"></i> : 
+                                 isConditionMet ? <i className="fa-solid fa-unlock unlocked-icon"></i> : 
+                                 <i className="fa-solid fa-lock locked-icon"></i>}
                             </div>
                             
                             <i className={`${ach.icon} achievement-icon`}></i>
@@ -113,24 +140,31 @@ function Achievements() {
                                 <p>{ach.description}</p>
                             </div>
 
-                            {/* Progress Bar */}
-                            <div className="progress-bar-container">
-                                <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }}></div>
-                            </div>
-                            <div className="progress-text">
-                                {currentVal} / {target}
+                            {/* TEN ELEMENT MA SZTYWNĄ WYSOKOŚĆ W CSS, WIĘC NIE SKACZE */}
+                            <div className="achievement-actions">
+                                {isClaimed ? (
+                                    <div className="claimed-badge">Odebrano</div>
+                                ) : isConditionMet ? (
+                                    <button className="claim-button" onClick={() => handleClaim(ach.id)}>
+                                        Odbierz nagrodę!
+                                    </button>
+                                ) : (
+                                    <>
+                                        <div className="progress-bar-container">
+                                            <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }}></div>
+                                        </div>
+                                        <div className="progress-text">
+                                            {currentVal} / {target}
+                                        </div>
+                                    </>
+                                )}
                             </div>
 
                             <div className="reward-badge">
-                                {ach.rewardType === 'CASH' ? (
-                                    <>
-                                        <i className="fa-solid fa-coins"></i> +{ach.rewardValue} PLN
-                                    </>
-                                ) : (
-                                    <>
-                                        <i className="fa-solid fa-user-astronaut"></i> {ach.rewardLabel}
-                                    </>
-                                )}
+                                {ach.rewardType === 'CASH' ? 
+                                    <><i className="fa-solid fa-coins"></i> +{ach.rewardValue} PLN</> : 
+                                    <><i className="fa-solid fa-user-astronaut"></i> {ach.rewardLabel}</>
+                                }
                             </div>
                         </div>
                     );

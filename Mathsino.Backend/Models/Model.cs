@@ -52,6 +52,7 @@ public class User
 
     public int SpinWheelCount { get; set; } = 0; 
     public int DoubleDownWins { get; set; } = 0;
+    public string ClaimedAchievements { get; set; } = "";
 }
 
 public class UserFriend

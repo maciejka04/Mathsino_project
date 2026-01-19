@@ -1,5 +1,5 @@
 .achievements-container {
-    padding: 2rem;
+    padding: 20px;
     color: white;
     max-width: 1200px;
     margin: 0 auto;
@@ -7,113 +7,72 @@
 }
 
 .achievements-header {
-    margin-bottom: 2rem;
     text-align: center;
+    margin-bottom: 40px;
 }
 
 .achievements-header h2 {
     font-size: 2.5rem;
-    color: gold;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    margin-bottom: 0.5rem;
+    color: #ffd700;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
 }
 
 .achievements-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
 }
 
 .achievement-card {
     background: rgba(0, 0, 0, 0.6);
-    border: 1px solid #444;
-    border-radius: 12px;
+    border: 2px solid #444;
+    border-radius: 15px;
     padding: 20px;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
     position: relative;
-    transition: transform 0.2s, box-shadow 0.2s;
-    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+    /* Sztywna wysokość minimalna, żeby karty były równe */
+    min-height: 320px; 
+}
+
+/* --- STANY KARTY --- */
+.achievement-card.locked {
+    opacity: 0.7;
 }
 
 .achievement-card.unlocked {
-    background: linear-gradient(135deg, rgba(46, 125, 50, 0.6), rgba(0, 0, 0, 0.6));
-    border-color: #4caf50;
-    box-shadow: 0 0 15px rgba(76, 175, 80, 0.2);
+    border-color: #ffd700;
+    background: linear-gradient(180deg, rgba(255, 215, 0, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    transform: translateY(-5px);
 }
 
-.achievement-card.locked {
-    opacity: 0.7;
-    background: rgba(30, 30, 30, 0.8);
+.achievement-card.claimed {
+    border-color: #00ff88;
+    opacity: 0.8;
 }
 
+/* --- IKONA GŁÓWNA --- */
 .achievement-icon {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
+    font-size: 3rem;
+    margin: 20px 0;
+    color: #ddd;
+    transition: color 0.3s;
+}
+
+.unlocked .achievement-icon {
     color: #ffd700;
 }
 
-.achievement-card.locked .achievement-icon {
-    color: #777;
+.claimed .achievement-icon {
+    color: #00ff88;
 }
 
-.achievement-content h3 {
-    margin: 0 0 5px 0;
-    font-size: 1.2rem;
-    color: #fff;
-}
-
-.achievement-content p {
-    font-size: 0.9rem;
-    color: #ccc;
-    margin-bottom: 15px;
-    line-height: 1.4;
-}
-
-/* Progress Bar */
-.progress-bar-container {
-    width: 100%;
-    height: 8px;
-    background-color: #333;
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: 10px;
-}
-
-.progress-bar-fill {
-    height: 100%;
-    background-color: gold;
-    transition: width 0.5s ease-in-out;
-}
-
-.progress-text {
-    font-size: 0.8rem;
-    color: #aaa;
-    text-align: right;
-    margin-top: -5px;
-    margin-bottom: 10px;
-}
-
-.reward-badge {
-    margin-top: auto;
-    align-self: flex-start;
-    background-color: #333;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    border: 1px solid #555;
-}
-
-.achievement-card.unlocked .reward-badge {
-    background-color: gold;
-    color: black;
-    border-color: orange;
-}
-
+/* --- STATUS IKONKA (Kłódka/Ptaszek) --- */
 .status-icon {
     position: absolute;
     top: 15px;
@@ -121,25 +80,104 @@
     font-size: 1.2rem;
 }
 
-.status-icon.locked { color: #555; }
-.status-icon.unlocked { color: #4caf50; }
+.locked-icon { color: #666; }
+.unlocked-icon { color: #ffd700; animation: pulse 2s infinite; }
+.claimed-icon { color: #00ff88; }
 
-.back-button-ach {
-    background: none;
-    border: none;
-    color: white;
+/* --- TREŚĆ --- */
+.achievement-content h3 {
     font-size: 1.2rem;
-    cursor: pointer;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    margin: 10px 0;
+    color: #fff;
 }
-.back-button-ach:hover { color: gold; }
 
-/* RWD */
-@media (max-width: 768px) {
-    .achievements-grid {
-        grid-template-columns: 1fr;
-    }
+.achievement-content p {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 20px;
+    min-height: 40px; /* Żeby tekst zajmował tyle samo miejsca */
+}
+
+/* --- SEKCJA AKCJI (Pasek vs Przycisk) --- */
+.achievement-actions {
+    width: 100%;
+    margin-top: auto; /* Dopycha do dołu */
+    height: 60px; /* SZTYWNA WYSOKOŚĆ - zapobiega skakaniu! */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Pasek postępu */
+.progress-bar-container {
+    width: 100%;
+    height: 10px;
+    background: #333;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: #ffd700;
+    transition: width 0.5s ease;
+}
+
+.progress-text {
+    font-size: 0.85rem;
+    color: #ccc;
+}
+
+/* Przycisk Odbierz */
+.claim-button {
+    background: linear-gradient(45deg, #ffd700, #ffaa00);
+    border: none;
+    color: #000;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    animation: popIn 0.3s ease-out;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(255, 215, 0, 0.4);
+}
+
+.claim-button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(45deg, #ffaa00, #ffd700);
+}
+
+/* Badge "Odebrano" */
+.claimed-badge {
+    background: rgba(0, 255, 136, 0.2);
+    color: #00ff88;
+    padding: 8px 16px;
+    border-radius: 15px;
+    border: 1px solid #00ff88;
+    font-weight: bold;
+}
+
+/* Nagroda na dole */
+.reward-badge {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #ffd700;
+    background: rgba(255, 215, 0, 0.1);
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes popIn {
+    0% { transform: scale(0); }
+    80% { transform: scale(1.1); }
+    100% { transform: scale(1); }
 }

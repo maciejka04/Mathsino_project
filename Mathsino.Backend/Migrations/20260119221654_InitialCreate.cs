@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mathsino.Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class migracja7378429kkll : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,7 +35,8 @@ namespace Mathsino.Backend.Migrations
                     SoundEffectsEnabled = table.Column<bool>(type: "boolean", nullable: false),
                     LessonsCompleted = table.Column<int>(type: "integer", nullable: false),
                     SpinWheelCount = table.Column<int>(type: "integer", nullable: false),
-                    DoubleDownWins = table.Column<int>(type: "integer", nullable: false)
+                    DoubleDownWins = table.Column<int>(type: "integer", nullable: false),
+                    ClaimedAchievements = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -122,11 +123,11 @@ namespace Mathsino.Backend.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "AvatarPath", "Balance", "DoubleDownWins", "Email", "FirstName", "Language", "LastName", "LastSpinTime", "LessonsCompleted", "MusicEnabled", "MusicId", "Provider", "ProviderId", "SoundEffectsEnabled", "SpinWheelCount", "UserName" },
+                columns: new[] { "Id", "AvatarPath", "Balance", "ClaimedAchievements", "DoubleDownWins", "Email", "FirstName", "Language", "LastName", "LastSpinTime", "LessonsCompleted", "MusicEnabled", "MusicId", "Provider", "ProviderId", "SoundEffectsEnabled", "SpinWheelCount", "UserName" },
                 values: new object[,]
                 {
-                    { 1, "snake.png", 5000, 0, "alice.smith@example.com", "Alice", "en", "Smith", new DateTime(2025, 1, 1, 10, 0, 0, 0, DateTimeKind.Utc), 0, true, 1, "", "", true, 0, "alismi" },
-                    { 2, "mouse.png", 3000, 0, "bob.johnson@example.com", "Bob", "en", "Johnson", new DateTime(2025, 1, 1, 10, 0, 0, 0, DateTimeKind.Utc), 0, true, 1, "", "", true, 0, "bobjoh" }
+                    { 1, "snake.png", 5000, "", 0, "alice.smith@example.com", "Alice", "en", "Smith", new DateTime(2025, 1, 1, 10, 0, 0, 0, DateTimeKind.Utc), 0, true, 1, "", "", true, 0, "alismi" },
+                    { 2, "mouse.png", 3000, "", 0, "bob.johnson@example.com", "Bob", "en", "Johnson", new DateTime(2025, 1, 1, 10, 0, 0, 0, DateTimeKind.Utc), 0, true, 1, "", "", true, 0, "bobjoh" }
                 });
 
             migrationBuilder.InsertData(
