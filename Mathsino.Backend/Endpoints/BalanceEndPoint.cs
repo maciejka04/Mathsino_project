@@ -37,7 +37,7 @@ public static class BalanceEndPoints
                         return Results.NotFound();
                     }
 
-                    const int COOLDOWN_MINUTES = 60*3;
+                    const int COOLDOWN_MINUTES = 0;
                     var now = DateTime.UtcNow;
 
 
@@ -48,6 +48,7 @@ public static class BalanceEndPoints
 
                     user.Balance += rewardAmount;
                     user.LastSpinTime = now;
+                    user.SpinWheelCount += 1;
                     await db.SaveChangesAsync();
 
                     return Results.Ok(

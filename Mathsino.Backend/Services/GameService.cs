@@ -4,6 +4,7 @@ using Mathsino.Backend.Game;
 using Mathsino.Backend.Interfaces;
 using Mathsino.Backend.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Mathsino.Backend.Services
 {
@@ -151,6 +152,19 @@ namespace Mathsino.Backend.Services
             }
 
             game.PlayerDouble(playerId);
+
+            // Increment DoubleDownWins counter for the user
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<MathsinoContext>();
+                var dbUser = await dbContext.Users.FindAsync(player.User.Id);
+                if (dbUser != null)
+                {
+                    dbUser.DoubleDownWins += 1;
+                    await dbContext.SaveChangesAsync();
+                }
+            }
+
             await SaveGameStateAsync(game);
             return game;
         }
@@ -208,6 +222,19 @@ namespace Mathsino.Backend.Services
             }
 
             game.PlayerDoubleSplit(playerId);
+
+            // Increment DoubleDownWins counter for the user for split hand
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<MathsinoContext>();
+                var dbUser = await dbContext.Users.FindAsync(player.User.Id);
+                if (dbUser != null)
+                {
+                    dbUser.DoubleDownWins += 1;
+                    await dbContext.SaveChangesAsync();
+                }
+            }
+
             await SaveGameStateAsync(game);
             return game;
         }
