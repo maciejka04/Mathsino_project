@@ -50,6 +50,30 @@ public class User
 
     public int LessonsCompleted { get; set; } = 0;
 
+    // Progress metrics for achievements
+    public int GamesPlayed { get; set; } = 0;
+    public int FriendsCount { get; set; } = 0;
+    public int LoginStreak { get; set; } = 0;
+    public int BlackjacksCount { get; set; } = 0;
+
+    // Achievement status columns (0 = not completed, 1 = completed, 2 = claimed)
+    public int Achievement01Status { get; set; } = 0;
+    public int Achievement02Status { get; set; } = 0;
+    public int Achievement03Status { get; set; } = 0;
+    public int Achievement04Status { get; set; } = 0;
+    public int Achievement05Status { get; set; } = 0;
+    public int Achievement06Status { get; set; } = 0;
+    public int Achievement07Status { get; set; } = 0;
+    public int Achievement08Status { get; set; } = 0;
+    public int Achievement09Status { get; set; } = 0;
+    public int Achievement10Status { get; set; } = 0;
+    public int Achievement11Status { get; set; } = 0;
+    public int Achievement12Status { get; set; } = 0;
+    public int Achievement13Status { get; set; } = 0;
+    public int Achievement14Status { get; set; } = 0;
+    public int Achievement15Status { get; set; } = 0;
+    public int Achievement16Status { get; set; } = 0;
+
     public int SpinWheelCount { get; set; } = 0; 
     public int DoubleDownWins { get; set; } = 0;
 }

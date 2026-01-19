@@ -12,6 +12,7 @@ import boar from '../../assets/profilepic/boar.png';
 import owl from '../../assets/profilepic/owl.png';
 import fox from '../../assets/profilepic/fox.png';
 import clickSound from '../../assets/mouse-click.mp3';
+import { achievementsConfig } from '../Achievements/achievementsConfig';
 import audioService from '../../services/audioService';
 
 const playClickSound = () => {
@@ -48,6 +49,20 @@ function Profile() {
   const [selectedAvatar, setSelectedAvatar] = useState(snake);
   const [pendingAvatar, setPendingAvatar] = useState(getAvatarFilename(snake));
   const [saveStatus, setSaveStatus] = useState('');
+
+  const [achStatuses, setAchStatuses] = useState({}); // id -> status
+  const unlockedAvatarFiles = React.useMemo(() => {
+    const files = new Set(['snake.png']); // default unlocked
+    achievementsConfig.forEach(ach => {
+      if (ach.rewardType === 'AVATAR' && (achStatuses[ach.id] ?? 0) === 2) {
+        // rewardValue is like avatar_student, transform to filename if needed
+        if (ach.rewardValue.endsWith('.png') || ach.rewardValue.endsWith('.jpg')) {
+          files.add(ach.rewardValue);
+        }
+      }
+    });
+    return Array.from(files);
+  }, [achStatuses]);
 
   const [user, setUser] = useState({
     id: null,      // ⬅️ DODANE
@@ -177,6 +192,19 @@ function Profile() {
     setUsernameAvailable(null);
   };
 
+  // Fetch achievements status for locking avatars
+  useEffect(() => {
+    if (!user.id) return;
+    fetch(`${API_URL}/users/${user.id}/achievements`)
+      .then(r => r.json())
+      .then(data => {
+        const map = {};
+        data.forEach(a => (map[a.id ?? a.Id] = a.status ?? a.Status));
+        setAchStatuses(map);
+      })
+      .catch(() => {});
+  }, [user.id]);
+
   // Pobranie danych zalogowanego użytkownika
   useEffect(() => {
     fetch(`${API_URL}/api/auth/profile`, {
@@ -305,15 +333,22 @@ function Profile() {
           <h4>{t('profile_choose_avatar')}</h4>
           <p>{t('profile_choose_prompt')}</p>
           <div className="avatar-grid">
-            {avatars.map((avatarSrc, index) => (
-              <img
-                key={index}
-                src={avatarSrc}
-                alt={`Awatar ${index + 1}`}
-                className={selectedAvatar === avatarSrc ? 'avatar-option active' : 'avatar-option'}
-                onClick={() => { playClickSound(); handleAvatarSelect(avatarSrc); }}
-              />
-            ))}
+            {avatars.map((avatarSrc, index) => {
+              const filename = getAvatarFilename(avatarSrc);
+              const isUnlocked = unlockedAvatarFiles.includes(filename);
+              return (
+                <div key={index} className="avatar-wrapper">
+                  <img
+                    src={avatarSrc}
+                    alt={`Awatar ${index + 1}`}
+                    className={selectedAvatar === avatarSrc ? 'avatar-option active' : 'avatar-option'}
+                    onClick={() => { if (isUnlocked) { playClickSound(); handleAvatarSelect(avatarSrc); } }}
+                    style={{ opacity: isUnlocked ? 1 : 0.4, cursor: isUnlocked ? 'pointer' : 'not-allowed' }}
+                  />
+                  {!isUnlocked && <span className="lock-overlay"><i className="fa-solid fa-lock"></i></span>}
+                </div>
+              );
+            })}
           </div>
           <button
             className="save-avatar-button"

@@ -64,6 +64,7 @@ app.MapUserEndPoints();
 app.MapGameEndPoints();
 app.MapBalanceEndPoints();
 app.MapFriendEndPoints();
+app.MapAchievementsEndPoints();
 app.MapAdRewardEndpoints();
 
 await app.RunAsync();

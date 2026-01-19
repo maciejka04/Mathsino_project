@@ -15,7 +15,8 @@ function Achievements() {
 
     // Dodatkowy stan na statystyki gracza (pobieramy je osobno, tak jak w Home.js)
     const [stats, setStats] = useState(null);
-    const [userAchievements, setUserAchievements] = useState([]); // ID odblokowanych
+    const [achStatuses, setAchStatuses] = useState({}); // id -> status (0/1/2)
+    const [claimingId, setClaimingId] = useState(null);
 
     useEffect(() => {
         if (!user?.id) return;
@@ -36,13 +37,17 @@ function Achievements() {
         // 2. Pobieramy listę odblokowanych osiągnięć (to trzeba dorobić w backendzie, na razie mock)
         // Zakładamy, że backend zwróci np. [1, 3, 8] - listę ID odblokowanych
         const fetchAchievements = async () => {
-             // TYMCZASOWO: Pusta lista lub mock, dopóki nie ma endpointu
-             // const response = await fetch(`${API_URL}/users/${user.id}/achievements`);
-             // const data = await response.json();
-             // setUserAchievements(data.map(a => a.achievementId));
-             
-             // MOCKOWANIE DO TESTÓW (Możesz usunąć jak będzie backend):
-             // setUserAchievements([1, 3]); 
+            try {
+                const response = await fetch(`${API_URL}/users/${user.id}/achievements`);
+                if (response.ok) {
+                    const data = await response.json(); // [{Id,Status}]
+                    const map = {};
+                    data.forEach(a => map[a.id ?? a.Id] = a.status ?? a.Status);
+                    setAchStatuses(map);
+                }
+            } catch (err) {
+                console.error('Error fetching achievements list', err);
+            }
         };
 
         fetchStats();
@@ -54,6 +59,24 @@ function Achievements() {
         if (audioService.areSoundEffectsEnabled()) {
             new Audio(clickSound).play().catch(()=>{});
         }
+    };
+
+    const claimAchievement = async (achId) => {
+        setClaimingId(achId);
+        try {
+            const res = await fetch(`${API_URL}/users/${user.id}/achievements/${achId}/claim`, { method: 'POST' });
+            if (res.ok) {
+                // refresh achievements
+                const refreshed = await fetch(`${API_URL}/users/${user.id}/achievements`);
+                const data = await refreshed.json();
+                const map = {};
+                data.forEach(a => map[a.id ?? a.Id] = a.status ?? a.Status);
+                setAchStatuses(map);
+            }
+        } catch(e){
+            console.error('claim error', e);
+        }
+        setClaimingId(null);
     };
 
     // Funkcja obliczająca postęp dla danego kafelka
@@ -71,10 +94,9 @@ function Achievements() {
         else if (ach.statKey === 'lessonsCompleted') current = 0; // TODO
         else if (ach.statKey === 'doubleDownWins') current = 0; // TODO
         
-        // Specjalny przypadek dla ID 1 (First Steps)
+        // Specjal handling for achievement 1 is now evaluated backend-side
         if (ach.id === 1) {
-            // Tutaj logika jest skomplikowana, na razie zwracamy 0 lub 1
-            return userAchievements.includes(1) ? 1 : 0; 
+            return achStatuses[1] >= 1 ? 1 : 0;
         }
 
         return current;
@@ -93,15 +115,14 @@ function Achievements() {
                     const currentVal = getProgress(ach);
                     const target = ach.targetValue;
                     
-                    // Czy odblokowane?
-                    // Sprawdzamy czy ID jest w liście userAchievements (z bazy) 
-                    // LUB (tymczasowo) czy progress >= target (dla testów frontendowych)
-                    const isUnlocked = userAchievements.includes(ach.id) || (currentVal >= target);
+                    // Unlocked if backend says completed/claimed OR fallback based on progress
+                    const status = achStatuses[ach.id] ?? 0; // 0 not done,1 completed,2 claimed
+                    const isUnlocked = status >= 1 || currentVal >= target; // fallback when backend not yet evaluated
                     
                     const progressPercent = Math.min((currentVal / target) * 100, 100);
 
                     return (
-                        <div key={ach.id} className={`achievement-card ${isUnlocked ? 'unlocked' : 'locked'}`}>
+                        <div key={ach.id} className={`achievement-card ${status === 2 ? 'claimed' : isUnlocked ? 'unlocked' : 'locked'}`}>
                             <div className="status-icon">
                                 {isUnlocked ? <i className="fa-solid fa-check-circle unlocked"></i> : <i className="fa-solid fa-lock locked"></i>}
                             </div>
@@ -132,6 +153,15 @@ function Achievements() {
                                     </>
                                 )}
                             </div>
+
+                            {status === 1 && (
+                                <button className="claim-btn" disabled={claimingId===ach.id} onClick={() => claimAchievement(ach.id)}>
+                                    {claimingId===ach.id ? '...' : t('achievements_claim') || 'Claim'}
+                                </button>
+                            )}
+                            {status === 2 && (
+                                <span className="claimed-label">{t('achievements_claimed') || 'Claimed'}</span>
+                            )}
                         </div>
                     );
                 })}
