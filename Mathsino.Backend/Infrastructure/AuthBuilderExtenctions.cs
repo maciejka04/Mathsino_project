@@ -123,7 +123,7 @@ public static class AuthBuilderExtenctions
                 Provider = provider,
                 ProviderId = providerId,
                 AvatarPath = "snake.png",
-                Balance = 2000,
+                Balance = 2500,
                 LastSpinTime = NewUserPastSpinTime,
                 LessonsCompleted = 0,
             };

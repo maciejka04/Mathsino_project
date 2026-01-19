@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import audioService from '../../services/audioService';
 
 const API_URL = "http://localhost:5126";
-const COOLDOWN_MINUTES = 0; 
+const COOLDOWN_MINUTES = 60*3; 
 
 const playClickSound = () => {
   if (audioService.areSoundEffectsEnabled()) {

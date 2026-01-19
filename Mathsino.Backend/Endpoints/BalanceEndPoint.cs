@@ -15,25 +15,7 @@ public static class BalanceEndPoints
             }
         );
 
-        // app.MapPost(
-        //     "user/{id}/balance/add",
-        //     async (int id, int amount, IBalanceService balanceService) =>
-        //     {
-        //         await balanceService.AddBalance(id, amount);
-        //         var newBalance = await balanceService.GetBalance(id);
-        //         return Results.Ok(newBalance);
-        //     }
-        // );
 
-        // app.MapPost(
-        //     "user/{id}/balance/deduct",
-        //     async (int id, int amount, IBalanceService balanceService) =>
-        //     {
-        //         await balanceService.DeductBalance(id, amount);
-        //         var newBalance = await balanceService.GetBalance(id);
-        //         return Results.Ok(newBalance);
-        //     }
-        // );
         app.MapPost(
                 "user/{id}/spin-wheel",
                 async (int id, HttpContext context, MathsinoContext db) =>
@@ -55,37 +37,9 @@ public static class BalanceEndPoints
                         return Results.NotFound();
                     }
 
-                    const int COOLDOWN_MINUTES = 0;
+                    const int COOLDOWN_MINUTES = 60*3;
                     var now = DateTime.UtcNow;
 
-                    // if (user.LastSpinTime.HasValue)
-                    // {
-                    //     var lastSpin = user.LastSpinTime.Value;
-
-                    //     if (lastSpin.Kind != DateTimeKind.Utc)
-                    //     {
-                    //         lastSpin = lastSpin.ToUniversalTime();
-                    //     }
-
-                    //     var nextSpinAvailableAt = lastSpin.AddMinutes(COOLDOWN_MINUTES);
-
-                    //     if (now < nextSpinAvailableAt)
-                    //     {
-                    //         var timeRemaining = nextSpinAvailableAt - now;
-
-                    //         return Results.BadRequest(
-                    //             new
-                    //             {
-                    //                 message = "Wymagana jest przerwa.",
-                    //                 cooldownHours = timeRemaining.Hours,
-                    //                 cooldownMinutes = timeRemaining.Minutes,
-                    //                 cooldownSeconds = timeRemaining.Seconds,
-                    //                 nextSpinAvailable = nextSpinAvailableAt,
-                    //                 lastSpin = lastSpin,
-                    //             }
-                    //         );
-                    //     }
-                    // }
 
                     var random = new Random();
                     int[] possibleRewards = { 100, 300, 200, 400, 1000, 200, 400, 2000 };
