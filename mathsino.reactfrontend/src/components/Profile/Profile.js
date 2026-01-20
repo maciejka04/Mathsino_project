@@ -1,6 +1,6 @@
 // src/components/Profile/Profile.js
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import './Profile.css';
 import { useTranslation } from 'react-i18next';
@@ -27,9 +27,20 @@ const AVATAR_MAP = {
   'boar.png': boar,
   'owl.png': owl,
   'fox.png': fox,
+  'fox.png': fox,
 };
 
-const avatars = [snake, mouse, racoon, boar, owl, fox];
+// list of avatar images for iteration
+const avatars = Object.values(AVATAR_MAP);
+
+const AVATAR_UNLOCKS = {
+  1: 'mouse.png',   // Warm Up (10 games)
+  2: 'racoon.png',  // Regular (100 games)
+  4: 'boar.png',    // Legend (10000 games)
+  8: 'owl.png',     // Millionaire (100k balance)
+  14: 'fox.png',    // Streak 10
+  16: 'fox.png',    // double 50
+};
 
 const getAvatarFilename = (avatarImport) => {
   const entries = Object.entries(AVATAR_MAP);
@@ -59,11 +70,23 @@ function Profile() {
   const [isEditingUsername, setIsEditingUsername] = useState(false);
   const [newUsername, setNewUsername] = useState('');
   const [usernameStatus, setUsernameStatus] = useState('');
+  // IDs already claimed by the user (achievements)
+  const [claimedAchievements, setClaimedAchievements] = useState([]);
   const [usernameAvailable, setUsernameAvailable] = useState(null);
 
+  const unlockedAvatars = useMemo(() => {
+    const set = new Set(['snake.png']); // Always unlocked
+    claimedAchievements.forEach((id) => {
+      if (AVATAR_UNLOCKS[id]) set.add(AVATAR_UNLOCKS[id]);
+    });
+    return set;
+  }, [claimedAchievements]);
+
   const handleAvatarSelect = (avatarSrc) => {
+    const filename = getAvatarFilename(avatarSrc);
+    if (!unlockedAvatars.has(filename)) return; // Block selecting locked avatars
     setSelectedAvatar(avatarSrc);
-    setPendingAvatar(getAvatarFilename(avatarSrc));
+    setPendingAvatar(filename);
   };
 
   const handleAvatarSave = async () => {
@@ -202,6 +225,22 @@ function Profile() {
       .catch(err => console.error("User load error:", err));
   }, []);
 
+  // Fetch claimed achievements when we have user id
+  useEffect(() => {
+    if (!user.id) return;
+    (async () => {
+      try {
+        const res = await fetch(`${API_URL}/users/${user.id}/achievements`);
+        if (res.ok) {
+          const data = await res.json();
+          setClaimedAchievements(data);
+        }
+      } catch (err) {
+        console.error('Achievements load error:', err);
+      }
+    })();
+  }, [user.id]);
+
   const handleLogout = async () => {
     try {
       await fetch(`${API_URL}/api/auth/logout`, {
@@ -305,15 +344,29 @@ function Profile() {
           <h4>{t('profile_choose_avatar')}</h4>
           <p>{t('profile_choose_prompt')}</p>
           <div className="avatar-grid">
-            {avatars.map((avatarSrc, index) => (
-              <img
-                key={index}
-                src={avatarSrc}
-                alt={`Awatar ${index + 1}`}
-                className={selectedAvatar === avatarSrc ? 'avatar-option active' : 'avatar-option'}
-                onClick={() => { playClickSound(); handleAvatarSelect(avatarSrc); }}
-              />
-            ))}
+            {avatars.map((avatarSrc, index) => {
+              const filename = getAvatarFilename(avatarSrc);
+              const isUnlocked = unlockedAvatars.has(filename);
+              const isActive = selectedAvatar === avatarSrc;
+              
+              return (
+                <div key={index} className={`avatar-container ${!isUnlocked ? 'locked-container' : ''}`}>
+                  <img
+                    src={avatarSrc}
+                    alt={`Awatar ${index + 1}`}
+                    className={`avatar-option ${isActive ? 'active' : ''} ${!isUnlocked ? 'locked' : ''}`}
+                    onClick={() => {
+                      if (isUnlocked) {
+                        playClickSound();
+                        handleAvatarSelect(avatarSrc);
+                      }
+                    }}
+                    title={!isUnlocked ? 'Odblokuj w osiągnięciach' : ''}
+                  />
+                  {}
+                </div>
+              );
+            })}
           </div>
           <button
             className="save-avatar-button"
@@ -331,15 +384,7 @@ function Profile() {
             {t('profile_logout')}
           </button>
 
-          <div className="danger-zone">
-            <h4>{t('profile_danger_zone')}</h4>
-            <button
-              className="danger-button"
-              onClick={() => { playClickSound(); }}
-            >
-              {t('profile_reset_progress')}
-            </button>
-          </div>
+          
         </div>
       </div>
     </div>

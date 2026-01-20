@@ -4,17 +4,82 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   en: {
     translation: {
-      /* ---  (SIDEBAR) --- */
+      /* --- (SIDEBAR) --- */
       "nav_play": "Play",
       "nav_learn": "Learn",
       "nav_statistics": "Statistics",
-      "nav_achievements": "Achievements", // <--- DODANE
+      "nav_achievements": "Achievements",
       "nav_friends": "Friends",
       "nav_resources": "Resources",
 
-      /* --- ACHIEVEMENTS PAGE --- */ // <--- DODANA SEKCJA
+      /* --- ACHIEVEMENTS PAGE --- */
       "achievements_title": "Your Achievements",
       "achievements_subtitle": "Track your progress and earn exclusive avatars!",
+      "ach_collected": "Collected",
+      "ach_claim_reward": "Claim Reward!",
+
+      /* --- SPECIFIC ACHIEVEMENTS (EN) --- */
+      "achievement_1_title": "Warm Up",
+      "achievement_1_desc": "Play 10 games of Blackjack.",
+      "avatar_1": "Mouse Avatar",
+
+      "achievement_2_title": "Regular",
+      "achievement_2_desc": "Play 100 games.",
+      "avatar_2": "Racoon Avatar",
+
+      "achievement_3_title": "Table Veteran",
+      "achievement_3_desc": "Play 1000 games.",
+
+      "achievement_4_title": "Casino Legend",
+      "achievement_4_desc": "Play 10,000 games.",
+      "avatar_4": "Boar Avatar",
+
+      "achievement_5_title": "First Savings",
+      "achievement_5_desc": "Reach a peak balance of 3,000 PLN.",
+      
+      "achievement_6_title": "Investor",
+      "achievement_6_desc": "Reach a peak balance of 10,000 PLN.",
+
+      "achievement_7_title": "Tycoon",
+      "achievement_7_desc": "Reach a peak balance of 25,000 PLN.",
+
+      "achievement_8_title": "Millionaire (Almost)",
+      "achievement_8_desc": "Reach a peak balance of 100,000 PLN.",
+      "avatar_8": "Owl Avatar",
+
+      "achievement_9_title": "Diligent Student",
+      "achievement_9_desc": "Complete at least one lesson.",
+
+      "achievement_10_title": "Strategy Master",
+      "achievement_10_desc": "Complete all lessons (5).",
+
+      "achievement_11_title": "Lucky Spin",
+      "achievement_11_desc": "Spin the wheel once.",
+
+      "achievement_12_title": "Gambler",
+      "achievement_12_desc": "Spin the wheel 10 times.",
+
+      "achievement_13_title": "Loyal Player",
+      "achievement_13_desc": "Login 5 days in a row.",
+
+      "achievement_14_title": "Loyal Player",
+      "achievement_14_desc": "Login 10 days in a row.",
+      "avatar_14": "Fox Avatar",
+
+      "achievement_15_title": "Risk Taker",
+      "achievement_15_desc": "Win 5 games after doubling down.",
+
+      "achievement_16_title": "GIGA Gambler",
+      "achievement_16_desc": "Spin the wheel 100 times.",
+
+      /* --- STRATEGY FEEDBACK (DODANE) --- */
+      "strategy_feedback_correct": "Good move!",
+      "strategy_feedback_error": "Mistake! Table says: {{move}}",
+      /* Opcjonalnie tłumaczenia ruchów, jeśli chcesz je podmieniać dynamicznie */
+      "move_HIT": "HIT",
+      "move_STAND": "STAND",
+      "move_DOUBLE": "DOUBLE",
+      "move_SPLIT": "SPLIT",
 
       /* --- Offline.js --- */
       "exit": "Exit",
@@ -26,7 +91,17 @@ const resources = {
       "blackjack": "BLACKJACK!",
       "lang_en": "EN",
       "lang_pl": "PL",
-
+      "trainer": "Trainer",
+      "bankrupt_title": "You went bankrupt",
+      "bankrupt_watch_ad": "Watch Ad (+100 PLN)",
+      "bankrupt_exit": "Exit Game",
+      "win_clean": "You won a total of {{amount}} PLN profit",
+      "loss_total": "You lost a total of {{amount}} PLN",
+      "game_win": "You won",
+      "game_blackjack": "Blackjack",
+      "game_push": "Push",
+      "game_lose": "You lost",
+      "you_label": "you",
       /* --- LOGIN.JS --- */
       "login_title": "Log in to continue",
       "login_subtitle": "Track progress and save your results.",
@@ -170,7 +245,6 @@ const resources = {
       "profile_danger_zone": "Danger Zone",
       "profile_reset_progress": "Reset Progress",
       "profile_edit_username": "Edit",
-
       "profile_not_found": "Profile not found",
 
       /* --- RESOURCES.JS --- */
@@ -193,54 +267,44 @@ const resources = {
       "resources_responsible_gaming": "Responsible Gaming",
       "resources_privacy_policy": "Privacy Policy",
       "resources_terms_of_service": "Terms of Service",
+      
       /* --- LEARN.JS --- */
       "learn_read_more": "Read more",
-
       "learn_l1_title": "Lesson 1",
       "learn_l1_subtitle": "Basic Rules & Mechanics",
       "learn_l1_desc": "Introduction to the game basics.",
-
       "learn_l2_title": "Lesson 2",
       "learn_l2_subtitle": "Card Values",
       "learn_l2_desc": "Understanding card points.",
-
       "learn_l3_title": "Lesson 3",
       "learn_l3_subtitle": "Hitting & Standing",
       "learn_l3_desc": "When to take a card and when to stop.",
-
       "learn_l4_title": "Lesson 4",
       "learn_l4_subtitle": "Doubling Down",
       "learn_l4_desc": "Maximizing your wins.",
-
       "learn_l5_title": "Lesson 5",
       "learn_l5_subtitle": "Splitting Pairs",
       "learn_l5_desc": "How to handle pairs.",
-
       "learn_l6_title": "Lesson 6",
       "learn_l6_subtitle": "Insurance",
       "learn_l6_desc": "Is it worth it?",
-
       "learn_l7_title": "Lesson 7",
       "learn_l7_subtitle": "Soft vs Hard Hands",
       "learn_l7_desc": "The power of the Ace.",
-
       "learn_l8_title": "Lesson 8",
       "learn_l8_subtitle": "Basic Strategy",
       "learn_l8_desc": "The mathematical approach.",
-
       "learn_l9_title": "Lesson 9",
       "learn_l9_subtitle": "Card Counting Intro",
       "learn_l9_desc": "Advanced techniques overview.",
-
       "learn_l10_title": "Lesson 10",
       "learn_l10_subtitle": "Bankroll Management",
       "learn_l10_desc": "How to manage your chips wisely.",
-
       "learn_l11_title": "Lesson 11",
       "learn_l11_subtitle": "Advanced Betting",
       "learn_l11_desc": "Systems and patterns.",
-
       "learn_progress_label": "Your progress",
+      
       /* --- LESSON PAGE --- */
       "lesson_wrong_action": "Nope! That's not the best move here. Try something else!",
       "lesson_intro_title": "Introduction",
@@ -248,6 +312,7 @@ const resources = {
       "lesson_start_button": "Start Lesson",
       "lesson_next_button": "Next",
       "lesson_back_to_menu": "Back to Menu",
+      
       /* --- Glossary.js --- */
       "glossary_title": "Blackjack Glossary",
       "glossary_subtitle": "Key terms and definitions.",
@@ -314,7 +379,6 @@ const resources = {
       /* --- PrivacyPolicy.js --- */
       "pp_title": "Mathsino Privacy Policy",
       "pp_effective_date": "Effective Date: November 21, 2025",
-
       "pp_section1_title": "1. What Data Do We Collect?",
       "pp_section1_desc": "When logging in via Google or Facebook, we collect the following personal data:",
       "pp_data_email": "Email Address",
@@ -323,28 +387,23 @@ const resources = {
       "pp_data_name_desc": "(for account personalization).",
       "pp_data_id": "Unique Provider ID",
       "pp_data_id_desc": "(Google ID or Facebook ID).",
-
       "pp_section2_title": "2. How Do We Use Your Data?",
       "pp_section2_desc": "Data is used exclusively for the following purposes:",
       "pp_use_auth": "Authenticating you within the Mathsino application.",
       "pp_use_progress": "Maintaining your login status and saving progress.",
       "pp_use_personalization": "Personalizing the in-app experience (e.g., displaying your name).",
-
       "pp_section3_title": "3. Data Deletion",
       "pp_section3_desc": "If you wish to delete your data, please follow the instructions available via the link below:",
       "pp_data_deletion_link": "Data Deletion Instructions",
 
-
       /* --- DataDeletion.js --- */
       "dd_title": "Mathsino User Data Deletion Instructions",
-
       "dd_section1_title": "Account Deletion Procedure",
       "dd_section1_desc": "In compliance with Meta (Facebook) requirements, to permanently delete all data associated with your Mathsino account, please follow the instructions below:",
       "dd_step1": "Log in to the Mathsino application (If you cannot log in, proceed to step 3).",
       "dd_step2": "Go to the profile page and look for the 'Delete Account' option (not yet implemented).",
       "dd_step3_title": "To request immediate deletion",
       "dd_step3_desc": "Send an email to",
-
       "dd_section2_title": "Required Information in the Email",
       "dd_section2_desc": "In the email subject line, enter 'Data Deletion Request - [Your Email Address]'. In the body of the message, please provide:",
       "dd_email_req1": "The email address used for Google/Facebook login.",
@@ -369,13 +428,78 @@ const resources = {
       "nav_play": "Graj",
       "nav_learn": "Nauka",
       "nav_statistics": "Statystyki",
-      "nav_achievements": "Osiągnięcia", // <--- DODANE
+      "nav_achievements": "Osiągnięcia",
       "nav_friends": "Znajomi",
       "nav_resources": "Zasoby",
 
-      /* --- ACHIEVEMENTS PAGE --- */ // <--- DODANA SEKCJA
+      /* --- ACHIEVEMENTS PAGE --- */
       "achievements_title": "Twoje Osiągnięcia",
       "achievements_subtitle": "Śledź postępy i zdobywaj unikalne awatary!",
+      "ach_collected": "Odebrano",
+      "ach_claim_reward": "Odbierz Nagrodę!",
+
+      /* --- SPECIFIC ACHIEVEMENTS (PL) --- */
+      "achievement_1_title": "Rozgrzewka",
+      "achievement_1_desc": "Zagraj 10 gier w Blackjacka.",
+      "avatar_1": "Myszka Awatar",
+
+      "achievement_2_title": "Stały Bywalec",
+      "achievement_2_desc": "Zagraj 100 gier.",
+      "avatar_2": "Szop Awatar",
+
+      "achievement_3_title": "Weteran Stołu",
+      "achievement_3_desc": "Zagraj 1000 gier.",
+
+      "achievement_4_title": "Legenda Kasyna",
+      "achievement_4_desc": "Zagraj 10 000 gier.",
+      "avatar_4": "Dzik Awatar",
+
+      "achievement_5_title": "Pierwsze Oszczędności",
+      "achievement_5_desc": "Osiągnij najwyższe saldo 3 000 PLN.",
+      
+      "achievement_6_title": "Inwestor",
+      "achievement_6_desc": "Osiągnij najwyższe saldo 10 000 PLN.",
+
+      "achievement_7_title": "Magnat",
+      "achievement_7_desc": "Osiągnij najwyższe saldo 25 000 PLN.",
+
+      "achievement_8_title": "Milioner (Prawie)",
+      "achievement_8_desc": "Osiągnij najwyższe saldo 100 000 PLN.",
+      "avatar_8": "Sowa Awatar",
+
+      "achievement_9_title": "Pilny Uczeń",
+      "achievement_9_desc": "Ukończ przynajmniej jedną lekcję.",
+
+      "achievement_10_title": "Mistrz Strategii",
+      "achievement_10_desc": "Ukończ wszystkie lekcje (5).",
+
+      "achievement_11_title": "Szczęśliwy Traf",
+      "achievement_11_desc": "Zakręć kołem raz.",
+
+      "achievement_12_title": "Hazardzista",
+      "achievement_12_desc": "Zakręć kołem 10 razy.",
+
+      "achievement_13_title": "Lojalny Gracz",
+      "achievement_13_desc": "Zaloguj się 5 dni z rzędu.",
+
+      "achievement_14_title": "Lojalny Gracz",
+      "achievement_14_desc": "Zaloguj się 10 dni z rzędu.",
+      "avatar_14": "Lis Awatar",
+
+      "achievement_15_title": "Ryzykant",
+      "achievement_15_desc": "Wygraj 5 gier po podwojeniu stawki.",
+
+      "achievement_16_title": "GIGA Hazardzista",
+      "achievement_16_desc": "Zakręć kołem 100 razy.",
+
+      /* --- STRATEGY FEEDBACK (DODANE) --- */
+      "strategy_feedback_correct": "Dobry ruch!",
+      "strategy_feedback_error": "Błąd! Tabela mówi: {{move}}",
+      /* Opcjonalnie tłumaczenia ruchów */
+      "move_HIT": "DOBIERZ",
+      "move_STAND": "PASUJ",
+      "move_DOUBLE": "PODWÓJ",
+      "move_SPLIT": "ROZDZIEL",
 
       /* --- Offline.js --- */
       "exit": "Wyjdź",
@@ -442,7 +566,17 @@ const resources = {
       "offline_split": "SPLIT",
       "offline_hit": "HIT",
       "offline_double": "DOUBLE",
-
+      "you_label": "TY",
+      "trainer": "Trener",
+      "bankrupt_title": "Zbankrutowałeś",
+      "bankrupt_watch_ad": "Obejrzyj Reklamę (+100 PLN)",
+      "bankrupt_exit": "Wyjdź z gry",
+      "win_clean": "Wygrałeś łącznie {{amount}} PLN na czysto",
+      "loss_total": "Straciłeś łącznie {{amount}} PLN",
+      "game_win": "Wygrałeś",
+      "game_blackjack": "Blackjack",
+      "game_push": "Zwrot",
+      "game_lose": "Przegrałeś",
       /* --- STATISTICS.JS --- */
       "stats_title": "Statystyki",
       "stats_loading": "Ładowanie statystyk...",
@@ -531,7 +665,6 @@ const resources = {
       "profile_danger_zone": "Strefa niebezpieczna",
       "profile_reset_progress": "Zresetuj postępy",
       "profile_edit_username": "Edytuj",
-
       "profile_not_found": "Profil nie został znaleziony",
 
       /* --- RESOURCES.JS --- */
@@ -554,54 +687,44 @@ const resources = {
       "resources_responsible_gaming": "Odpowiedzialna gra",
       "resources_privacy_policy": "Polityka prywatności",
       "resources_terms_of_service": "Regulamin serwisu",
+      
       /* --- LEARN.JS --- */
       "learn_read_more": "Czytaj więcej",
-
       "learn_l1_title": "Lekcja 1",
       "learn_l1_subtitle": "Zasady i Mechanika",
       "learn_l1_desc": "Wprowadzenie do podstaw gry.",
-
       "learn_l2_title": "Lekcja 2",
       "learn_l2_subtitle": "Wartości Kart",
       "learn_l2_desc": "Zrozumienie punktacji kart.",
-
       "learn_l3_title": "Lekcja 3",
       "learn_l3_subtitle": "Dobieranie i Pasowanie",
       "learn_l3_desc": "Kiedy dobrać kartę, a kiedy spasować.",
-
       "learn_l4_title": "Lekcja 4",
       "learn_l4_subtitle": "Podwajanie stawki",
       "learn_l4_desc": "Maksymalizacja wygranych (Double Down).",
-
       "learn_l5_title": "Lekcja 5",
       "learn_l5_subtitle": "Rozdzielanie par",
       "learn_l5_desc": "Jak obsługiwać pary (Split).",
-
       "learn_l6_title": "Lekcja 6",
       "learn_l6_subtitle": "Ubezpieczenie",
       "learn_l6_desc": "Czy warto brać Insurance?",
-
       "learn_l7_title": "Lekcja 7",
       "learn_l7_subtitle": "Ręce Miękkie i Twarde",
       "learn_l7_desc": "Potęga Asa w talii.",
-
       "learn_l8_title": "Lekcja 8",
       "learn_l8_subtitle": "Strategia Podstawowa",
       "learn_l8_desc": "Podejście matematyczne.",
-
       "learn_l9_title": "Lekcja 9",
       "learn_l9_subtitle": "Liczenie Kart - Wstęp",
       "learn_l9_desc": "Przegląd technik zaawansowanych.",
-
       "learn_l10_title": "Lekcja 10",
       "learn_l10_subtitle": "Zarządzanie kapitałem",
       "learn_l10_desc": "Jak mądrze zarządzać żetonami.",
-
       "learn_l11_title": "Lekcja 11",
       "learn_l11_subtitle": "Zaawansowane zakłady",
       "learn_l11_desc": "Systemy i schematy obstawiania.",
-
       "learn_progress_label": "Twój postęp",
+      
       /* --- LESSON PAGE --- */
       "lesson_intro_title": "Wprowadzenie",
       "lesson_wrong_action": "Nie! To nie jest najlepszy ruch. Spróbuj czegoś innego!",
@@ -609,6 +732,7 @@ const resources = {
       "lesson_conclusion_title": "Zakończenie",
       "lesson_back_to_menu": "Powrót do menu",
       "lesson_next_button": "Dalej",
+      
       /* --- Glossary.js --- */
       "glossary_title": "Słownik Blackjacka",
       "glossary_subtitle": "Kluczowe terminy i definicje.",
@@ -675,7 +799,6 @@ const resources = {
       /* --- PrivacyPolicy.js --- */
       "pp_title": "Polityka Prywatności Mathsino",
       "pp_effective_date": "Data wejścia w życie: 21 listopada 2025 r.",
-
       "pp_section1_title": "1. Jakie dane zbieramy?",
       "pp_section1_desc": "Korzystając z logowania przez Google lub Facebook, zbieramy następujące dane osobowe:",
       "pp_data_email": "Adres e-mail",
@@ -684,28 +807,23 @@ const resources = {
       "pp_data_name_desc": "(do personalizacji konta).",
       "pp_data_id": "Unikalny identyfikator dostawcy",
       "pp_data_id_desc": "(Google ID lub Facebook ID).",
-
       "pp_section2_title": "2. Jak wykorzystujemy Twoje dane?",
       "pp_section2_desc": "Dane są używane wyłącznie w celu:",
       "pp_use_auth": "Uwierzytelnienia Cię w aplikacji Mathsino.",
       "pp_use_progress": "Utrzymania Twojego stanu logowania i zapisywania postępów.",
       "pp_use_personalization": "Personalizacji doświadczeń w aplikacji (np. wyświetlania Twojego imienia).",
-
       "pp_section3_title": "3. Usunięcie Danych",
       "pp_section3_desc": "Jeśli chcesz usunąć swoje dane, postępuj zgodnie z instrukcjami dostępnymi pod poniższym linkiem:",
       "pp_data_deletion_link": "Instrukcje usunięcia danych",
 
-
       /* --- DataDeletion.js --- */
       "dd_title": "Instrukcje Usunięcia Danych Użytkownika Mathsino",
-
       "dd_section1_title": "Procedura Usunięcia Konta",
       "dd_section1_desc": "Zgodnie z wymogami Meta (Facebook), aby trwale usunąć wszystkie dane powiązane z Twoim kontem Mathsino, postępuj zgodnie z poniższymi instrukcjami:",
       "dd_step1": "Zaloguj się do aplikacji Mathsino. (Jeśli nie możesz się zalogować, przejdź do kroku 3).",
       "dd_step2": "Przejdź do strony profilu i poszukaj opcji 'Usuń Konto' (jeszcze niezaimplementowane).",
       "dd_step3_title": "Aby zażądać usunięcia natychmiast",
       "dd_step3_desc": "Wyślij wiadomość e-mail na adres",
-
       "dd_section2_title": "Wymagane Informacje w E-mailu",
       "dd_section2_desc": "W tytule wiadomości wpisz 'Prośba o usunięcie danych - [Twój Adres E-mail]'. W treści wiadomości, podaj:",
       "dd_email_req1": "Adres e-mail użyty do logowania przez Google/Facebook.",

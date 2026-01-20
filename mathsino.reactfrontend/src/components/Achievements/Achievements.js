@@ -24,7 +24,6 @@ function Achievements() {
                 const response = await fetch(`${API_URL}/users/${user.id}/stats`);
                 if(response.ok) {
                     const data = await response.json();
-                    console.log("Stats from Backend:", data); 
                     setStats(data);
                 }
             } catch (error) {
@@ -57,15 +56,11 @@ function Achievements() {
 
     const getStatValue = (key) => {
         if (!stats) return 0;
-        // 1. Dokładna nazwa
         if (stats[key] !== undefined) return stats[key];
-        // 2. PascalCase
         const upperKey = key.charAt(0).toUpperCase() + key.slice(1);
         if (stats[upperKey] !== undefined) return stats[upperKey];
-        // 3. camelCase
         const lowerKey = key.charAt(0).toLowerCase() + key.slice(1);
         if (stats[lowerKey] !== undefined) return stats[lowerKey];
-
         return 0;
     };
 
@@ -77,33 +72,24 @@ function Achievements() {
             case 'totalGames':
                 current = getStatValue('totalGames'); 
                 break;
-            
             case 'peakBalance':
-                // Teraz pobieramy historyczny rekord ze statystyk!
                 current = getStatValue('peakBalance'); 
                 break;
-
             case 'lessonsCompleted':
                 current = getStatValue('lessonsCompleted');
                 break;
-
             case 'spinWheelCount':
                 current = getStatValue('spinWheelCount');
                 break;
-
             case 'loginStreak':
                 current = getStatValue('daysStreak');
                 break;
-
-            // --- NOWY ---
             case 'doubleDownWins':
                 current = getStatValue('doubleDownWins');
                 break;
-
             default:
                 current = 0;
         }
-        
         return current;
     };
 
@@ -115,7 +101,7 @@ function Achievements() {
             });
 
             if (response.ok) {
-                const data = await response.json();
+                // const data = await response.json(); // opcjonalne użycie data
                 setUserAchievements((prev) => [...prev, achievementId]);
                 if (refreshUser) refreshUser();
             } else {
@@ -130,8 +116,8 @@ function Achievements() {
     return (
         <div className="achievements-container">
             <div className="achievements-header">
-                <h2>{t('achievements_title') || "Achievements"}</h2>
-                <p>{t('achievements_subtitle') || "Track your progress and earn rewards!"}</p>
+                <h2>{t('achievements_title')}</h2>
+                <p>{t('achievements_subtitle')}</p>
             </div>
 
             <div className="achievements-grid">
@@ -154,16 +140,17 @@ function Achievements() {
                             <i className={`${ach.icon} achievement-icon`}></i>
                             
                             <div className="achievement-content">
-                                <h3>{ach.title}</h3>
-                                <p>{ach.description}</p>
+                                {/* Tłumaczenie tytułu i opisu */}
+                                <h3>{t(`achievement_${ach.id}_title`)}</h3>
+                                <p>{t(`achievement_${ach.id}_desc`)}</p>
                             </div>
 
                             <div className="achievement-actions">
                                 {isClaimed ? (
-                                    <div className="claimed-badge">Collected</div>
+                                    <div className="claimed-badge">{t('ach_collected', 'Collected')}</div>
                                 ) : isConditionMet ? (
                                     <button className="claim-button" onClick={() => handleClaim(ach.id)}>
-                                        Claim Reward!
+                                        {t('ach_claim_reward', 'Claim Reward!')}
                                     </button>
                                 ) : (
                                     <>
@@ -180,7 +167,7 @@ function Achievements() {
                             <div className="reward-badge">
                                 {ach.rewardType === 'CASH' ? 
                                     <><i className="fa-solid fa-coins"></i> +{ach.rewardValue} PLN</> : 
-                                    <><i className="fa-solid fa-user-astronaut"></i> {ach.rewardLabel}</>
+                                    <><i className="fa-solid fa-user-astronaut"></i> {t(`avatar_${ach.id}`) || ach.rewardLabel}</>
                                 }
                             </div>
                         </div>

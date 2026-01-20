@@ -7,9 +7,9 @@ export const achievementsConfig = [
         icon: "fa-solid fa-play",
         targetValue: 10,
         statKey: "totalGames",
-        rewardType: "CASH",
-        rewardValue: 50,
-        rewardLabel: "50 PLN"
+        rewardType: "AVATAR",
+        rewardValue: 0,
+        rewardLabel: "Mouse Avatar"
     },
     {
         id: 2,
@@ -18,9 +18,9 @@ export const achievementsConfig = [
         icon: "fa-solid fa-layer-group",
         targetValue: 100,
         statKey: "totalGames",
-        rewardType: "CASH",
-        rewardValue: 300,
-        rewardLabel: "300 PLN"
+        rewardType: "AVATAR",
+        rewardValue: 0,
+        rewardLabel: "Racoon Avatar"
     },
     {
         id: 3,
@@ -40,9 +40,9 @@ export const achievementsConfig = [
         icon: "fa-solid fa-crown",
         targetValue: 10000,
         statKey: "totalGames",
-        rewardType: "CASH",
-        rewardValue: 5000,
-        rewardLabel: "5000 PLN"
+        rewardType: "AVATAR",
+        rewardValue: 0,
+        rewardLabel: "Boar Avatar"
     },
 
     // --- PEAK BALANCE (5-8) ---
@@ -86,9 +86,9 @@ export const achievementsConfig = [
         icon: "fa-solid fa-vault",
         targetValue: 100000,
         statKey: "peakBalance",
-        rewardType: "CASH",
-        rewardValue: 10000,
-        rewardLabel: "10 000 PLN"
+        rewardType: "AVATAR",
+        rewardValue: 0,
+        rewardLabel: "Owl Avatar"
     },
 
     // --- LESSONS (9-10) ---
@@ -108,14 +108,14 @@ export const achievementsConfig = [
         title: "Strategy Master",
         description: "Complete all lessons (5).",
         icon: "fa-solid fa-graduation-cap",
-        targetValue: 10,
+        targetValue: 5,
         statKey: "lessonsCompleted",
         rewardType: "CASH",
         rewardValue: 1000,
         rewardLabel: "1000 PLN"
     },
 
-    // --- SPIN WHEEL (11-12) ---
+    // --- SPIN WHEEL (11-12, 16) ---
     {
         id: 11,
         title: "Lucky Spin",
@@ -138,8 +138,19 @@ export const achievementsConfig = [
         rewardValue: 500,
         rewardLabel: "500 PLN"
     },
+    {
+        id: 16, // Zmienione z 12 na 16 (unikalne ID)
+        title: "GIGA Gambler",
+        description: "Spin the wheel 100 times.",
+        icon: "fa-solid fa-arrows-spin",
+        targetValue: 100,
+        statKey: "spinWheelCount",
+        rewardType: "CASH",
+        rewardValue: 5000,
+        rewardLabel: "5000 PLN"
+    },
 
-    // --- STREAK (13) ---
+    // --- STREAK (13-14) ---
     {
         id: 13,
         title: "Loyal Player",
@@ -151,10 +162,21 @@ export const achievementsConfig = [
         rewardValue: 500,
         rewardLabel: "500 PLN"
     },
-
-    // --- SPECIAL (14) - NOWY ---
     {
         id: 14,
+        title: "GIGA Loyal Player",
+        description: "Login 10 days in a row.",
+        icon: "fa-solid fa-fire",
+        targetValue: 10,
+        statKey: "loginStreak",
+        rewardType: "AVATAR",
+        rewardValue: 0,
+        rewardLabel: "Fox Avatar"
+    },
+
+    // --- SPECIAL (15) ---
+    {
+        id: 15,
         title: "Risk Taker",
         description: "Win 5 games after doubling down.",
         icon: "fa-solid fa-angles-up",
@@ -163,5 +185,16 @@ export const achievementsConfig = [
         rewardType: "CASH",
         rewardValue: 1000,
         rewardLabel: "1000 PLN"
+    },
+    {
+        id: 16,
+        title: "GIGA Risk Taker",
+        description: "Win 50 games after doubling down.",
+        icon: "fa-solid fa-angles-up",
+        targetValue: 50,
+        statKey: "doubleDownWins",
+        rewardType: "AVATAR",
+        rewardValue: 0,
+        rewardLabel: "Fox Avatar"
     }
 ];

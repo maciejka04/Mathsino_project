@@ -1,5 +1,5 @@
 using Mathsino.Backend.Game;
-
+import { useTranslation } from 'react-i18next';
 namespace Mathsino.Backend.Services;
 
 public static class BlackjackStrategy
@@ -71,7 +71,7 @@ public static class BlackjackStrategy
         bool isCorrect = playerAction == optimalMove;
         string moveName = optimalMove.ToString().ToUpper();
 
-        return (isCorrect, moveName, isCorrect ? "Dobry ruch!" : $"Błąd! Tabela mówi: {moveName}");
+        return (isCorrect, moveName, isCorrect ? "Good move!" : $"Bad move! correct move: {moveName}");
     }
 
     private static Move GetOptimalMove(List<Card> hand, Card dealerCard, bool canSplit)

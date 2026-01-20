@@ -305,72 +305,85 @@ public static class UserEndPoints
             switch (achievementId)
             {
                 // --- GAMES ---
-                case 1: // 10 games
-                    conditionMet = stats.TotalGames >= 10;
-                    rewardValue = 50;
-                    break;
-                case 2: // 100 games
-                    conditionMet = stats.TotalGames >= 100;
-                    rewardValue = 300;
-                    break;
-                case 3: // 1000 games
-                    conditionMet = stats.TotalGames >= 1000;
-                    rewardValue = 1500;
-                    break;
-                case 4: // 10000 games
-                    conditionMet = stats.TotalGames >= 10000;
-                    rewardValue = 5000;
-                    break;
+    case 1: // 10 games -> Mouse Avatar
+        conditionMet = stats.TotalGames >= 10;
+        rewardValue = 0; // Nagroda to Awatar
+        break;
+    case 2: // 100 games -> Racoon Avatar
+        conditionMet = stats.TotalGames >= 100;
+        rewardValue = 0; // Nagroda to Awatar
+        break;
+    case 3: // 1000 games -> Cash
+        conditionMet = stats.TotalGames >= 1000;
+        rewardValue = 1500;
+        break;
+    case 4: // 10000 games -> Boar Avatar
+        conditionMet = stats.TotalGames >= 10000;
+        rewardValue = 0; // Nagroda to Awatar
+        break;
 
-                // --- PEAK BALANCE (Zmieniono na PeakBalance) ---
-                case 5: // 3000 balance
-                    conditionMet = stats.PeakBalance >= 3000; 
-                    rewardValue = 200;
-                    break;
-                case 6: // 10000 balance
-                    conditionMet = stats.PeakBalance >= 10000; 
-                    rewardValue = 1000;
-                    break;
-                case 7: // 25000 balance
-                    conditionMet = stats.PeakBalance >= 25000; 
-                    rewardValue = 2500;
-                    break;
-                case 8: // 100000 balance
-                    conditionMet = stats.PeakBalance >= 100000; 
-                    rewardValue = 10000;
-                    break;
+    // --- PEAK BALANCE ---
+    case 5: // 3000 balance -> Cash (Fox jest zajęty w ID 14)
+        conditionMet = stats.PeakBalance >= 3000; 
+        rewardValue = 200;
+        break;
+    case 6: // 10000 balance
+        conditionMet = stats.PeakBalance >= 10000; 
+        rewardValue = 1000;
+        break;
+    case 7: // 25000 balance
+        conditionMet = stats.PeakBalance >= 25000; 
+        rewardValue = 2500;
+        break;
+    case 8: // 100000 balance -> Owl Avatar
+        conditionMet = stats.PeakBalance >= 100000; 
+        rewardValue = 0; // Nagroda to Awatar
+        break;
 
-                // --- LESSONS ---
-                case 9: // 1 lesson
-                    conditionMet = user.LessonsCompleted >= 1;
-                    rewardValue = 100;
-                    break;
-                case 10: // 5 lessons
-                    conditionMet = user.LessonsCompleted >= 10;
-                    rewardValue = 1000;
-                    break;
+    // --- LESSONS ---
+    case 9: // 1 lesson
+        conditionMet = user.LessonsCompleted >= 1;
+        rewardValue = 100;
+        break;
+    case 10: // 5 lessons (All)
+        conditionMet = user.LessonsCompleted >= 5;
+        rewardValue = 1000;
+        break;
 
-                // --- SPIN WHEEL ---
-                case 11: // 1 spin
-                    conditionMet = user.SpinWheelCount >= 1;
-                    rewardValue = 50;
-                    break;
-                case 12: // 10 spins
-                    conditionMet = user.SpinWheelCount >= 10;
-                    rewardValue = 500;
-                    break;
+    // --- SPIN WHEEL ---
+    case 11: // 1 spin
+        conditionMet = user.SpinWheelCount >= 1;
+        rewardValue = 50;
+        break;
+    case 12: // 10 spins
+        conditionMet = user.SpinWheelCount >= 10;
+        rewardValue = 500;
+        break;
+    case 16: // 100 spins (Zmienione ID z duplikatu 12 na 16)
+        conditionMet = user.SpinWheelCount >= 100;
+        rewardValue = 5000; // Duża nagroda pieniężna zamiast "mouse avatar" który był w ID 1
+        break;
 
-                // --- STREAK ---
-                case 13: // 5 days
-                    conditionMet = stats.DaysStreak >= 5;
-                    rewardValue = 500;
-                    break;
+    // --- STREAK ---
+    case 13: // 5 days
+        conditionMet = stats.DaysStreak >= 5;
+        rewardValue = 500;
+        break;
 
-                // --- NEW: DOUBLE DOWN (ID 14) ---
-                case 14: // 5 Double Down wins
-                    conditionMet = user.DoubleDownWins >= 5; // Sprawdzamy pole w User (lub stats.DoubleDownWins)
-                    rewardValue = 1000;
-                    break;
+    case 14: // 10 days -> Fox Avatar
+        conditionMet = stats.DaysStreak >= 10;
+        rewardValue = 0; // Nagroda to Awatar
+        break;
+
+    // --- DOUBLE DOWN ---
+    case 15: // 5 Double Down wins
+        conditionMet = user.DoubleDownWins >= 5;
+        rewardValue = 1000;
+        break;
+    case 16: // 50 Double Down wins
+        conditionMet = user.DoubleDownWins >= 50;
+        rewardValue = 0; // Nagroda to Awatar
+        break;
 
                 default:
                     return Results.BadRequest(new { message = "Unknown Achievement ID." });
