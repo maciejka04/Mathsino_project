@@ -1,6 +1,7 @@
 // src/pages/Offline/components/GameOverlays.js
 import React, { useEffect, useRef } from "react";
 import Fireworks from 'fireworks-js';
+import { useTranslation } from 'react-i18next';
 
 const GameOverlays = ({ 
     showFireworks, 
@@ -14,7 +15,7 @@ const GameOverlays = ({
     onModalClose 
 }) => {
     const fireworksContainerRef = useRef(null);
-
+    const { t } = useTranslation();
     useEffect(() => {
         let fireworks;
         if (showFireworks && fireworksContainerRef.current) {
@@ -71,7 +72,7 @@ const GameOverlays = ({
                     }}
                 >
                     <div style={{ fontWeight: "bold", marginBottom: "5px", fontSize: "1.3rem" }}>
-                        {strategyFeedback.isCorrect ? "DOBRY RUCH!" : "ZŁY RUCH!"}
+                        {strategyFeedback.isCorrect ? t('good_move') : t('bad_move')}
                     </div>
                     <div>{strategyFeedback.message}</div>
                 </div>

@@ -79,7 +79,7 @@ function Profile() {
       });
 
       if (response.ok) {
-        setSaveStatus('Awatar zapisany pomyślnie! ✅');
+        setSaveStatus(t('avatar_saved'));
         if (refreshUser) {
           refreshUser();
         }

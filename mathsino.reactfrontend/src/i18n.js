@@ -14,7 +14,7 @@ const resources = {
 
       /* --- ACHIEVEMENTS PAGE --- */ // <--- DODANA SEKCJA
       "achievements_title": "Your Achievements",
-      "achievements_subtitle": "Track your progress and earn exclusive avatars!",
+      "achievements_subtitle": "Track your progress and earn exclusive rewards!",
 
       /* --- Offline.js --- */
       "exit": "Exit",
@@ -26,6 +26,8 @@ const resources = {
       "blackjack": "BLACKJACK!",
       "lang_en": "EN",
       "lang_pl": "PL",
+      "good_move": "GOOD MOVE",
+      "bad_move": "BAD MOVE",
 
       /* --- LOGIN.JS --- */
       "login_title": "Log in to continue",
@@ -170,7 +172,7 @@ const resources = {
       "profile_danger_zone": "Danger Zone",
       "profile_reset_progress": "Reset Progress",
       "profile_edit_username": "Edit",
-
+      "avatar_saved": "Avatar saved! ✅",
       "profile_not_found": "Profile not found",
 
       /* --- RESOURCES.JS --- */
@@ -442,6 +444,8 @@ const resources = {
       "offline_split": "SPLIT",
       "offline_hit": "HIT",
       "offline_double": "DOUBLE",
+      "good_move": "GOOD MOVE!",
+      "bad_move": "BAD MOVE!",
 
       /* --- STATISTICS.JS --- */
       "stats_title": "Statystyki",
@@ -531,7 +535,7 @@ const resources = {
       "profile_danger_zone": "Strefa niebezpieczna",
       "profile_reset_progress": "Zresetuj postępy",
       "profile_edit_username": "Edytuj",
-
+      "avatar_saved": "Awatar został zapisany! ✅",
       "profile_not_found": "Profil nie został znaleziony",
 
       /* --- RESOURCES.JS --- */
