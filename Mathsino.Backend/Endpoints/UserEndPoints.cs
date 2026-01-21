@@ -359,9 +359,9 @@ public static class UserEndPoints
         conditionMet = user.SpinWheelCount >= 10;
         rewardValue = 500;
         break;
-    case 16: // 100 spins (Zmienione ID z duplikatu 12 na 16)
+    case 17: // 100 spins (Zmienione ID z duplikatu 12 na 16)
         conditionMet = user.SpinWheelCount >= 100;
-        rewardValue = 5000; // Duża nagroda pieniężna zamiast "mouse avatar" który był w ID 1
+        rewardValue = 5000; 
         break;
 
     // --- STREAK ---

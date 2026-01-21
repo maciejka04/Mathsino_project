@@ -9,25 +9,27 @@ import { Outlet, NavLink, Link, useLocation } from 'react-router-dom';
 import audioService from './services/audioService';
 import musicService from './services/musicService';
 
-// Importy zasobów
-import awatar from './assets/profilowe_smok.png';
+// Importy zasobów(POWIĄZANE Z PROFILE)
 import logo from './assets/logo.png';
 import snake from './assets/profilepic/snake.png';
-import mouse from './assets/profilepic/mouse.png';
-import racoon from './assets/profilepic/racoon.png';
-import boar from './assets/profilepic/boar.png';
-import owl from './assets/profilepic/owl.png';
-import fox from './assets/profilepic/fox.png';
+import mouse from './assets/profilepic/mouse1.png';
+import racoon from './assets/profilepic/racoon1.png';
+import boar from './assets/profilepic/boar1.png';
+import owl from './assets/profilepic/owl1.png';
+import fox from './assets/profilepic/fox1.png';
 import clickSound from './assets/mouse-click.mp3';
+
+// Default avatar now uses snake image
+const defaultAvatar = snake;
 
 
 const AVATAR_MAP = {
   'snake.png': snake,
-  'mouse.png': mouse,
-  'racoon.png': racoon,
-  'boar.png': boar,
-  'owl.png': owl,
-  'fox.png': fox,
+  'mouse1.png': mouse,
+  'racoon1.png': racoon,
+  'boar1.png': boar,
+  'owl1.png': owl,
+  'fox1.png': fox,
 };
 
 const BACKEND_URL = 'http://localhost:5126';
@@ -41,7 +43,7 @@ function Layout() {
   const [user, setUser] = useState({
     name: "",
     email: "",
-    avatarUrl: awatar,
+    avatarUrl: defaultAvatar,
     avatarPath: 'snake.png',
     userName: ""
   });
@@ -59,8 +61,8 @@ function Layout() {
         return res.json();
       })
       .then(data => {
-        const avatarPathFromDb = data.avatarPath || 'profilowe_smok.png';
-        const finalAvatarUrl = AVATAR_MAP[avatarPathFromDb] || awatar;
+        const avatarPathFromDb = data.avatarPath || 'snake.png';
+        const finalAvatarUrl = AVATAR_MAP[avatarPathFromDb] || defaultAvatar;
         const fetchedBalance = (data.balance !== undefined && data.balance !== null)
           ? parseInt(data.balance, 10)
           : 0;
@@ -110,7 +112,7 @@ function Layout() {
         if (err.message !== "Unauthorized") {
           console.error("Layout user load error:", err);
         }
-        setUser({ name: "Gość", isAuthenticated: false, avatarUrl: awatar });
+        setUser({ name: "Gość", isAuthenticated: false, avatarUrl: defaultAvatar });
       });
   };
 

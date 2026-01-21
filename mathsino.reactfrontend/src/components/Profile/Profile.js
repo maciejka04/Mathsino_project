@@ -6,11 +6,11 @@ import './Profile.css';
 import { useTranslation } from 'react-i18next';
 
 import snake from '../../assets/profilepic/snake.png';
-import mouse from '../../assets/profilepic/mouse.png';
-import racoon from '../../assets/profilepic/racoon.png';
-import boar from '../../assets/profilepic/boar.png';
-import owl from '../../assets/profilepic/owl.png';
-import fox from '../../assets/profilepic/fox.png';
+import mouse from '../../assets/profilepic/mouse1.png';
+import racoon from '../../assets/profilepic/racoon1.png';
+import boar from '../../assets/profilepic/boar1.png';
+import owl from '../../assets/profilepic/owl1.png';
+import fox from '../../assets/profilepic/fox1.png';
 import clickSound from '../../assets/mouse-click.mp3';
 import audioService from '../../services/audioService';
 
@@ -22,24 +22,24 @@ const API_URL = "http://localhost:5126";  // ⬅️ DODANE
 
 const AVATAR_MAP = {
   'snake.png': snake,
-  'mouse.png': mouse,
-  'racoon.png': racoon,
-  'boar.png': boar,
-  'owl.png': owl,
-  'fox.png': fox,
-  'fox.png': fox,
+  'mouse1.png': mouse,
+  'racoon1.png': racoon,
+  'boar1.png': boar,
+  'owl1.png': owl,
+  'fox1.png': fox,
+  'fox1.png': fox,
 };
 
 // list of avatar images for iteration
 const avatars = Object.values(AVATAR_MAP);
 
 const AVATAR_UNLOCKS = {
-  1: 'mouse.png',   // Warm Up (10 games)
-  2: 'racoon.png',  // Regular (100 games)
-  4: 'boar.png',    // Legend (10000 games)
-  8: 'owl.png',     // Millionaire (100k balance)
-  14: 'fox.png',    // Streak 10
-  16: 'fox.png',    // double 50
+  1: 'mouse1.png',   // Warm Up (10 games)
+  2: 'racoon1.png',  // Regular (100 games)
+  4: 'boar1.png',    // Legend (10000 games)
+  8: 'owl1.png',     // Millionaire (100k balance)
+  14: 'fox1.png',    // Streak 10
+  16: 'fox1.png',    // double 50
 };
 
 const getAvatarFilename = (avatarImport) => {
