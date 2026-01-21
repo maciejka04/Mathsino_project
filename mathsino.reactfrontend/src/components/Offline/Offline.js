@@ -60,10 +60,10 @@ function Offline() {
 
   const getResultText = (result) => {
     if (!result) return "";
-    if (result === "Win") return "WYGRANA!";
-    if (result === "Lose") return "PRZEGRANA";
-    if (result === "Push") return "REMIS";
-    if (result === "Blackjack") return "BLACKJACK!";
+    if (result === "Win") return t('game_win');       // Zmiana: użycie klucza tłumaczenia
+    if (result === "Lose") return t('game_lose');     // Zmiana: użycie klucza tłumaczenia
+    if (result === "Push") return t('game_push');     // Zmiana: użycie klucza tłumaczenia
+    if (result === "Blackjack") return t('game_blackjack'); // Zmiana: użycie klucza tłumaczenia
     return "";
   };
 
@@ -72,10 +72,10 @@ function Offline() {
     let totalWin = 0;
     const calc = (res, bet, isDoubled) => {
       const actualBet = isDoubled ? bet * 2 : bet;
-      if (res === "Win") return { txt: "Wygrałeś", val: actualBet };
-      if (res === "Blackjack") return { txt: "Blackjack", val: actualBet * 1.5 };
-      if (res === "Push") return { txt: "Zwrot", val: 0 };
-      return { txt: "Przegrałeś", val: -actualBet };
+      if (res === "Win") return { val: actualBet };
+      if (res === "Blackjack") return { val: actualBet * 1.5 };
+      if (res === "Push") return { val: 0 };
+      return { val: -actualBet };
     };
 
     const main = calc(game.gameResult, game.currentBet, game.mainDoubled);
@@ -92,8 +92,8 @@ function Offline() {
     return {
       title: msg,
       desc: totalWin >= 0
-        ? `Wygrałeś łącznie ${totalWin} PLN na czysto`
-        : `Straciłeś łącznie ${Math.abs(totalWin)} PLN`,
+        ? t('win_clean', { amount: totalWin }) // Zmiana: użycie klucza z parametrem amount
+        : t('loss_total', { amount: Math.abs(totalWin) }), // Zmiana: użycie klucza z parametrem amount
     };
   };
 
@@ -127,7 +127,7 @@ function Offline() {
           <div className="bankrupt-content">
             <i className="fa-solid fa-triangle-exclamation" style={{ fontSize: '4rem', color: '#ff4d4d', marginBottom: '20px' }}></i>
 
-            <h1 style={{ color: '#ff4d4d' }}>You went bankrupt</h1>
+            <h1 style={{ color: '#ff4d4d' }}>{t('bankrupt_title')}</h1>
 
             <div className="bankrupt-actions">
               <button
@@ -135,7 +135,7 @@ function Offline() {
                 onClick={adReward.handleWatchAd}
                 disabled={adReward.isDisabled}
               >
-                Watch Ad (+100 PLN) <i className="fa-solid fa-clapperboard" style={{ marginLeft: '8px' }} />
+                {t('bankrupt_watch_ad')} <i className="fa-solid fa-clapperboard" style={{ marginLeft: '8px' }} />
               </button>
 
               <button
@@ -143,7 +143,7 @@ function Offline() {
                 onClick={handleGoBack}
                 style={{ marginTop: '10px', width: '100%', padding: '12px' }}
               >
-                Exit Game <i className="fa-solid fa-door-open" style={{ marginLeft: '8px' }} />
+                {t('bankrupt_exit')} <i className="fa-solid fa-door-open" style={{ marginLeft: '8px' }} />
               </button>
             </div>
           </div>
@@ -171,6 +171,7 @@ function Offline() {
           game.closeModal();
           game.setCurrentBet(0);
         }}
+        t={t} // Zmiana: przekazanie funkcji t do GameOverlays
       />
 
       <div className="game-table-area">
@@ -187,7 +188,7 @@ function Offline() {
         <Hand
           cards={game.playerCards}
           deckPosition={DECK_POSITION}
-          title={game.hasSplit ? `${t('hand')} 1` : "Ty"}
+          title={game.hasSplit ? `${t('hand')} 1` : t('you_label') || "Ty"} 
           gameStatus={game.gameStatus}
           isDealer={false}
           hasSplit={game.hasSplit}
