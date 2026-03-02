@@ -1,224 +1,83 @@
-# README.md wygenerowane przy pomocy Claude, na remote labs wmi nie trzeba nic robić wystarczy odpalić projekt
-
 # Mathsino
 
-Projekt .NET Aspire składający się z backendu (WebAPI), frontendu (Blazor WebAssembly) i orkiestratora Aspire.
-
-## 📋 Wymagania
-
-Przed uruchomieniem projektu musisz zainstalować następujące narzędzia:
-
-### 1. .NET SDK 9.0 (lub nowszy)
-
-- **Windows & macOS**: Pobierz z [https://dotnet.microsoft.com/download](https://dotnet.microsoft.com/download)
-- Pobierz najnowszą wersję .NET SDK
-- Uruchom instalator i postępuj zgodnie z instrukcjami
-
-### 2. Docker Desktop
-
-Docker jest **wymagany** do uruchomienia .NET Aspire.
-
-#### Windows:
-
-1. Pobierz Docker Desktop z [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
-2. Uruchom instalator
-3. Po instalacji uruchom Docker Desktop
-4. Poczekaj aż Docker całkowicie wystartuje (ikona w zasobniku systemowym powinna być zielona)
-
-#### macOS:
-
-1. Pobierz Docker Desktop z [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
-2. Przeciągnij aplikację do folderu Applications
-3. Uruchom Docker Desktop
-4. Poczekaj aż Docker całkowicie wystartuje (ikona w menu bar powinna być zielona)
-
-#### 2.5. Nodejs
-
-1. Pobierz [https://nodejs.org/en/download]
-
-**Alternatywa (macOS)**: Możesz użyć Podman Desktop zamiast Docker Desktop
-
-### 3. IDE/Edytor (opcjonalnie, ale zalecane)
-
-- Visual Studio 2022 (Windows/macOS)
-- Visual Studio Code z rozszerzeniem C#
-- JetBrains Rider
-
-## 🚀 Uruchomienie projektu
-
-### Krok 1: Sprawdź czy wszystko jest zainstalowane
-
-Otwórz terminal (Command Prompt/PowerShell na Windows, Terminal na macOS) i wykonaj:
-
-```bash
-dotnet --version
-```
-
-Powinieneś zobaczyć wersję .NET (np. `9.0.100`)
-
-```bash
-docker --version
-```
-
-Powinieneś zobaczyć wersję Docker (np. `Docker version 24.0.7`)
-
-### Krok 2: Sklonuj repozytorium
-
-```bash
-git clone [URL_DO_REPOZYTORIUM]
-cd Mathsino
-```
-
-### Krok 3: Zainstaluj .NET Aspire workload
-
-**WAŻNE**: Ten krok musisz wykonać tylko raz na swoim komputerze.
-
-```bash
-dotnet workload install aspire
-```
-
-### Krok 4: Zainstaluj WASM Tools
-
-**WAŻNE**: Ten krok musisz wykonać tylko raz na swoim komputerze (potrzebne dla Blazor WebAssembly).
-
-```bash
-dotnet workload install wasm-tools
-```
-
-### Krok 5: Upewnij się że Docker jest uruchomiony
-
-- **Windows**: Sprawdź czy ikona Docker Desktop w zasobniku systemowym jest zielona
-- **macOS**: Sprawdź czy ikona Docker Desktop w menu bar jest zielona
-
-Jeśli Docker nie jest uruchomiony, uruchom aplikację Docker Desktop i poczekaj aż wystartuje.
-
-### Krok 6: Uruchom projekt
-
-Przejdź do folderu głównego projektu (Mathsino) i wykonaj:
-
-```bash
-cd Mathsino.reactfrontend
-npm install
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-npm install react-router-dom
-npm install chart.js react-chartjs-2
-npm install framer-motion@12.23.24
-npm install fireworks-js
-npm install i18next react-i18next i18next-browser-languagedetector
-```
-
-```bash
-cd ..
-```
-
-```bash
-cd Mathsino.host
-dotnet run
-```
-
-### Krok 7: Otwórz aplikację
-
-Po uruchomieniu w terminalu zobaczysz URL do Aspire Dashboard, np.:
-
-```
-Login to the dashboard at http://localhost:15888/login?t=xxxxx
-```
-
-1. Skopiuj cały URL (wraz z tokenem `?t=...`)
-2. Otwórz go w przeglądarce
-3. W dashboardzie zobaczysz wszystkie uruchomione serwisy
-4. Kliknij na odpowiedni endpoint żeby otworzyć:
-   - Frontend (Blazor WebAssembly)
-   - Backend API
-
-## 🛑 Zatrzymanie projektu
-
-W terminalu gdzie uruchomiłeś projekt naciśnij:
-
-- **Windows/macOS**: `Ctrl + C`
-
-## ❓ Problemy i rozwiązania
-
-### "Docker daemon is not running"
-
-**Rozwiązanie**: Uruchom Docker Desktop i poczekaj aż całkowicie wystartuje.
-
-### "Workload 'aspire' not found"
-
-**Rozwiązanie**: Wykonaj ponownie:
-
-```bash
-dotnet workload install aspire
-```
-
-### "The process cannot access the file because it is being used by another process" (Windows)
-
-**Rozwiązanie**:
-
-1. Zamknij wszystkie instancje Visual Studio / VS Code
-2. Otwórz Task Manager (Ctrl+Shift+Esc)
-3. Zakończ wszystkie procesy `dotnet.exe`
-4. Spróbuj ponownie
-
-### Port jest już zajęty
-
-**Rozwiązanie**: Zamknij inne aplikacje które mogą używać portów lub zrestartuj komputer.
-
-### Blazor WebAssembly nie buduje się
-
-**Rozwiązanie**: Upewnij się że zainstalowałeś wasm-tools:
-
-```bash
-dotnet workload install wasm-tools
-```
-
-## 📁 Struktura projektu
-
-```
-Mathsino/
-├── Mathsino.sln                    # Solution file
-├── Mathsino.host/                  # Aspire AppHost (orkiestrator)
-├── Mathsino.Backend/               # Web API (backend)
-├── Mathsino.Frontend/              # Blazor WebAssembly (frontend)
-└── Mathsino.ServiceDefaults/       # Wspólna konfiguracja dla serwisów
-```
-
-## 🔧 Komendy developerskie
-
-### Zbudowanie całego solution
-
-```bash
-dotnet build
-```
-
-### Czyszczenie buildu
-
-```bash
-dotnet clean
-```
-
-### Przywrócenie pakietów NuGet
-
-```bash
-dotnet restore
-```
-
-## 📚 Dodatkowe informacje
-
-- **Aspire Dashboard**: To graficzny interfejs do zarządzania i monitorowania wszystkich serwisów w projekcie
-- **ServiceDefaults**: Zawiera wspólną konfigurację (logging, health checks, telemetry) dla wszystkich serwisów
-- Projekt automatycznie konfiguruje komunikację między frontendem a backendem
-
-## 🆘 Potrzebujesz pomocy?
-
-Jeśli masz problemy:
-
-1. Sprawdź czy Docker jest uruchomiony
-2. Sprawdź czy zainstalowałeś wszystkie workloads (aspire, wasm-tools)
-3. Spróbuj zrestartować Docker Desktop
-4. Spróbuj zrestartować terminal/komputer
+Mathsino to innowacyjna platforma edukacyjna .NET Aspire, zaprojektowana do nauki zasad i strategii gier kasynowych w bezpiecznym, symulowanym środowisku. Projekt łączy teorię prawdopodobieństwa z interaktywną rozgrywką, oferując analizę decyzji gracza w czasie rzeczywistym bez ryzyka finansowego.
 
 ---
 
-**Wersja .NET**: 9.0+  
-**Wersja Aspire**: 9.0+
+## Kluczowe Funkcje
+
+* Moduł Nauki i Symulacji: Interaktywne lekcje zasad z dynamicznym obliczaniem prawdopodobieństwa sukcesu każdego ruchu.
+* Trening i Analityka: Zaawansowany silnik analizujący błędy gracza, generujący raporty postępów i rekomendacje strategiczne.
+* System Gamifikacji: Rankingi, poziomy doświadczenia i odznaki motywujące do nauki.
+* Bezpieczeństwo: Symulacja przeznaczona wyłącznie do celów edukacyjnych dla osób pełnoletnich.
+
+---
+
+## 🛠️ Wymagania Wstępne
+
+Przed uruchomieniem upewnij się, że masz zainstalowane:
+1. .NET SDK 9.0+
+2. Docker Desktop (musi być uruchomiony!)
+3. Node.js (wersja LTS)
+
+---
+
+## 🚀 Instalacja i Uruchomienie
+
+### Krok 1: Instalacja Workloadów .NET
+Otwórz terminal i wykonaj poniższe komendy (wymagane tylko przy pierwszym uruchomieniu):
+
+dotnet workload install aspire
+dotnet workload install wasm-tools
+
+### Krok 2: Konfiguracja Frontendu (React)
+Przejdź do folderu frontendu, aby zainstalować wszystkie niezbędne biblioteki graficzne i funkcyjne:
+
+cd Mathsino.reactfrontend
+
+# Instalacja podstawowych zależności
+npm install
+
+# Instalacja bibliotek dodatkowych (Routing, Wykresy, Animacje, Tłumaczenia)
+npm install react-router-dom chart.js react-chartjs-2 fireworks-js
+npm install framer-motion@12.23.24
+npm install i18next react-i18next i18next-browser-languagedetector
+
+# Opcjonalne dla użytkowników Windows (odblokowanie skryptów)
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+cd ..
+
+### Krok 3: Uruchomienie Projektu
+Wróć do głównego katalogu i uruchom orkiestrator .NET Aspire:
+
+cd Mathsino.host
+dotnet run
+
+### Krok 4: Dashboard
+W terminalu pojawi się unikalny link do Aspire Dashboard (np. http://localhost:15888/login?t=...).
+
+1. Skopiuj link i otwórz go w przeglądarce.
+2. W sekcji Resources zobaczysz status Backend API oraz Frontendu.
+3. Kliknij w odpowiedni Endpoint, aby otworzyć aplikację.
+
+---
+
+## 📁 Struktura Projektu
+
+* Mathsino.host: Orkiestrator .NET Aspire – zarządza uruchamianiem wszystkich usług.
+* Mathsino.Backend: Web API – serce aplikacji (logika gier i obliczenia statystyczne).
+* Mathsino.reactfrontend: React UI – nowoczesny i responsywny interfejs użytkownika.
+* Mathsino.ServiceDefaults: Wspólna konfiguracja – telemetryka, logging i standardy sieciowe.
+
+---
+
+## 👥 Zespół Projektowy
+
+* Oliwier Goluda
+* Paulina Maciejewska
+* Aleksandra Nowak
+* Daniel Pasternak
+* Mateusz Swędra
+
+Wersja .NET: 9.0 | Wersja Aspire: 9.0
